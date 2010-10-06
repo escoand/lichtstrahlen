@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="week">Wochenspruch:</string>
+	<string name="month">Monatsspruch:</string>
+	<string name="select">Bibelstelle wählen:</string>
+	<string name="wait">Bitte warten...</string>
+	
+    <string name="menuBible">Bibeltext</string>
+    <string name="menuToday">Heute</string>
+    <string name="menuDate">Datum</string>
+    <string name="menuNotes">Notizen</string>
+    <string name="menuList">Verseliste</string>
+    <string name="menuInfo">Info</string>
+    
+    <string name="aboutMessage">(c) copyright Andreas Schönfelder 2010</string>
+</resources>
