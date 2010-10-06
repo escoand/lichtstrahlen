@@ -3,17 +3,17 @@
 	<item
 		android:title="@string/menuBible"
 		android:id="@+id/menuBible"
-		android:icon="@drawable/ic_menu_book"
+		android:icon="@android:drawable/ic_menu_search"
 		/>
 	<item
 		android:id="@+id/menuToday"
 		android:title="@string/menuToday"
-		android:icon="@drawable/ic_menu_goto"
+		android:icon="@android:drawable/ic_menu_today"
 		/>
 	<item
 		android:id="@+id/menuDate"
 		android:title="@string/menuDate"
-		android:icon="@drawable/ic_menu_calendar"
+		android:icon="@android:drawable/ic_menu_my_calendar"
 		/>
 	<item
 		android:id="@+id/menuNotes"
@@ -23,7 +23,7 @@
 	<item
 		android:id="@+id/menuList"
 		android:title="@string/menuList"
-		android:icon="@drawable/ic_menu_list"
+		android:icon="@android:drawable/ic_menu_agenda"
 		/>
 	<item
 		android:id="@+id/menuInfo"
