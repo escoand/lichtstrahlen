@@ -15,10 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="menu_calendar_book.svg"
-   inkscape:export-filename="/home/andreas/workspace/lichtstrahlen/res/drawable/menu_calendar.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   sodipodi:docname="ic_menu_calendar.src.svg"
+   inkscape:export-filename="../res/drawable-hdpi/ic_menu_calendar.png"
+   inkscape:export-xdpi="135"
+   inkscape:export-ydpi="135">
   <defs
      id="defs4">
     <linearGradient
