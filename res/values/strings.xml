@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Lichtstrahlen4Android</string>
+	
+	<string name="week">Verse of the week:</string>
+	<string name="month">Verse of the month:</string>
+	<string name="select">Select Bible Verse:</string>
+	<string name="wait">Please wait...</string>
+	
+    <string name="menuBible">Bible Text</string>
+    <string name="menuToday">Today</string>
+    <string name="menuDate">Date</string>
+    <string name="menuNotes">Notes</string>
+    <string name="menuList">Verse List</string>
+    <string name="menuInfo">Info</string>
+    
+    <string name="aboutMessage">(c) copyright Andreas Schönfelder 2010</string>
+</resources>
