@@ -8,6 +8,7 @@
 	<item
 		android:id="@+id/menuToday"
 		android:title="@string/menuToday"
+		android:icon="@drawable/ic_menu_goto"
 		/>
 	<item
 		android:id="@+id/menuDate"
