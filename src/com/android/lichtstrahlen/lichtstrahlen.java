@@ -2,8 +2,10 @@ package com.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -28,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class lichtstrahlen extends Activity {
@@ -44,6 +47,8 @@ public class lichtstrahlen extends Activity {
 	private TextView txtHeader;
 	private TextView txtText;
 	private TextView txtAuthor;
+	
+	private CharSequence[] lstVerses;
 
     private ProgressDialog progress;
     private AlertDialog alert;
@@ -130,14 +135,15 @@ public class lichtstrahlen extends Activity {
 		case R.id.menuNotes:
 			return true;
 		case R.id.menuList:
+			new VerseListTask().execute();
 			return true;
 		case R.id.menuInfo:
 			String version = "";
 			try {
 				version = " " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-			} catch (NameNotFoundException e) {
-			}
-			alert.setMessage(getString(R.string.app_name) + version + "\n\n" + getString(R.string.aboutMessage));
+			} catch (NameNotFoundException e) { }
+			alert.setTitle(getString(R.string.app_name) + version);
+			alert.setMessage(getString(R.string.aboutMessage));
 			alert.show();
 			return true;
 		default:
@@ -170,7 +176,7 @@ public class lichtstrahlen extends Activity {
 	
 	
 	// task for reading one day
-	private class ReadingTask extends AsyncTask<Object, Object, Object> {
+	private class ReadingTask extends AsyncTask<Object, Object, HashMap<String, String>> {
 
 		@Override
 		protected void onPreExecute() {
@@ -179,7 +185,7 @@ public class lichtstrahlen extends Activity {
 		}
 
 		@Override
-		protected Object doInBackground(Object... params) {
+		protected HashMap<String, String> doInBackground(Object... params) {
 			final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 			XmlPullParser xml = null;
 			int id;
@@ -255,41 +261,39 @@ public class lichtstrahlen extends Activity {
 			return result;
 		}
 
-		@SuppressWarnings("unchecked")
 		@Override
-		protected void onPostExecute(Object result) {
-			HashMap<String, String> data = (HashMap<String, String>) result;
+		protected void onPostExecute(HashMap<String, String> result) {
 			Vector<CharSequence> versesTemp = new Vector<CharSequence>();
 			
 			setTitle(getString(R.string.app_name) + " für " + DateFormat.getDateInstance().format(date));
 			
 			// month
-			if(data.containsKey("monthtext")) {
+			if(result.containsKey("monthtext")) {
 				frmMonth.setVisibility(View.VISIBLE);
-				txtMonthText.setText(data.get("monthtext"));
-				txtMonthVerse.setText(data.get("monthverse"));
-				versesTemp.add(data.get("monthverse"));
+				txtMonthText.setText(result.get("monthtext"));
+				txtMonthVerse.setText(result.get("monthverse"));
+				versesTemp.add(result.get("monthverse"));
 			}
 			else
 				frmMonth.setVisibility(View.GONE);
 			
 			// week
-			if(data.containsKey("weektext")) {
+			if(result.containsKey("weektext")) {
 				frmWeek.setVisibility(View.VISIBLE);
-				txtWeekText.setText(data.get("weektext"));
-				txtWeekVerse.setText(data.get("weekverse"));
-				versesTemp.add(data.get("weekverse"));
+				txtWeekText.setText(result.get("weektext"));
+				txtWeekVerse.setText(result.get("weekverse"));
+				versesTemp.add(result.get("weekverse"));
 			}
 			else
 				frmWeek.setVisibility(View.GONE);
 			
 			// day
-			if(data.containsKey("text")) {
-				txtVerse.setText(data.get("verse"));
-				txtHeader.setText(data.get("header"));
-				txtText.setText(data.get("text"));
-				txtAuthor.setText(data.get("author"));
-				versesTemp.add(data.get("verse"));
+			if(result.containsKey("text")) {
+				txtVerse.setText(result.get("verse"));
+				txtHeader.setText(result.get("header"));
+				txtText.setText(result.get("text"));
+				txtAuthor.setText(result.get("author"));
+				versesTemp.add(result.get("verse"));
 			}
 			else {
 				txtVerse.setText(null);
@@ -304,6 +308,78 @@ public class lichtstrahlen extends Activity {
     		// hide progress dialog
     		progress.dismiss();
 		}
+	}
 		
+	private class VerseListTask extends AsyncTask<Object, Object, ArrayList<HashMap<String, String>>> {
+
+		@Override
+		protected void onPreExecute() {
+			// show progress dialog
+			progress = ProgressDialog.show(lichtstrahlen.this, null, getString(R.string.wait), true, false);
+		}
+		
+		@Override
+		protected ArrayList<HashMap<String, String>> doInBackground(Object... params) {
+			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
+			XmlPullParser xml = null;
+			int id;
+			String dateread = ""; 
+			
+			// open xml file
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + new SimpleDateFormat("yyyyMM").format(date), "xml", "com.android.lichtstrahlen");
+			metrics = null;
+			if(id == 0)
+				id = R.xml.data;
+			xml = getResources().getXml(id);
+			
+			try {
+				while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
+					switch(xml.getEventType()) {
+						case XmlPullParser.START_TAG:
+							if(xml.getName().equals("entry"))
+								dateread = xml.getAttributeValue(null, "date");
+							else if(xml.getName().equals("verse")) {
+								xml.next();
+								HashMap<String, String> item = new HashMap<String, String>();
+								item.put("date", dateread);
+								item.put("verse", xml.getText());
+								list.add(item);
+							}
+							break;
+						case XmlPullParser.END_TAG:
+							if(xml.getName().equals("entry"))
+								dateread = "";;
+							break;
+					}
+					xml.next();
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return list;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+			AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+			adb.setCancelable(true);
+			adb.setTitle(getString(R.string.select));
+			adb.setAdapter(
+				new SimpleAdapter(lichtstrahlen.this, result,R.layout.verselist, new String[] {"verse", "date"}, new int[] {R.id.listVerse, R.id.listDate}),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int item) {
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.bibleserver.com/text/LUT/" + verses[item])));
+					}
+			});
+			selection = adb.create();
+			selection.show();
+			
+    		// hide progress dialog
+    		progress.dismiss();
+		}
 	}
 }
