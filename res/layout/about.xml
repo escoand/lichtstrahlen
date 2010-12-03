@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
+	android:background="#FFFFFF"
+	android:id="@+id/aboutLayout"
 	android:layout_height="fill_parent"
-	android:orientation="vertical"
+	android:layout_width="fill_parent"
 	>
-	<TextView
+	<ImageView
+		android:id="@+id/imgLichtstrahlen"
+		android:layout_alignParentTop="true"
 		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:text="@string/aboutMessage"
+		android:layout_width="wrap_content"
+		android:padding="10sp"
+		android:src="@drawable/lichtstrahlen"
 		/>
-</LinearLayout>
+	<ImageView
+		android:id="@+id/imgBorn"
+		android:layout_alignParentBottom="true"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:src="@drawable/born"
+		/>
+	<ScrollView
+		android:layout_above="@id/imgBorn"
+		android:layout_below="@id/imgLichtstrahlen"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		>
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:padding="10sp"
+			android:text="@string/aboutMessage"
+			android:textColor="#000000"
+			/>
+	</ScrollView>
+</RelativeLayout>
