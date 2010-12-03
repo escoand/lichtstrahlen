@@ -6,6 +6,7 @@
 	<string name="month">Verse of the month:</string>
 	<string name="select">Select Bible Verse:</string>
 	<string name="wait">Please wait...</string>
+    <string name="noText">no text for this date found</string>
 	
     <string name="menuBible">Bible Text</string>
     <string name="menuToday">Today</string>
@@ -14,5 +15,5 @@
     <string name="menuList">Verse List</string>
     <string name="menuInfo">Info</string>
     
-    <string name="aboutMessage">(c) copyright Andreas Schönfelder 2010</string>
+    <string name="aboutMessage">Die Bibellesehilfe für alle Christen, die ihre Beziehung zu Gott und ihr Verständnis der Bibel weiter vertiefen wollen - auch unterwegs:\n\nJeden Tag gibt es einen erklärenden und zum Nachdenken anregenden Text zur täglichen Bibellese, der einen Impuls für den Alltag geben will.\n\nJeden Tag gibt es die Möglichkeit, einen persönlichen Merkvers oder einen wichtigen Gedanken aufzuschreiben und zum Nachlesen, Bitten und Danke zu speichern.\n\nFür das Lesen der Lichstrahlen 2011 ist keine Internetverbindung nötig. Nur wenn sie den vollständigen Bibeltext lesen möchten, ...\n\n(c) copyright Andreas Schönfelder 2010</string>
 </resources>
