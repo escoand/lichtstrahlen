@@ -4,6 +4,7 @@
 	<string name="month">Monatsspruch:</string>
 	<string name="select">Bibelstellenliste</string>
 	<string name="wait">Bitte warten...</string>
+    <string name="noText">kein Tagestext für dieses Datum gefunden</string>
 	
     <string name="menuBible">Bibeltext</string>
     <string name="menuToday">Heute</string>

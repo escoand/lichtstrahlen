@@ -1,4 +1,4 @@
-package com.android.lichtstrahlen;
+package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -17,6 +17,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class lichtstrahlen extends Activity {
 	
 	
 	private Date date = new Date();
+	private final DateFormat dateformat = DateFormat.getDateInstance();
 	private CharSequence[] verses = null;
 
 	private LinearLayout frmMonth;
@@ -150,6 +152,11 @@ public class lichtstrahlen extends Activity {
 				Dialog dialog = new Dialog(this);
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
+				try {
+					((TextView) dialog.findViewById(R.id.txtVersion)).setText("Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				return dialog;
 		}
 		return null;
@@ -178,6 +185,7 @@ public class lichtstrahlen extends Activity {
 
 		@Override
 		protected HashMap<String, String> doInBackground(Object... params) {
+			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM"); 
 			final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 			XmlPullParser xml = null;
 			int id;
@@ -187,7 +195,7 @@ public class lichtstrahlen extends Activity {
 			// open xml file
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + new SimpleDateFormat("yyyyMM").format(date), "xml", "com.android.lichtstrahlen");
+			id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(date), "xml", getPackageName());
 			metrics = null;
 			if(id == 0)
 				id = R.xml.data;
@@ -257,7 +265,7 @@ public class lichtstrahlen extends Activity {
 		protected void onPostExecute(HashMap<String, String> result) {
 			Vector<CharSequence> versesTemp = new Vector<CharSequence>();
 			
-			setTitle(getString(R.string.app_name) + " für " + DateFormat.getDateInstance().format(date));
+			setTitle(getString(R.string.app_name) + " für " + dateformat.format(date));
 			
 			// month
 			if(result.containsKey("monthtext")) {
@@ -290,7 +298,7 @@ public class lichtstrahlen extends Activity {
 			else {
 				txtVerse.setText(null);
 				txtHeader.setText(null);
-				txtText.setText("kein Text gefunden");
+				txtText.setText(getString(R.string.noText));
 				txtAuthor.setText(null);
 			}
 			
@@ -312,6 +320,8 @@ public class lichtstrahlen extends Activity {
 		
 		@Override
 		protected ArrayList<HashMap<String, String>> doInBackground(Object... params) {
+			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
+			final SimpleDateFormat yearmonthday = new SimpleDateFormat("yyyyMMdd");
 			Date curdate = (Date) date.clone();
 			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
 			XmlPullParser xml = null;
@@ -322,7 +332,7 @@ public class lichtstrahlen extends Activity {
 				curdate.setMonth(i - 1);
 				DisplayMetrics metrics = new DisplayMetrics();
 				getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				int id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + new SimpleDateFormat("yyyyMM").format(curdate), "xml", "com.android.lichtstrahlen");
+				int id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(curdate), "xml", getPackageName());
 				metrics = null;
 				if(id == 0)
 					id = R.xml.data;
@@ -337,7 +347,7 @@ public class lichtstrahlen extends Activity {
 								else if(xml.getName().equals("verse")) {
 									xml.next();
 									HashMap<String, String> item = new HashMap<String, String>();
-									item.put("date", DateFormat.getDateInstance().format(new SimpleDateFormat("yyyyMMdd").parse(dateread)));
+									item.put("date", dateformat.format(yearmonthday.parse(dateread)));
 									item.put("verse", xml.getText());
 									list.add(item);
 								}
@@ -360,7 +370,8 @@ public class lichtstrahlen extends Activity {
 
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
-			AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+			final AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+			
 			adb.setCancelable(true);
 			adb.setTitle(getString(R.string.select));
 			adb.setAdapter(
@@ -370,13 +381,14 @@ public class lichtstrahlen extends Activity {
 					public void onClick(DialogInterface dialog, int item) {
 						try {
 							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
-							date = DateFormat.getDateInstance().parse(element.get("date"));
+							date = dateformat.parse(element.get("date"));
 							new ReadingTask().execute();
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}
 					}
 			});
+			
 			selection = adb.create();
 			selection.show();
 			
