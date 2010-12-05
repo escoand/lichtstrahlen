@@ -1,5 +1,9 @@
 package com.escoand.android.lichtstrahlen;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +19,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
@@ -36,22 +42,27 @@ import android.widget.TextView;
 public class lichtstrahlen extends Activity {
 	static final int DIALOG_ABOUT_ID = 0;
 	static final int DIALOG_DATE_ID = 1;
+	static final int DIALOG_NOTE_ID = 2;
 	
 	
 	private Date date = new Date();
 	private final DateFormat dateformat = DateFormat.getDateInstance();
 	private CharSequence[] verses = null;
+	private HashMap<String, String> notes = new HashMap<String, String>();
 
-	private LinearLayout frmMonth;
+	private LinearLayout grpMonth;
 	private TextView txtMonthText;
 	private TextView txtMonthVerse;
-	private LinearLayout frmWeek;
+	private LinearLayout grpWeek;
 	private TextView txtWeekText;
 	private TextView txtWeekVerse;
 	private TextView txtVerse;
 	private TextView txtHeader;
 	private TextView txtText;
 	private TextView txtAuthor;
+	private LinearLayout grpNote;
+	private TextView txtNoteText;
+	private TextView btnNoteSave;
 
     private ProgressDialog progress;
     private AlertDialog selection;
@@ -62,20 +73,37 @@ public class lichtstrahlen extends Activity {
         setContentView(R.layout.main);
         
         // init elements
-        frmMonth = (LinearLayout) findViewById(R.id.month);
+        progress = new ProgressDialog(this);
+        progress.setMessage(getString(R.string.wait));
+        grpMonth = (LinearLayout) findViewById(R.id.month);
         txtMonthText = (TextView) findViewById(R.id.monthtext);
         txtMonthVerse = (TextView) findViewById(R.id.monthverse);
-        frmWeek = (LinearLayout) findViewById(R.id.week);
+        grpWeek = (LinearLayout) findViewById(R.id.week);
         txtWeekText = (TextView) findViewById(R.id.weektext);
         txtWeekVerse = (TextView) findViewById(R.id.weekverse);
         txtVerse = (TextView) findViewById(R.id.verse);
         txtHeader = (TextView) findViewById(R.id.headline);
         txtText = (TextView) findViewById(R.id.text);
         txtAuthor = (TextView) findViewById(R.id.author);
+        grpNote = (LinearLayout) findViewById(R.id.note);
+        txtNoteText = (TextView) findViewById(R.id.noteText);
+        btnNoteSave = (Button) findViewById(R.id.noteSave);
         
-        // read today
-		if(txtText.getText().equals(""))
+        // read initially
+		if(txtText.getText().equals("")) {
+			new ReadNoteTask().execute();
 			new ReadingTask().execute();
+		}
+		
+		// callback for clicking save note
+		btnNoteSave.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				HashMap<String, String> data = new HashMap<String, String>();
+				data.put(new SimpleDateFormat("yyyyMMdd").format(date), txtNoteText.getText().toString());
+				new SaveNoteTask().execute(data);
+			}
+		});
 	}
 
 	
@@ -127,6 +155,8 @@ public class lichtstrahlen extends Activity {
 			showDialog(DIALOG_DATE_ID);
 			return true;
 		case R.id.menuNotes:
+			//showDialog(DIALOG_NOTE_ID);
+			new NoteListTask().execute();
 			return true;
 		case R.id.menuList:
 			new VerseListTask().execute();
@@ -143,12 +173,11 @@ public class lichtstrahlen extends Activity {
 	// callback for creating dialog
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Date date = new Date();
+		Dialog dialog = new Dialog(this);
 		switch(id) {
 			case DIALOG_DATE_ID:
 				return new DatePickerDialog(this, datepickerlistener, date.getYear() + 1900, date.getMonth(), date.getDate());
 			case DIALOG_ABOUT_ID:
-				Dialog dialog = new Dialog(this);
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
 				try {
@@ -156,6 +185,10 @@ public class lichtstrahlen extends Activity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				return dialog;
+			case DIALOG_NOTE_ID:
+				dialog.setTitle(getString(R.string.menuNotes) + " " + getString(R.string.textFor) + " " + dateformat.format(date));
+				dialog.setContentView(R.layout.note);
 				return dialog;
 		}
 		return null;
@@ -174,87 +207,87 @@ public class lichtstrahlen extends Activity {
 	
 	
 	// task for reading one day
-	private class ReadingTask extends AsyncTask<Object, Object, HashMap<String, String>> {
+	private class ReadingTask extends AsyncTask<Void, Void, HashMap<String, String>> {
+		private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
+		private final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 
 		@Override
 		protected void onPreExecute() {
 			// show progress dialog
-			progress = ProgressDialog.show(lichtstrahlen.this, null, getString(R.string.wait), true, false);
+			progress.show();
 		}
 
 		@Override
-		protected HashMap<String, String> doInBackground(Object... params) {
-			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM"); 
-			final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
+		protected HashMap<String, String> doInBackground(Void... params) {
 			XmlPullParser xml = null;
 			int id;
 			String dateread = ""; 
 			HashMap<String, String> result = new HashMap<String, String>();
 			
-			// open xml file
+			// get xml file
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(date), "xml", getPackageName());
-			metrics = null;
-			if(id == 0)
-				id = R.xml.data;
-			xml = getResources().getXml(id);
-			
-			try {
-				while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
-					if(xml.getEventType() == XmlPullParser.START_TAG) {
-						// entry tag
-						if(xml.getName().equals("entry")) {
-							dateread = xml.getAttributeValue(null, "date");
+
+			// read xml file
+			if(id != 0) {
+				xml = getResources().getXml(id);
+				try {
+					while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
+						if(xml.getEventType() == XmlPullParser.START_TAG) {
+							// entry tag
+							if(xml.getName().equals("entry")) {
+								dateread = xml.getAttributeValue(null, "date");
+							}
+							else if(dateread.equals(datestring)) {
+								// bible tag
+								if(xml.getName().equals("verse")) {
+									xml.next();
+									result.put("verse", xml.getText());
+								}
+								// header tag
+								else if(xml.getName().equals("header")) {
+									xml.next();
+									result.put("header", xml.getText());
+								}
+								// text tag
+								else if(xml.getName().equals("text")) {
+									xml.next();
+									result.put("text", xml.getText());
+								}
+								// author tag
+								else if(xml.getName().equals("author")) {
+									xml.next();
+									result.put("author", xml.getText());
+								}
+								// weektext tag
+								else if(xml.getName().equals("weektext")) {
+									xml.next();
+									result.put("weektext", xml.getText());
+								}
+								// weekverse tag
+								else if(xml.getName().equals("weekverse")) {
+									xml.next();
+									result.put("weekverse", xml.getText());
+								}
+								// monthtext tag
+								else if(xml.getName().equals("monthtext")) {
+									xml.next();
+									result.put("monthtext", xml.getText());
+								}
+								// monthverse tag
+								else if(xml.getName().equals("monthverse")) {
+									xml.next();
+									result.put("monthverse", xml.getText());
+								}
+							}
 						}
-						else if(dateread.equals(datestring)) {
-							// bible tag
-							if(xml.getName().equals("verse")) {
-								xml.next();
-								result.put("verse", xml.getText());
-							}
-							// header tag
-							else if(xml.getName().equals("header")) {
-								xml.next();
-								result.put("header", xml.getText());
-							}
-							// text tag
-							else if(xml.getName().equals("text")) {
-								xml.next();
-								result.put("text", xml.getText());
-							}
-							// author tag
-							else if(xml.getName().equals("author")) {
-								xml.next();
-								result.put("author", xml.getText());
-							}
-							// weektext tag
-							else if(xml.getName().equals("weektext")) {
-								xml.next();
-								result.put("weektext", xml.getText());
-							}
-							// weekverse tag
-							else if(xml.getName().equals("weekverse")) {
-								xml.next();
-								result.put("weekverse", xml.getText());
-							}
-							// monthtext tag
-							else if(xml.getName().equals("monthtext")) {
-								xml.next();
-								result.put("monthtext", xml.getText());
-							}
-							// monthverse tag
-							else if(xml.getName().equals("monthverse")) {
-								xml.next();
-								result.put("monthverse", xml.getText());
-							}
-						}
+						xml.next();
 					}
-					xml.next();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 			
 			return result;
@@ -264,27 +297,27 @@ public class lichtstrahlen extends Activity {
 		protected void onPostExecute(HashMap<String, String> result) {
 			Vector<CharSequence> versesTemp = new Vector<CharSequence>();
 			
-			setTitle(getString(R.string.app_name) + " für " + dateformat.format(date));
+			setTitle(getString(R.string.app_name) + " " + getString(R.string.textFor) + " " + dateformat.format(date));
 			
 			// month
 			if(result.containsKey("monthtext")) {
-				frmMonth.setVisibility(View.VISIBLE);
+				grpMonth.setVisibility(View.VISIBLE);
 				txtMonthText.setText(result.get("monthtext"));
 				txtMonthVerse.setText(result.get("monthverse"));
 				versesTemp.add(result.get("monthverse"));
 			}
 			else
-				frmMonth.setVisibility(View.GONE);
+				grpMonth.setVisibility(View.GONE);
 			
 			// week
 			if(result.containsKey("weektext")) {
-				frmWeek.setVisibility(View.VISIBLE);
+				grpWeek.setVisibility(View.VISIBLE);
 				txtWeekText.setText(result.get("weektext"));
 				txtWeekVerse.setText(result.get("weekverse"));
 				versesTemp.add(result.get("weekverse"));
 			}
 			else
-				frmWeek.setVisibility(View.GONE);
+				grpWeek.setVisibility(View.GONE);
 			
 			// day
 			if(result.containsKey("text")) {
@@ -293,12 +326,18 @@ public class lichtstrahlen extends Activity {
 				txtText.setText(result.get("text"));
 				txtAuthor.setText(result.get("author"));
 				versesTemp.add(result.get("verse"));
+				grpNote.setVisibility(View.VISIBLE);
+				if(notes.containsKey(datestring))
+					txtNoteText.setText(notes.get(datestring));
+				else
+					txtNoteText.setText(null);
 			}
 			else {
 				txtVerse.setText(null);
 				txtHeader.setText(null);
 				txtText.setText(getString(R.string.noText));
 				txtAuthor.setText(null);
+				grpNote.setVisibility(View.GONE);
 			}
 			
 			// set verses array
@@ -308,17 +347,98 @@ public class lichtstrahlen extends Activity {
     		progress.dismiss();
 		}
 	}
-		
-	private class VerseListTask extends AsyncTask<Object, Object, ArrayList<HashMap<String, String>>> {
+
+	// task for loading notes
+	private class ReadNoteTask extends AsyncTask<Void, Void, HashMap<String, String>> {
 
 		@Override
 		protected void onPreExecute() {
 			// show progress dialog
-			progress = ProgressDialog.show(lichtstrahlen.this, null, getString(R.string.wait), true, false);
+			progress.show();
 		}
 		
 		@Override
-		protected ArrayList<HashMap<String, String>> doInBackground(Object... params) {
+		protected HashMap<String, String> doInBackground(Void... params) {
+			HashMap<String, String> result = new HashMap<String, String>();
+			
+			// read notes
+			try {
+				ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(openFileInput("notes.ser")));
+				result = (HashMap<String, String>) stream.readObject();
+				stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(HashMap<String, String> result) {
+			notes = result;
+			
+    		// hide progress dialog
+    		progress.hide();
+		}
+	}
+	
+	// task for saving notes
+	private class SaveNoteTask extends AsyncTask<HashMap<String, String>, Void, HashMap<String, String>> {
+
+		@Override
+		protected void onPreExecute() {
+			// show progress dialog
+			progress.show();
+		}
+		
+		@Override
+		protected HashMap<String, String> doInBackground(HashMap<String, String>... params) {
+			HashMap<String, String> result = new HashMap<String, String>();
+			
+			// read notes
+			try {
+				ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(openFileInput("notes.ser")));
+				result = (HashMap<String, String>) stream.readObject();
+				stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			// add new notes
+			for(HashMap<String, String> param: params)
+				result.putAll(param);
+
+			// save notes
+			try {
+				ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(openFileOutput("notes.ser", Context.MODE_PRIVATE)));
+				stream.writeObject(result);
+				stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(HashMap<String, String> result) {
+			notes = result;
+			
+    		// hide progress dialog
+    		progress.dismiss();
+		}
+	}
+		
+	private class VerseListTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
+
+		@Override
+		protected void onPreExecute() {
+			// show progress dialog
+			progress.show();
+		}
+		
+		@Override
+		protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
 			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 			final SimpleDateFormat yearmonthday = new SimpleDateFormat("yyyyMMdd");
 			Date curdate = (Date) date.clone();
@@ -326,41 +446,48 @@ public class lichtstrahlen extends Activity {
 			XmlPullParser xml = null;
 			String dateread = ""; 
 
-			// open xml files
-			for(int i = 1; i <= 12; i++) {
-				curdate.setMonth(i - 1);
-				DisplayMetrics metrics = new DisplayMetrics();
-				getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				int id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(curdate), "xml", getPackageName());
-				metrics = null;
-				if(id == 0)
-					id = R.xml.data;
-				xml = getResources().getXml(id);
+			// run 2010 till 2015
+			for(int year = 2010; year <= 2015; year++) {
+				curdate.setYear(year - 1900);
 				
-				try {
-					while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
-						switch(xml.getEventType()) {
-							case XmlPullParser.START_TAG:
-								if(xml.getName().equals("entry"))
-									dateread = xml.getAttributeValue(null, "date");
-								else if(xml.getName().equals("verse")) {
-									xml.next();
-									HashMap<String, String> item = new HashMap<String, String>();
-									item.put("date", dateformat.format(yearmonthday.parse(dateread)));
-									item.put("verse", xml.getText());
-									list.add(item);
-								}
-								break;
-							case XmlPullParser.END_TAG:
-								if(xml.getName().equals("entry"))
-									dateread = "";;
-								break;
-						}
-						xml.next();
-					}
+				// run all months
+				for(int month = 1; month <= 12; month++) {
+					curdate.setMonth(month - 1);
 					
-				} catch (Exception e) {
-					e.printStackTrace();
+					// get xml file
+					DisplayMetrics metrics = new DisplayMetrics();
+					getWindowManager().getDefaultDisplay().getMetrics(metrics);
+					int id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(curdate), "xml", getPackageName());
+					
+					// read xml file
+					if(id != 0) {
+						xml = getResources().getXml(id);
+						try {
+							while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
+								switch(xml.getEventType()) {
+									case XmlPullParser.START_TAG:
+										if(xml.getName().equals("entry"))
+											dateread = xml.getAttributeValue(null, "date");
+										else if(xml.getName().equals("verse")) {
+											xml.next();
+											HashMap<String, String> item = new HashMap<String, String>();
+											item.put("date", dateformat.format(yearmonthday.parse(dateread)));
+											item.put("verse", xml.getText());
+											list.add(item);
+										}
+										break;
+									case XmlPullParser.END_TAG:
+										if(xml.getName().equals("entry"))
+											dateread = "";;
+										break;
+								}
+								xml.next();
+							}
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				}
 			}
 			
@@ -375,6 +502,101 @@ public class lichtstrahlen extends Activity {
 			adb.setTitle(getString(R.string.select));
 			adb.setAdapter(
 				new SimpleAdapter(lichtstrahlen.this, result,R.layout.list, new String[] {"verse", "date"}, new int[] {R.id.listVerse, R.id.listDate}),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int item) {
+						try {
+							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
+							date = dateformat.parse(element.get("date"));
+							new ReadingTask().execute();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
+			});
+			
+			selection = adb.create();
+			selection.show();
+			
+    		// hide progress dialog
+    		progress.dismiss();
+		}
+	}
+		
+	private class NoteListTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
+
+		@Override
+		protected void onPreExecute() {
+			// show progress dialog
+			progress.show();
+		}
+		
+		@Override
+		protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
+			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
+			final SimpleDateFormat yearmonthday = new SimpleDateFormat("yyyyMMdd");
+			Date curdate = (Date) date.clone();
+			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
+			XmlPullParser xml = null;
+			String dateread = ""; 
+
+			// run 2010 till 2015
+			for(int year = 2010; year <= 2015; year++) {
+				curdate.setYear(year - 1900);
+				
+				// run all months
+				for(int month = 1; month <= 12; month++) {
+					curdate.setMonth(month - 1);
+					
+					// get xml file
+					DisplayMetrics metrics = new DisplayMetrics();
+					getWindowManager().getDefaultDisplay().getMetrics(metrics);
+					int id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(curdate), "xml", getPackageName());
+					
+					// read xml file
+					if(id != 0) {
+						xml = getResources().getXml(id);
+						try {
+							while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
+								switch(xml.getEventType()) {
+									case XmlPullParser.START_TAG:
+										if(xml.getName().equals("entry"))
+											dateread = xml.getAttributeValue(null, "date");
+										else if(xml.getName().equals("verse") && notes.containsKey(dateread)) {
+											xml.next();
+											HashMap<String, String> item = new HashMap<String, String>();
+											item.put("date", dateformat.format(yearmonthday.parse(dateread)));
+											item.put("verse", xml.getText());
+											item.put("note", notes.get(dateread).toString());
+											list.add(item);
+										}
+										break;
+									case XmlPullParser.END_TAG:
+										if(xml.getName().equals("entry"))
+											dateread = "";;
+										break;
+								}
+								xml.next();
+							}
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			
+			return list;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+			final AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+			
+			adb.setCancelable(true);
+			adb.setTitle(getString(R.string.menuNotes));
+			adb.setAdapter(
+				new SimpleAdapter(lichtstrahlen.this, result,R.layout.noteslist, new String[] {"verse", "date", "note"}, new int[] {R.id.listVerse, R.id.listDate, R.id.listNote}),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {

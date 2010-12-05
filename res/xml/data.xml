@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <lichtstrahlen>
+  <!-- 
   <entry date="19001231">
     <verse></verse>
     <header></header>
     <text></text>
     <author></author>
-    <!-- text of the month (optional) -->
     <monthtext></monthtext>
     <monthverse></monthverse>
-    <!-- text of the week (optional) -->
     <weektext></weektext>
     <weekverse></weekverse>
   </entry>
+  -->
 </lichtstrahlen>
