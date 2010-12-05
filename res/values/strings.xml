@@ -7,6 +7,9 @@
 	<string name="select">Select Bible Verse:</string>
 	<string name="wait">Please wait...</string>
     <string name="noText">no text for this date found</string>
+    
+    <string name="textFor">for</string>
+    <string name="textSave">Save</string>
 	
     <string name="menuBible">Bible Text</string>
     <string name="menuToday">Today</string>
