@@ -10,6 +10,7 @@
     
     <string name="textFor">for</string>
     <string name="textSave">Save</string>
+    <string name="textDelete">Delete</string>
 	
     <string name="menuBible">Bible Text</string>
     <string name="menuToday">Today</string>
