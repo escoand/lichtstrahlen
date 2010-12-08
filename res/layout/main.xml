@@ -132,13 +132,27 @@
 				android:layout_width="fill_parent"
 				android:minLines="3"
 				/>
-			<Button
-				android:id="@+id/noteSave"
+			<LinearLayout
 				android:layout_gravity="center_horizontal"
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="@string/textSave"
-				/>
+		    	android:orientation="horizontal"
+				>
+				<Button
+					android:id="@+id/noteSave"
+					android:layout_gravity="center_horizontal"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/textSave"
+					/>
+				<Button
+					android:id="@+id/noteDelete"
+					android:layout_gravity="center_horizontal"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/textDelete"
+					/>
+			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
 </ScrollView>

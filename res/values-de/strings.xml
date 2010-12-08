@@ -8,6 +8,7 @@
     
     <string name="textFor">für</string>
     <string name="textSave">Speichern</string>
+    <string name="textDelete">Löschen</string>
 	
     <string name="menuBible">Bibeltext</string>
     <string name="menuToday">Heute</string>
