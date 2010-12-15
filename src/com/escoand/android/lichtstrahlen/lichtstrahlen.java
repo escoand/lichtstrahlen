@@ -52,10 +52,10 @@ public class lichtstrahlen extends Activity {
         // init elements
         progress = new ProgressDialog(this);
         progress.setMessage(getString(R.string.wait));
-        notes = new Notes(this);
         
         // read initially
-		new ReadingTask().execute();
+        notes = new Notes(this);
+		new VerseTask().execute();
 		
 		// callback for save note
 		findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
@@ -110,13 +110,13 @@ public class lichtstrahlen extends Activity {
 			return false;
 		case R.id.menuToday:
 			date = new Date();
-			new ReadingTask().execute();
+			new VerseTask().execute();
 			return true;
 		case R.id.menuDate:
 			showDialog(DIALOG_DATE_ID);
 			return true;
 		case R.id.menuNotes:
-			new VerseListTask().execute(true);
+			new NotesListTask().execute();
 			return true;
 		case R.id.menuList:
 			new VerseListTask().execute();
@@ -140,6 +140,7 @@ public class lichtstrahlen extends Activity {
 			case DIALOG_ABOUT_ID:
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
+
 				try {
 					((TextView) dialog.findViewById(R.id.txtVersion)).setText("Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 				} catch (Exception e) {
@@ -158,13 +159,13 @@ public class lichtstrahlen extends Activity {
 		    date.setYear(year - 1900);
 		    date.setMonth(monthOfYear);
 		    date.setDate(dayOfMonth);
-		    new ReadingTask().execute();
+		    new VerseTask().execute();
 		}
 	};
 	
 	
 	// task for reading one day
-	private class ReadingTask extends AsyncTask<Void, Void, HashMap<String, String>> {
+	private class VerseTask extends AsyncTask<Void, Void, HashMap<String, String>> {
 		private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 		private final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 
@@ -284,10 +285,7 @@ public class lichtstrahlen extends Activity {
 				((TextView) findViewById(R.id.author)).setText(result.get("author"));
 				versesTemp.add(result.get("verse"));
 				findViewById(R.id.note).setVisibility(View.VISIBLE);
-				if(notes.exist(date))
-					((TextView) findViewById(R.id.noteText)).setText(notes.get(date));
-				else
-					((TextView) findViewById(R.id.noteText)).setText(null);
+				((TextView) findViewById(R.id.noteText)).setText(notes.get(date));
 			}
 			else {
 				((TextView) findViewById(R.id.verse)).setText(null);
@@ -305,11 +303,9 @@ public class lichtstrahlen extends Activity {
 		}
 	}
 	
-	
-	// read verse list in background
-	private class VerseListTask extends AsyncTask<Boolean, Void, ArrayList<HashMap<String, String>>> {
-		boolean onlyNotes = false;
 
+	// read verse list in background
+	private class NotesListTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
 		@Override
 		protected void onPreExecute() {
 			// show progress dialog
@@ -317,15 +313,13 @@ public class lichtstrahlen extends Activity {
 		}
 		
 		@Override
-		protected ArrayList<HashMap<String, String>> doInBackground(Boolean... params) {
+		protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
 			final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 			final SimpleDateFormat yearmonthday = new SimpleDateFormat("yyyyMMdd");
 			Date curdate = (Date) date.clone();
 			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
 			XmlPullParser xml = null;
 			String dateread = "";
-
-			onlyNotes = (params.length > 0 ? params[0] : false);
 
 			// run 2010 till 2015
 			for(int year = 2010; year <= 2015; year++) {
@@ -352,7 +346,7 @@ public class lichtstrahlen extends Activity {
 											dateread = xml.getAttributeValue(null, "date");
 										
 										// read verse if all or note for day exists
-										else if(xml.getName().equals("verse") && (!onlyNotes || notes.exist(yearmonthday.parse(dateread)))) {
+										else if(xml.getName().equals("verse") && notes.exist(yearmonthday.parse(dateread))) {
 											xml.next();
 											HashMap<String, String> item = new HashMap<String, String>();
 											item.put("date", dateformat.format(yearmonthday.parse(dateread)));
@@ -390,7 +384,7 @@ public class lichtstrahlen extends Activity {
 				new SimpleAdapter(
 					lichtstrahlen.this,
 					result,
-					(onlyNotes ? R.layout.noteslist : R.layout.list),
+					R.layout.noteslist,
 					new String[] {"verse", "date", "note"},
 					new int[] {R.id.listVerse, R.id.listDate, R.id.listNote}),
 				new DialogInterface.OnClickListener() {
@@ -399,7 +393,116 @@ public class lichtstrahlen extends Activity {
 						try {
 							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
 							date = dateformat.parse(element.get("date"));
-							new ReadingTask().execute();
+							new VerseTask().execute();
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
+					}
+			});
+			
+			selection = adb.create();
+			selection.show();
+			
+    		// hide progress dialog
+    		progress.dismiss();
+		}
+	}
+	
+	
+	// read verse list in background
+	private class VerseListTask extends AsyncTask<Boolean, Void, ArrayList<HashMap<String, String>>> {
+		@Override
+		protected void onPreExecute() {
+			// show progress dialog
+			progress.show();
+		}
+		
+		@Override
+		protected ArrayList<HashMap<String, String>> doInBackground(Boolean... params) {
+			final SimpleDateFormat format_year = new SimpleDateFormat("yyyy");
+			final SimpleDateFormat format_yearmonthday = new SimpleDateFormat("yyyyMMdd");
+			Date curdate = (Date) date.clone();
+			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
+			XmlPullParser xml = null;
+			
+			Date dateread = new Date(0);
+			Date dateuntil = new Date(0);
+
+			// run 2010 till 2015
+			for(int year = 2010; year <= 2015; year++) {
+				curdate.setYear(year - 1900);
+					
+				// get xml file
+				DisplayMetrics metrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				int id = new Resources(getAssets(), metrics, null).getIdentifier("list_" + format_year.format(curdate), "xml", getPackageName());
+				
+				// read xml file
+				if(id != 0) {
+					xml = getResources().getXml(id);
+					try {
+						while(xml.getEventType() != XmlPullParser.END_DOCUMENT) {
+							switch(xml.getEventType()) {
+								case XmlPullParser.START_TAG:
+									// read date of entry
+									if(xml.getName().equals("entry")) {
+										dateread = format_yearmonthday.parse(xml.getAttributeValue(null, "date"));
+										if(xml.getAttributeValue(null, "until") != null)
+											dateuntil = format_yearmonthday.parse(xml.getAttributeValue(null, "until"));
+										else
+											dateuntil = dateread;
+									}
+									
+									// read verse if all or note for day exists
+									else if(xml.getName().equals("verse")) {
+										xml.next();
+										HashMap<String, String> item = new HashMap<String, String>();
+										item.put("date", dateformat.format(dateread));
+										item.put("until", dateformat.format(dateuntil));
+										item.put("verse", xml.getText());
+										if(notes.exist(dateread))
+											item.put("note", notes.get(dateread));
+										list.add(item);
+									}
+									break;
+								case XmlPullParser.END_TAG:
+									if(xml.getName().equals("entry"))
+										dateread = new Date(0);
+									break;
+							}
+							xml.next();
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			return list;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+			final AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+			
+			// create list dialog
+			adb.setCancelable(true);
+			adb.setTitle(getString(R.string.menuList));
+			adb.setAdapter(
+				new VerseListAdapter(
+					lichtstrahlen.this,
+					result,
+					R.layout.list,
+					new String[] {"verse", "date"},
+					new int[] {R.id.listVerse, R.id.listDate}),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int item) {
+						try {
+							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
+							date = dateformat.parse(element.get("date"));
+							new VerseTask().execute();
 						} catch (ParseException e) {
 							e.printStackTrace();
 						}

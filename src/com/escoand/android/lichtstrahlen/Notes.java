@@ -10,14 +10,19 @@ import java.util.HashMap;
 import android.content.Context;
 
 /**
- * @author aschoenf
- *
+ * Implements a general way of dealing with notes for dates.
+ * Save the notes as a serialized HashMap.
+ * @author escoand
  */
 public class Notes extends Object {
 	private Context context;
 	private HashMap<Date, String> notes = new HashMap<Date, String>();
 	
-	// constructor
+	/**
+	 * Constructs a new empty <code>Notes</code> instance.<br/>
+	 * Reads the notes from last session.
+	 * @param context the context.
+	 */
 	public Notes(Context context) {
 		super();
 		
@@ -28,6 +33,10 @@ public class Notes extends Object {
 		_load();
 	}
 	
+	
+	private Date _normalize(Date date) {
+		return new Date(date.getYear(), date.getMonth(), date.getDate());
+	}
 	
 	private void _load() {
 		try {
@@ -51,48 +60,42 @@ public class Notes extends Object {
 	
 	
 	/**
-	 * Add new note
-	 * @param date
-	 * @param note
+	 * Sets a note for the specific date.<br/>
+	 * Saves the whole <code>Notes</code> object.
+	 * @param date the date
+	 * @param note the note
 	 */
 	public void add(Date date, String note) {
-		Date tmp = new Date(date.getYear(), date.getMonth(), date.getDate());
-		
-		notes.put(tmp, note);
+		notes.put(_normalize(date), note);
 		
 		_save();
 	}
 	
 	/**
-	 * Check if note exist for date
-	 * @param date
-	 * @return if note for date exists
+	 * Returns whether a note exists for the specified date.
+	 * @param date the date to search for.
+	 * @return true if a note exists for the specified date, false otherwise.
 	 */
 	public boolean exist(Date date) {
-		Date tmp = new Date(date.getYear(), date.getMonth(), date.getDate());
-		
-		return notes.containsKey(tmp);
+		return notes.containsKey(_normalize(date));
 	}
 	
 	/**
-	 * Get note for date
-	 * @param date
-	 * @return note
+	 * Returns the note for the specified date.
+	 * @param date the date
+	 * @return the note for the specified date, or null if no note for the specified date is found.
 	 */
 	public String get(Date date) {
-		Date tmp = new Date(date.getYear(), date.getMonth(), date.getDate());
-		
-		return notes.get(tmp).toString();
+		return notes.get(_normalize(date)).toString();
 	}
 	
 	/**
-	 * Remove note
-	 * @param date
+	 * Removes the note for the specified key.<br/>
+	 * Saves the whole <code>Notes</code> object.
+	 * @param date the date
 	 */
 	public void remove(Date date) {
-		Date tmp = new Date(date.getYear(), date.getMonth(), date.getDate());
-		
-		notes.remove(tmp);
+		notes.remove(_normalize(date));
 		
 		_save();
 	}
