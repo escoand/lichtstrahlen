@@ -86,7 +86,10 @@ public class Notes extends Object {
 	 * @return the note for the specified date, or null if no note for the specified date is found.
 	 */
 	public String get(Date date) {
-		return notes.get(_normalize(date)).toString();
+		if(exist(date))
+			return notes.get(_normalize(date)).toString();
+		else
+			return null;
 	}
 	
 	/**
