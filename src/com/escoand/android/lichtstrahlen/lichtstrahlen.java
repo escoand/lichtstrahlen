@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
@@ -18,6 +19,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,8 +37,9 @@ import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class lichtstrahlen extends Activity {
+public class lichtstrahlen extends Activity implements OnGesturePerformedListener {
 	static final int DIALOG_ABOUT_ID = 0;
 	static final int DIALOG_DATE_ID = 1;
 	
@@ -40,8 +48,11 @@ public class lichtstrahlen extends Activity {
 	private CharSequence[] verses = null;
 	private Notes notes = null;
 
-    public ProgressDialog progress;
-    private AlertDialog selection;
+    public ProgressDialog progress = null;
+    private AlertDialog selection = null;
+    
+    private GestureLibrary lib = null;
+    private GestureOverlayView gestures = null;
 
     
 	@Override
@@ -56,6 +67,14 @@ public class lichtstrahlen extends Activity {
         // read initially
         notes = new Notes(this);
 		new VerseTask().execute();
+		
+		// init gestures
+		lib = GestureLibraries.fromRawResource(this, R.raw.gestures);
+		if(!lib.load()) {
+			finish();
+		}
+		gestures = (GestureOverlayView) findViewById(R.id.gestures);
+		gestures.addOnGesturePerformedListener(this);
 		
 		// callback for save note
 		findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
@@ -72,6 +91,23 @@ public class lichtstrahlen extends Activity {
 				notes.remove(date);
 			}
 		});
+	}
+
+
+	@Override
+	public void onGesturePerformed(GestureOverlayView arg0, Gesture arg1) {
+	    ArrayList<Prediction> predictions = lib.recognize(arg1);
+
+	    if (predictions.size() > 0) {
+	        Prediction prediction = predictions.get(0);
+	        if (prediction.score > 10.0) {
+	        	if(prediction.name.equals("wipe_left"))
+	        		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
+	        	else if(prediction.name.equals("wipe_right"))
+	        		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+        		new VerseTask().execute();
+	        }
+	    }
 	}
 	
 
