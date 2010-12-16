@@ -5,6 +5,8 @@
 	
 	<!-- common -->
 	<string name="msgWait">Bitte warten...</string>
+	<string name="buttonYes">Ja</string>
+	<string name="buttonNo">Nein</string>
 	<string name="listNotes">Notizen</string>
 	<string name="listVerses">Bibelstellenliste</string>
 
@@ -14,9 +16,10 @@
     <string name="mainNothing">kein Tagestext für dieses Datum gefunden</string>
     
     <!-- notes -->
-    <string name="noteTitle">Notiz:</string>
+    <string name="noteTitle">Notizen:</string>
     <string name="noteSave">Speichern</string>
     <string name="noteDelete">Löschen</string>
+    <string name="noteDeleteQuestion">Notiz wirklich löschen?</string>
     <string name="noteSaved">Notiz gespeichert</string>
     <string name="noteDeleted">Notiz gelöscht</string>
     

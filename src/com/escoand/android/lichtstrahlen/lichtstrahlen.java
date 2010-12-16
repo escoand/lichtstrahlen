@@ -30,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,12 +58,9 @@ public class lichtstrahlen extends Activity {
 		// init
 		progress = new ProgressDialog(this);
 		progress.setMessage(getString(R.string.msgWait));
+		gesture = new GestureDetector(new Gestures(this));
 		notes = new Notes(this);
 		new VerseTask().execute();
-		
-		// Gesture detection
-		gesture = new GestureDetector(new Gestures(this));
-		
 		
 		// callback for save note
 		findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
@@ -77,36 +75,41 @@ public class lichtstrahlen extends Activity {
 		findViewById(R.id.noteDelete).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				notes.remove(date);
-				((TextView) findViewById(R.id.noteText)).setText(null);
-				Toast.makeText(lichtstrahlen.this, getString(R.string.noteDeleted), Toast.LENGTH_SHORT).show();
+				AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+				adb.setMessage(getString(R.string.noteDeleteQuestion))
+					.setCancelable(false)
+					.setPositiveButton(getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							notes.remove(date);
+							((TextView) findViewById(R.id.noteText)).setText(null);
+							Toast.makeText(lichtstrahlen.this, getString(R.string.noteDeleted), Toast.LENGTH_SHORT).show();
+						}
+					})
+					.setNegativeButton(getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					})
+					.create()
+					.show();
 			}
 		});
 	}
 
 
+	// callback for gestures
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if(gesture.onTouchEvent(event))
 			return true;
 		return super.onTouchEvent(event);
 	}
-
-    
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		super.dispatchTouchEvent(event);
 		return onTouchEvent(event);
-	}
-	
-	public void nextDay() {
-		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
-		new VerseTask().execute();
-	}
-	
-	public void prevDay() {
-		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
-		new VerseTask().execute();
 	}
 	
 
@@ -168,11 +171,24 @@ public class lichtstrahlen extends Activity {
 	// callback for creating dialog
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = new Dialog(this);
+		
 		switch(id) {
 			case DIALOG_DATE_ID:
-				return new DatePickerDialog(this, datepickerlistener, date.getYear() + 1900, date.getMonth(), date.getDate());
+				return new DatePickerDialog(this,
+					new DatePickerDialog.OnDateSetListener() {
+						@Override
+						public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+						    date.setYear(year - 1900);
+						    date.setMonth(monthOfYear);
+						    date.setDate(dayOfMonth);
+						    new VerseTask().execute();
+						}
+					},
+					date.getYear() + 1900,
+					date.getMonth(),
+					date.getDate());
 			case DIALOG_ABOUT_ID:
+				Dialog dialog = new Dialog(this);
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
 
@@ -185,21 +201,22 @@ public class lichtstrahlen extends Activity {
 		}
 		return null;
 	}
-    
-	
-    // callback for setting date
-    private final DatePickerDialog.OnDateSetListener datepickerlistener = new DatePickerDialog.OnDateSetListener() {
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		    date.setYear(year - 1900);
-		    date.setMonth(monthOfYear);
-		    date.setDate(dayOfMonth);
-		    new VerseTask().execute();
-		}
-	};
 	
 	
-	// task for reading one day
+	// go to next day
+	public void nextDay() {
+		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+		new VerseTask().execute();
+	}
+	
+	// go to previous day
+	public void prevDay() {
+		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
+		new VerseTask().execute();
+	}
+	
+	
+	// read verse in background
 	public class VerseTask extends AsyncTask<Void, Void, HashMap<String, String>> {
 		private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 		private final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
@@ -330,6 +347,9 @@ public class lichtstrahlen extends Activity {
 				findViewById(R.id.note).setVisibility(View.GONE);
 			}
 			
+			// scroll to top
+			//((ScrollView) findViewById(R.id.scroll)).pageScroll(View.FOCUS_UP);
+			
 			// set verses array
 			verses = versesTemp.toArray(new CharSequence[versesTemp.size()]);
 			
@@ -339,7 +359,7 @@ public class lichtstrahlen extends Activity {
 	}
 	
 
-	// read verse list in background
+	// read notes list in background
 	private class NotesListTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
 		@Override
 		protected void onPreExecute() {
@@ -410,32 +430,30 @@ public class lichtstrahlen extends Activity {
 
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
-			final AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
-			
 			// create list dialog
-			adb.setCancelable(true);
-			adb.setTitle(getString(R.string.menuNotes));
-			adb.setAdapter(
-				new SimpleAdapter(
-					lichtstrahlen.this,
-					result,
-					R.layout.noteslist,
-					new String[] {"verse", "date", "note"},
-					new int[] {R.id.listVerse, R.id.listDate, R.id.listNote}),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int item) {
-						try {
-							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
-							date = dateformat.parse(element.get("date"));
-							new VerseTask().execute();
-						} catch (ParseException e) {
-							e.printStackTrace();
+			selection = new AlertDialog.Builder(lichtstrahlen.this)
+				.setCancelable(true)
+				.setTitle(getString(R.string.menuNotes))
+				.setAdapter(
+					new SimpleAdapter(
+						lichtstrahlen.this,
+						result,
+						R.layout.noteslist,
+						new String[] {"verse", "date", "note"},
+						new int[] {R.id.listVerse, R.id.listDate, R.id.listNote}),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							try {
+								HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(id);
+								date = dateformat.parse(element.get("date"));
+								new VerseTask().execute();
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 						}
-					}
-			});
-			
-			selection = adb.create();
+				})
+				.create();
 			selection.show();
 			
     		// hide progress dialog
@@ -519,32 +537,30 @@ public class lichtstrahlen extends Activity {
 
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
-			final AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
-			
 			// create list dialog
-			adb.setCancelable(true);
-			adb.setTitle(getString(R.string.menuList));
-			adb.setAdapter(
-				new VerseListAdapter(
-					lichtstrahlen.this,
-					result,
-					R.layout.list,
-					new String[] {"verse", "date"},
-					new int[] {R.id.listVerse, R.id.listDate}),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int item) {
-						try {
-							HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(item);
-							date = dateformat.parse(element.get("date"));
-							new VerseTask().execute();
-						} catch (ParseException e) {
-							e.printStackTrace();
+			selection = new AlertDialog.Builder(lichtstrahlen.this).setCancelable(true)
+				.setTitle(getString(R.string.menuList))
+				.setAdapter(
+					new VerseListAdapter(
+						lichtstrahlen.this,
+						result,
+						R.layout.list,
+						new String[] {"verse", "date"},
+						new int[] {R.id.listVerse, R.id.listDate}),
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							try {
+								HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(id);
+								date = dateformat.parse(element.get("date"));
+								new VerseTask().execute();
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 						}
 					}
-			});
-			
-			selection = adb.create();
+				)
+				.create();
 			selection.show();
 			
     		// hide progress dialog

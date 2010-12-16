@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/scroll"
 	android:layout_height="fill_parent"
 	android:layout_width="fill_parent"
 	>
@@ -25,6 +26,7 @@
 		    	android:orientation="horizontal"
 				>
 				<TextView
+					android:focusable="true"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:layout_width="0dp"
@@ -60,6 +62,7 @@
 		    	android:orientation="horizontal"
 				>
 				<TextView
+					android:focusable="true"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:layout_width="0dp"
@@ -87,6 +90,7 @@
 	    	android:orientation="horizontal"
 			>
 			<TextView
+				android:focusable="true"
 				android:id="@+id/headline"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
@@ -123,7 +127,7 @@
 			<TextView
 				android:layout_height="wrap_content"
 				android:layout_width="wrap_content"
-				android:text="@string/menuNotes"
+				android:text="@string/noteTitle"
 				android:textStyle="bold"
 				/>
 			<EditText
