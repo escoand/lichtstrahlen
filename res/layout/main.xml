@@ -1,169 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-		
-<!-- gestures -->
-<android.gesture.GestureOverlayView xmlns:android="http://schemas.android.com/apk/res/android"
-	android:gestureStrokeType="single"
-    android:id="@+id/gestures"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent"
-    >
-    
-	<ScrollView
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	>
+	<LinearLayout
 		android:layout_height="fill_parent"
 		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:padding="10dp"
 		>
+
+		<!-- text of the month -->
 		<LinearLayout
-			android:layout_height="fill_parent"
+			android:id="@+id/month"
+			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:orientation="vertical"
-			android:padding="10dp"
+	    	android:orientation="vertical"
+	    	android:paddingBottom="10dp"
+	    	android:visibility="gone"
 			>
-	
-			<!-- text of the month -->
-			<LinearLayout
-				android:id="@+id/month"
-				android:layout_height="wrap_content"
-				android:layout_width="fill_parent"
-		    	android:orientation="vertical"
-		    	android:paddingBottom="10dp"
-		    	android:visibility="gone"
-				>
-				<LinearLayout
-					android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-			    	android:orientation="horizontal"
-					>
-					<TextView
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:layout_width="0dp"
-						android:text="@string/month"
-						android:textStyle="bold"
-						/>
-					<TextView
-						android:gravity="right"
-						android:id="@+id/monthverse"
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						/>
-				</LinearLayout>
-				<TextView
-					android:id="@+id/monthtext"
-					android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					/>
-			</LinearLayout>
-	
-			<!-- text of the week -->
-			<LinearLayout
-				android:id="@+id/week"
-				android:layout_height="wrap_content"
-				android:layout_width="fill_parent"
-		    	android:orientation="vertical"
-		    	android:paddingBottom="10dp"
-		    	android:visibility="gone"
-				>
-				<LinearLayout
-					android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-			    	android:orientation="horizontal"
-					>
-					<TextView
-						android:layout_height="wrap_content"
-						android:layout_weight="1"
-						android:layout_width="0dp"
-						android:text="@string/week"
-						android:textStyle="bold"
-						/>
-					<TextView
-						android:gravity="right"
-						android:id="@+id/weekverse"
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						/>
-				</LinearLayout>
-				<TextView
-					android:id="@+id/weektext"
-					android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					/>
-			</LinearLayout>
-	
-			<!-- text of the day -->
 			<LinearLayout
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 		    	android:orientation="horizontal"
 				>
 				<TextView
-					android:id="@+id/headline"
 					android:layout_height="wrap_content"
 					android:layout_weight="1"
 					android:layout_width="0dp"
+					android:text="@string/mainMonth"
 					android:textStyle="bold"
 					/>
 				<TextView
-					android:id="@+id/verse"
+					android:gravity="right"
+					android:id="@+id/monthverse"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					/>
 			</LinearLayout>
 			<TextView
-				android:id="@+id/text"
+				android:id="@+id/monthtext"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				/>
-			<TextView
-				android:gravity="right"
-				android:id="@+id/author"
-				android:layout_height="wrap_content"
-				android:layout_width="fill_parent"
-				/>
-	
-			<!-- notes -->
+		</LinearLayout>
+
+		<!-- text of the week -->
+		<LinearLayout
+			android:id="@+id/week"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+	    	android:orientation="vertical"
+	    	android:paddingBottom="10dp"
+	    	android:visibility="gone"
+			>
 			<LinearLayout
-				android:id="@+id/note"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-		    	android:orientation="vertical"
-		    	android:paddingTop="10dp"
-		    	android:visibility="gone"
+		    	android:orientation="horizontal"
 				>
 				<TextView
 					android:layout_height="wrap_content"
-					android:layout_width="wrap_content"
-					android:text="@string/menuNotes"
+					android:layout_weight="1"
+					android:layout_width="0dp"
+					android:text="@string/mainWeek"
 					android:textStyle="bold"
 					/>
-				<EditText
-					android:id="@+id/noteText"
+				<TextView
+					android:gravity="right"
+					android:id="@+id/weekverse"
 					android:layout_height="wrap_content"
-					android:layout_width="fill_parent"
-					android:minLines="3"
+					android:layout_width="wrap_content"
 					/>
-				<LinearLayout
+			</LinearLayout>
+			<TextView
+				android:id="@+id/weektext"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				/>
+		</LinearLayout>
+
+		<!-- text of the day -->
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+	    	android:orientation="horizontal"
+			>
+			<TextView
+				android:id="@+id/headline"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:layout_width="0dp"
+				android:textStyle="bold"
+				/>
+			<TextView
+				android:id="@+id/verse"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				/>
+		</LinearLayout>
+		<TextView
+			android:id="@+id/text"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			/>
+		<TextView
+			android:gravity="right"
+			android:id="@+id/author"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			/>
+
+		<!-- notes -->
+		<LinearLayout
+			android:id="@+id/note"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+	    	android:orientation="vertical"
+	    	android:paddingTop="10dp"
+	    	android:visibility="gone"
+			>
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="@string/menuNotes"
+				android:textStyle="bold"
+				/>
+			<EditText
+				android:id="@+id/noteText"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:minLines="3"
+				/>
+			<LinearLayout
+				android:layout_gravity="center_horizontal"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+		    	android:orientation="horizontal"
+				>
+				<Button
+					android:id="@+id/noteSave"
 					android:layout_gravity="center_horizontal"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
-			    	android:orientation="horizontal"
-					>
-					<Button
-						android:id="@+id/noteSave"
-						android:layout_gravity="center_horizontal"
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						android:text="@string/textSave"
-						/>
-					<Button
-						android:id="@+id/noteDelete"
-						android:layout_gravity="center_horizontal"
-						android:layout_height="wrap_content"
-						android:layout_width="wrap_content"
-						android:text="@string/textDelete"
-						/>
-				</LinearLayout>
+					android:text="@string/noteSave"
+					/>
+				<Button
+					android:id="@+id/noteDelete"
+					android:layout_gravity="center_horizontal"
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:text="@string/noteDelete"
+					/>
 			</LinearLayout>
 		</LinearLayout>
-	</ScrollView>
-
-</android.gesture.GestureOverlayView>
+	</LinearLayout>
+</ScrollView>

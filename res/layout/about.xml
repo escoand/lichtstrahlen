@@ -40,7 +40,7 @@
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
 			android:padding="10dp"
-			android:text="@string/aboutMessage"
+			android:text="@string/about"
 			android:textColor="#000000"
 			android:textSize="11dp"
 			android:autoLink="all"

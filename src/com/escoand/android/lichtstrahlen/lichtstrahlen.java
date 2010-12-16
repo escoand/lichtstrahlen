@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
@@ -19,19 +18,15 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
-import android.gesture.GestureOverlayView;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.gesture.Prediction;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
@@ -39,9 +34,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class lichtstrahlen extends Activity implements OnGesturePerformedListener {
-	static final int DIALOG_ABOUT_ID = 0;
-	static final int DIALOG_DATE_ID = 1;
+public class lichtstrahlen extends Activity {
+	private static final int DIALOG_ABOUT_ID = 0;
+	private static final int DIALOG_DATE_ID = 1;
 	
 	private Date date = new Date();
 	private final DateFormat dateformat = DateFormat.getDateInstance();
@@ -51,36 +46,30 @@ public class lichtstrahlen extends Activity implements OnGesturePerformedListene
     public ProgressDialog progress = null;
     private AlertDialog selection = null;
     
-    private GestureLibrary lib = null;
-    private GestureOverlayView gestures = null;
+    private GestureDetector gesture = null;
 
-    
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        // init elements
-        progress = new ProgressDialog(this);
-        progress.setMessage(getString(R.string.wait));
-        
-        // read initially
-        notes = new Notes(this);
+		setContentView(R.layout.main);
+		
+		// init
+		progress = new ProgressDialog(this);
+		progress.setMessage(getString(R.string.msgWait));
+		notes = new Notes(this);
 		new VerseTask().execute();
 		
-		// init gestures
-		lib = GestureLibraries.fromRawResource(this, R.raw.gestures);
-		if(!lib.load()) {
-			finish();
-		}
-		gestures = (GestureOverlayView) findViewById(R.id.gestures);
-		gestures.addOnGesturePerformedListener(this);
+		// Gesture detection
+		gesture = new GestureDetector(new Gestures(this));
+		
 		
 		// callback for save note
 		findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				notes.add(date, ((TextView) findViewById(R.id.noteText)).getText().toString());
+				Toast.makeText(lichtstrahlen.this, getString(R.string.noteSaved), Toast.LENGTH_SHORT).show();
 			}
 		});
 		
@@ -89,25 +78,35 @@ public class lichtstrahlen extends Activity implements OnGesturePerformedListene
 			@Override
 			public void onClick(View v) {
 				notes.remove(date);
+				((TextView) findViewById(R.id.noteText)).setText(null);
+				Toast.makeText(lichtstrahlen.this, getString(R.string.noteDeleted), Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
 
 
 	@Override
-	public void onGesturePerformed(GestureOverlayView arg0, Gesture arg1) {
-	    ArrayList<Prediction> predictions = lib.recognize(arg1);
+	public boolean onTouchEvent(MotionEvent event) {
+		if(gesture.onTouchEvent(event))
+			return true;
+		return super.onTouchEvent(event);
+	}
 
-	    if (predictions.size() > 0) {
-	        Prediction prediction = predictions.get(0);
-	        if (prediction.score > 10.0) {
-	        	if(prediction.name.equals("wipe_left"))
-	        		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
-	        	else if(prediction.name.equals("wipe_right"))
-	        		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
-        		new VerseTask().execute();
-	        }
-	    }
+    
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		super.dispatchTouchEvent(event);
+		return onTouchEvent(event);
+	}
+	
+	public void nextDay() {
+		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+		new VerseTask().execute();
+	}
+	
+	public void prevDay() {
+		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
+		new VerseTask().execute();
 	}
 	
 
@@ -132,7 +131,7 @@ public class lichtstrahlen extends Activity implements OnGesturePerformedListene
 			else if(verses.length > 1) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(this);
 				adb.setCancelable(true);
-				adb.setTitle(getString(R.string.select));
+				adb.setTitle(getString(R.string.listVerses));
 				adb.setItems(verses, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {
@@ -201,7 +200,7 @@ public class lichtstrahlen extends Activity implements OnGesturePerformedListene
 	
 	
 	// task for reading one day
-	private class VerseTask extends AsyncTask<Void, Void, HashMap<String, String>> {
+	public class VerseTask extends AsyncTask<Void, Void, HashMap<String, String>> {
 		private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 		private final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 
@@ -326,7 +325,7 @@ public class lichtstrahlen extends Activity implements OnGesturePerformedListene
 			else {
 				((TextView) findViewById(R.id.verse)).setText(null);
 				((TextView) findViewById(R.id.headline)).setText(null);
-				((TextView) findViewById(R.id.text)).setText(getString(R.string.noText));
+				((TextView) findViewById(R.id.text)).setText(getString(R.string.mainNothing));
 				((TextView) findViewById(R.id.author)).setText(null);
 				findViewById(R.id.note).setVisibility(View.GONE);
 			}
