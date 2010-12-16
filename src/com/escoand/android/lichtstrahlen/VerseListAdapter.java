@@ -13,10 +13,12 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class VerseListAdapter extends SimpleAdapter {
+	Context context;
 	ArrayList<? extends Map<String, ?>> data;
 	
 	public VerseListAdapter(Context context, ArrayList<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
 		super(context, data, resource, from, to);
+		this.context = context;
 		this.data = data;
 	}
 
@@ -40,11 +42,11 @@ public class VerseListAdapter extends SimpleAdapter {
 		if(date.equals(until))
 			txt.setText(new SimpleDateFormat("dd.MM.").format(date));
 		else if(date.getYear() == until.getYear() && date.getMonth() == until.getMonth())
-			txt.setText(new SimpleDateFormat("dd.").format(date) + " bis " + new SimpleDateFormat("dd.MM.").format(until));
+			txt.setText(new SimpleDateFormat("dd.").format(date) + " " + context.getString(R.string.textUntil) + " " + new SimpleDateFormat("dd.MM.").format(until));
 		else if(date.getYear() == until.getYear())
-			txt.setText(new SimpleDateFormat("dd.MM.").format(date) + " bis " + new SimpleDateFormat("dd.MM.").format(until));
+			txt.setText(new SimpleDateFormat("dd.MM.").format(date) + " " + context.getString(R.string.textUntil) + " " + new SimpleDateFormat("dd.MM.").format(until));
 		else
-			txt.setText(new SimpleDateFormat("dd.MM.yyyy").format(date) + " bis " + new SimpleDateFormat("dd.MM.yyyy").format(until));
+			txt.setText(new SimpleDateFormat("dd.MM.yyyy").format(date) + " " + context.getString(R.string.textUntil) + " " + new SimpleDateFormat("dd.MM.yyyy").format(until));
 		
 		return view;
 	}
