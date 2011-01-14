@@ -16,9 +16,12 @@
     <string name="mainNothing">kein Tagestext für dieses Datum gefunden</string>
     
     <!-- notes -->
-    <string name="noteTitle">Notizen:</string>
+    <string name="mainNote">Notizen:</string>
+    <string name="noteNote">Notiz</string>
+    <string name="noteAdd">Notiz hinzufügen / bearbeiten</string>
     <string name="noteSave">Speichern</string>
     <string name="noteDelete">Löschen</string>
+    <string name="noteCancel">Abbrechen</string>
     <string name="noteDeleteQuestion">Notiz wirklich löschen?</string>
     <string name="noteSaved">Notiz gespeichert</string>
     <string name="noteDeleted">Notiz gelöscht</string>
