@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:background="#FFFFFF"
 	android:id="@+id/aboutLayout"
@@ -39,7 +40,7 @@
 			android:id="@+id/txtAbout"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:padding="10dp"
+			android:padding="11dp"
 			android:text="@string/about"
 			android:textColor="#000000"
 			android:textSize="11dp"

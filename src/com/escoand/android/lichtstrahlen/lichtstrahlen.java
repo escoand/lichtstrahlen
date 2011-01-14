@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -29,8 +30,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.webkit.WebView;
 import android.widget.DatePicker;
-import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,8 @@ import android.widget.Toast;
 public class lichtstrahlen extends Activity {
 	private static final int DIALOG_ABOUT_ID = 0;
 	private static final int DIALOG_DATE_ID = 1;
+	private static final int DIALOG_NOTE_ID = 2;
+	private static final String BIBLE_URL = "http://www.bibleserver.com/text/";
 	
 	private Date date = new Date();
 	private final DateFormat dateformat = DateFormat.getDateInstance();
@@ -56,46 +59,13 @@ public class lichtstrahlen extends Activity {
 		setContentView(R.layout.main);
 		
 		// init
+		((WebView) findViewById(R.id.content)).getSettings().setSupportZoom(true);
+		((WebView) findViewById(R.id.content)).getSettings().setBuiltInZoomControls(true);
 		progress = new ProgressDialog(this);
 		progress.setMessage(getString(R.string.msgWait));
 		gesture = new GestureDetector(new Gestures(this));
 		notes = new Notes(this);
 		new VerseTask().execute();
-		
-		// callback for save note
-		findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				notes.add(date, ((TextView) findViewById(R.id.noteText)).getText().toString());
-				Toast.makeText(lichtstrahlen.this, getString(R.string.noteSaved), Toast.LENGTH_SHORT).show();
-			}
-		});
-		
-		// callback for delete note
-		findViewById(R.id.noteDelete).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
-				adb.setMessage(getString(R.string.noteDeleteQuestion))
-					.setCancelable(false)
-					.setPositiveButton(getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							notes.remove(date);
-							((TextView) findViewById(R.id.noteText)).setText(null);
-							Toast.makeText(lichtstrahlen.this, getString(R.string.noteDeleted), Toast.LENGTH_SHORT).show();
-						}
-					})
-					.setNegativeButton(getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					})
-					.create()
-					.show();
-			}
-		});
 	}
 
 
@@ -128,7 +98,7 @@ public class lichtstrahlen extends Activity {
 		switch(item.getItemId()) {
 		case R.id.menuBible:
 			if(verses.length == 1) {
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.bibleserver.com/text/LUT/" + verses[0])));
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BIBLE_URL + verses[0])));
 				return true;
 			}
 			else if(verses.length > 1) {
@@ -138,7 +108,7 @@ public class lichtstrahlen extends Activity {
 				adb.setItems(verses, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {
-						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.bibleserver.com/text/LUT/" + verses[item])));
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(BIBLE_URL + verses[item])));
 					}
 				});
 				selection = adb.create();
@@ -171,6 +141,7 @@ public class lichtstrahlen extends Activity {
 	// callback for creating dialog
 	@Override
 	protected Dialog onCreateDialog(int id) {
+		Dialog dialog = new Dialog(this);
 		
 		switch(id) {
 			case DIALOG_DATE_ID:
@@ -188,7 +159,6 @@ public class lichtstrahlen extends Activity {
 					date.getMonth(),
 					date.getDate());
 			case DIALOG_ABOUT_ID:
-				Dialog dialog = new Dialog(this);
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
 
@@ -197,6 +167,71 @@ public class lichtstrahlen extends Activity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				return dialog;
+			case DIALOG_NOTE_ID:
+				dialog.setTitle(getString(R.string.noteNote) + " " + getString(R.string.textFor) + " " + dateformat.format(date));
+				dialog.setContentView(R.layout.noteedit);
+				
+				// load note
+				if(notes.exist(date))
+					((TextView) dialog.findViewById(R.id.noteText)).setText(notes.get(date));
+				
+				// callback for save note
+				dialog.findViewById(R.id.noteSave).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// save note
+						View parent = (View) v.getParent().getParent();
+						notes.add(date, ((TextView) parent.findViewById(R.id.noteText)).getText().toString());
+						
+						// back to main
+						lichtstrahlen.this.dismissDialog(DIALOG_NOTE_ID);
+						new VerseTask().execute();
+						Toast.makeText(getApplicationContext(), getString(R.string.noteSaved), Toast.LENGTH_LONG).show();
+					}
+				});
+				
+				// callback for delete note
+				dialog.findViewById(R.id.noteDelete).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						AlertDialog.Builder adb = new AlertDialog.Builder(lichtstrahlen.this);
+						adb.setMessage(getString(R.string.noteDeleteQuestion))
+							.setCancelable(false)
+							.setPositiveButton(getString(R.string.buttonYes), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									// delete note
+									notes.remove(date);
+									
+									// back to main
+									dialog.dismiss();
+									lichtstrahlen.this.dismissDialog(DIALOG_NOTE_ID);
+									new VerseTask().execute();
+									Toast.makeText(getApplicationContext(), getString(R.string.noteDeleted), Toast.LENGTH_LONG).show();
+								}
+							})
+							.setNegativeButton(getString(R.string.buttonNo), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int id) {
+									dialog.cancel();
+								}
+							})
+							.create()
+							.show();
+					}
+				});
+				
+				// callback for cancel
+				dialog.findViewById(R.id.noteCancel).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// back to main
+						lichtstrahlen.this.dismissDialog(DIALOG_NOTE_ID);
+					}
+				});
+				
 				return dialog;
 		}
 		return null;
@@ -306,49 +341,58 @@ public class lichtstrahlen extends Activity {
 		@Override
 		protected void onPostExecute(HashMap<String, String> result) {
 			Vector<CharSequence> versesTemp = new Vector<CharSequence>();
+			String content = "";
 			
 			setTitle(getString(R.string.app_name) + " " + getString(R.string.textFor) + " " + dateformat.format(date));
 			
 			// month
 			if(result.containsKey("monthtext")) {
-				findViewById(R.id.month).setVisibility(View.VISIBLE);
-				((TextView) findViewById(R.id.monthtext)).setText(result.get("monthtext"));
-				((TextView) findViewById(R.id.monthverse)).setText(result.get("monthverse"));
+				content += "<p>";
+				content += "<div style=\"font-weight: bold;\">" + TextUtils.htmlEncode(getString(R.string.mainMonth)) + "</div>";
+				content += "<div>" + TextUtils.htmlEncode(result.get("monthtext")) + "</div>";
+				content += "<div style=\"text-align: right; white-space: nowrap;\">" + TextUtils.htmlEncode(result.get("monthverse")) + "</div>";
+				content += "</p>";
 				versesTemp.add(result.get("monthverse"));
 			}
-			else
-				findViewById(R.id.month).setVisibility(View.GONE);
 			
 			// week
 			if(result.containsKey("weektext")) {
-				findViewById(R.id.week).setVisibility(View.VISIBLE);
-				((TextView) findViewById(R.id.weektext)).setText(result.get("weektext"));
-				((TextView) findViewById(R.id.weekverse)).setText(result.get("weekverse"));
+				content += "<p>";
+				content += "<div style=\"font-weight: bold;\">" + TextUtils.htmlEncode(getString(R.string.mainWeek)) + "</div>";
+				content += "<div>" + TextUtils.htmlEncode(result.get("weektext")) + "</div>";
+				content += "<div style=\"text-align: right; white-space: nowrap;\">" + TextUtils.htmlEncode(result.get("weekverse")) + "</div>";
+				content += "</p>";
 				versesTemp.add(result.get("weekverse"));
 			}
-			else
-				findViewById(R.id.week).setVisibility(View.GONE);
 			
 			// day
 			if(result.containsKey("text")) {
-				((TextView) findViewById(R.id.verse)).setText(result.get("verse"));
-				((TextView) findViewById(R.id.headline)).setText(result.get("header"));
-				((TextView) findViewById(R.id.text)).setText(result.get("text"));
-				((TextView) findViewById(R.id.author)).setText(result.get("author"));
+				content += "<p>";
+				content += "<div style=\"float: right; text-align: right; white-space: nowrap;\">" + TextUtils.htmlEncode(result.get("verse")) + "</div>";
+				content += "<div style=\"font-weight: bold;\">" + TextUtils.htmlEncode(result.get("header")) + "</div>";
+				content += "<div style=\"clear: both;\">" + TextUtils.htmlEncode(result.get("text")) + "</div>";
+				content += "<div style=\"text-align: right;\">" + TextUtils.htmlEncode(result.get("author")) + "</div>";
+				content += "</p>";
 				versesTemp.add(result.get("verse"));
-				findViewById(R.id.note).setVisibility(View.VISIBLE);
-				((TextView) findViewById(R.id.noteText)).setText(notes.get(date));
+				
+				// note
+				if(notes.exist(date)) {
+					content += "<p>";
+					content += "<div style=\"font-weight: bold;\">" + TextUtils.htmlEncode(getString(R.string.mainNote)) + "</div>";
+					content += "<div>" + TextUtils.htmlEncode(notes.get(date)) + "</div>";
+					content += "</p>";
+				}
 			}
 			else {
-				((TextView) findViewById(R.id.verse)).setText(null);
-				((TextView) findViewById(R.id.headline)).setText(null);
-				((TextView) findViewById(R.id.text)).setText(getString(R.string.mainNothing));
-				((TextView) findViewById(R.id.author)).setText(null);
-				findViewById(R.id.note).setVisibility(View.GONE);
+				content = getString(R.string.mainNothing);
 			}
 			
+			// set content
+			content = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>" + content + "</body></html>";
+			((WebView) findViewById(R.id.content)).loadData(content, "text/html", "utf-8");
+			
 			// scroll to top
-			//((ScrollView) findViewById(R.id.scroll)).pageScroll(View.FOCUS_UP);
+			((WebView) findViewById(R.id.content)).scrollTo(0, 0);
 			
 			// set verses array
 			verses = versesTemp.toArray(new CharSequence[versesTemp.size()]);
@@ -445,15 +489,29 @@ public class lichtstrahlen extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
 							try {
-								HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(id);
-								date = dateformat.parse(element.get("date"));
-								new VerseTask().execute();
+								// show note edit dialog
+								if(id == 0)
+									showDialog(DIALOG_NOTE_ID);
+								
+								// go to date
+								else {
+									HashMap<String, String> element = (HashMap<String, String>) selection.getListView().getItemAtPosition(id);
+									date = dateformat.parse(element.get("date"));
+									new VerseTask().execute();
+								}
 							} catch (ParseException e) {
 								e.printStackTrace();
 							}
 						}
 				})
 				.create();
+			
+			// add header
+			TextView addNote = new TextView(lichtstrahlen.this);
+			addNote.setText(getString(R.string.noteAdd));
+			addNote.setPadding(5, 10, 5, 10);
+			selection.getListView().addHeaderView(addNote);
+			
 			selection.show();
 			
     		// hide progress dialog
