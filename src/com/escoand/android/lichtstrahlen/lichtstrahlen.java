@@ -46,11 +46,12 @@ public class lichtstrahlen extends Activity {
 	private final DateFormat dateformat = DateFormat.getDateInstance();
 	private CharSequence[] verses = null;
 	private Notes notes = null;
-
-    public ProgressDialog progress = null;
-    private AlertDialog selection = null;
-    
-    private GestureDetector gesture = null;
+	private int scale = 100;
+	
+	public ProgressDialog progress = null;
+	private AlertDialog selection = null;
+	
+	private GestureDetector gesture = null;
 
 
 	@Override
@@ -59,16 +60,25 @@ public class lichtstrahlen extends Activity {
 		setContentView(R.layout.main);
 		
 		// init
+		scale = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE).getInt("scale", 100);
 		((WebView) findViewById(R.id.content)).getSettings().setSupportZoom(true);
 		((WebView) findViewById(R.id.content)).getSettings().setBuiltInZoomControls(true);
+		((WebView) findViewById(R.id.content)).setInitialScale(scale);
 		progress = new ProgressDialog(this);
 		progress.setMessage(getString(R.string.msgWait));
 		gesture = new GestureDetector(new Gestures(this));
 		notes = new Notes(this);
 		new VerseTask().execute();
 	}
-
-
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		scale = (int) (((WebView) findViewById(R.id.content)).getScale() * 100);
+		getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE).edit().putInt("scale", scale).commit();
+	}
+	
+	
 	// callback for gestures
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -82,19 +92,19 @@ public class lichtstrahlen extends Activity {
 		return onTouchEvent(event);
 	}
 	
-
+	
 	// callback for showing option menu
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.options_menu, menu);
 		return true;
 	}
-    
-
-    // callback for clicking option item
+	
+	
+	// callback for clicking option item
 	@Override
- 	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.id.menuBible:
 			if(verses.length == 1) {
@@ -136,7 +146,7 @@ public class lichtstrahlen extends Activity {
 			return false;
 		}
 	}
-    
+	
 	
 	// callback for creating dialog
 	@Override
@@ -161,7 +171,7 @@ public class lichtstrahlen extends Activity {
 			case DIALOG_ABOUT_ID:
 				dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dialog.setContentView(R.layout.about);
-
+				
 				try {
 					((TextView) dialog.findViewById(R.id.txtVersion)).setText("Version " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
 				} catch (Exception e) {
@@ -255,13 +265,13 @@ public class lichtstrahlen extends Activity {
 	public class VerseTask extends AsyncTask<Void, Void, HashMap<String, String>> {
 		private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
 		private final String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
-
+		
 		@Override
 		protected void onPreExecute() {
 			// show progress dialog
 			progress.show();
 		}
-
+		
 		@Override
 		protected HashMap<String, String> doInBackground(Void... params) {
 			XmlPullParser xml = null;
@@ -273,7 +283,7 @@ public class lichtstrahlen extends Activity {
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			id = new Resources(getAssets(), metrics, null).getIdentifier("data_" + yearmonth.format(date), "xml", getPackageName());
-
+			
 			// read xml file
 			if(id != 0) {
 				xml = getResources().getXml(id);
@@ -337,7 +347,7 @@ public class lichtstrahlen extends Activity {
 			
 			return result;
 		}
-
+		
 		@Override
 		protected void onPostExecute(HashMap<String, String> result) {
 			Vector<CharSequence> versesTemp = new Vector<CharSequence>();
@@ -387,12 +397,17 @@ public class lichtstrahlen extends Activity {
 				content = getString(R.string.mainNothing);
 			}
 			
-			// set content
-			content = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>" + content + "</body></html>";
-			((WebView) findViewById(R.id.content)).loadData(content, "text/html", "utf-8");
+			// scale
+			if(((WebView) findViewById(R.id.content)).getUrl() != null)
+				scale = (int) (((WebView) findViewById(R.id.content)).getScale() * 100);
+			((WebView) findViewById(R.id.content)).setInitialScale(scale);
 			
 			// scroll to top
 			((WebView) findViewById(R.id.content)).scrollTo(0, 0);
+			
+			// set content
+			content = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>" + content + "</body></html>";
+			((WebView) findViewById(R.id.content)).loadData(content, "text/html", "utf-8");
 			
 			// set verses array
 			verses = versesTemp.toArray(new CharSequence[versesTemp.size()]);
@@ -402,7 +417,7 @@ public class lichtstrahlen extends Activity {
 		}
 	}
 	
-
+	
 	// read notes list in background
 	private class NotesListTask extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
 		@Override
@@ -419,7 +434,7 @@ public class lichtstrahlen extends Activity {
 			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
 			XmlPullParser xml = null;
 			String dateread = "";
-
+			
 			// run 2010 till 2015
 			for(int year = 2010; year <= 2015; year++) {
 				curdate.setYear(year - 1900);
@@ -471,7 +486,7 @@ public class lichtstrahlen extends Activity {
 			
 			return list;
 		}
-
+		
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
 			// create list dialog
@@ -514,8 +529,8 @@ public class lichtstrahlen extends Activity {
 			
 			selection.show();
 			
-    		// hide progress dialog
-    		progress.dismiss();
+			// hide progress dialog
+			progress.dismiss();
 		}
 	}
 	
@@ -538,7 +553,7 @@ public class lichtstrahlen extends Activity {
 			
 			Date dateread = new Date(0);
 			Date dateuntil = new Date(0);
-
+			
 			// run 2010 till 2015
 			for(int year = 2010; year <= 2015; year++) {
 				curdate.setYear(year - 1900);
@@ -592,7 +607,7 @@ public class lichtstrahlen extends Activity {
 			
 			return list;
 		}
-
+		
 		@Override
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
 			// create list dialog
@@ -621,8 +636,8 @@ public class lichtstrahlen extends Activity {
 				.create();
 			selection.show();
 			
-    		// hide progress dialog
-    		progress.dismiss();
+			// hide progress dialog
+			progress.dismiss();
 		}
 	}
 }
