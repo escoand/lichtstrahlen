@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- app -->
-	<string name="app_name">Rays of Light 2012</string>
+	<string name="app_name">Lichtstrahlen 2012</string>
 
 	<!-- common -->
-	<string name="msgWait">Please wait...</string>
-	<string name="buttonYes">Yes</string>
-	<string name="buttonNo">No</string>
-	<string name="listNotes">Notes</string>
-	<string name="listVerses">Scripture list</string>
+	<string name="msgWait">Bitte warten...</string>
+	<string name="buttonYes">Ja</string>
+	<string name="buttonNo">Nein</string>
+	<string name="listNotes">Notizen</string>
+	<string name="listVerses">Bibelstellenliste</string>
 
 	<!-- main -->
-	<string name="mainWeek">of the week:</string>
-	<string name="mainMonth">of the month:</string>
-	<string name="mainNothing">No text for this date.</string>
+	<string name="mainWeek">Wochenspruch:</string>
+	<string name="mainMonth">Monatsspruch:</string>
+	<string name="mainNothing">kein Tagestext für dieses Datum gefunden</string>
 
 	<!-- notes -->
-	<string name="mainNote">Notes:</string>
-	<string name="noteNote">Note</string>
-	<string name="noteAdd">Add / edit note</string>
-	<string name="noteSave">Save</string>
-	<string name="noteDelete">Delete</string>
-	<string name="noteCancel">Cancel</string>
-	<string name="noteDeleteQuestion">Delete this note?</string>
-	<string name="noteSaved">Note saved</string>
-	<string name="noteDeleted">Note deleted</string>
+	<string name="mainNote">Notizen:</string>
+	<string name="noteNote">Notiz</string>
+	<string name="noteAdd">Notiz hinzufügen / bearbeiten</string>
+	<string name="noteSave">Speichern</string>
+	<string name="noteDelete">Löschen</string>
+	<string name="noteCancel">Abbrechen</string>
+	<string name="noteDeleteQuestion">Notiz wirklich löschen?</string>
+	<string name="noteSaved">Notiz gespeichert</string>
+	<string name="noteDeleted">Notiz gelöscht</string>
 
 	<!-- text -->
-	<string name="textFor">for</string>
-	<string name="textUntil">until</string>
+	<string name="textFor">für</string>
+	<string name="textUntil">bis</string>
 
 	<!-- menu -->
-	<string name="menuBible">Scripture</string>
-	<string name="menuToday">Today</string>
-	<string name="menuDate">Calendar</string>
-	<string name="menuNotes">Notes</string>
-	<string name="menuList">Scripture list</string>
-	<string name="menuInfo">Information</string>
+	<string name="menuBible">Bibeltext</string>
+	<string name="menuToday">Heute</string>
+	<string name="menuDate">Kalender</string>
+	<string name="menuNotes">Notizen</string>
+	<string name="menuList">Bibelstellenliste</string>
+	<string name="menuListCondensed">Bibelstellen</string>
+	<string name="menuInfo">Info</string>
 
 	<!-- about -->
 	<string name="about" formatted="false"><![CDATA[Die Bibellesehilfe für alle Christen, die ihre Beziehung zu Gott und ihr Verständnis der Bibel weiter vertiefen wollen – auch unterwegs:<br/>Jeden Tag gibt es einen erklärenden und zum Nachdenken anregenden Text zur täglichen Bibellese, der einen Impuls für den Alltag geben will.<br/>Jeden Tag gibt es die Möglichkeit, einen persönlichen Merkvers oder einen wichtigen Gedanken aufzuschreiben und zum Nachlesen, Bitten und Danken zu speichern.<br/><br/>Für das Lesen der Lichtstrahlen 2012 ist keine Internetverbindung nötig. Nur wenn Sie die vollständigen Bibeltexte lesen möchten, müssen Sie eine Internetverbindung herstellen.<br/><br/><a href="http://www.bornverlag.de/index.php?id=5&shop%5bplace%5d=detail&shop%5bNO%5d=182099&shop%5bcategory%5d=BV_BA_BL">Die Lichtstrahlen als Buch</a>: zusätzlich mit Einführungen in die biblischen Bücher, Impulsen zum Gebet und weiteren Themenseiten.<br/><br/><b>Herausgeber</b><br/>Deutscher Jugendverband „Entschieden für Christus“ (EC) e.V.<br/><a href="http://www.ec-jugend.de">ec-jugend.de</a><br/><br/><b>Verlag</b><br/>© 2011 BORN-VERLAG Medien für Mitarbeiter<br/><a href="http://www.bornverlag.de">bornverlag.de</a><br/><br/>Programmierung: <a href="https://github.com/escoand/lichtstrahlen/wiki">Andreas Schönfelder</a><br/><br/><br/>Verwendung von Jahreslosung, Monatssprüche und Bibelleseplan mit freundlicher Genehmigung von Ökumenische Arbeitsgemeinschaft für Bibellesen, Reichensteiner Weg 24, 14195 Berlin, <a href="http://www.oeab.de">oeab.de</a><br/><br/>Bibeltexte Verwendung mit freundlicher Genehmigung: Lutherbibel, revidierter Text 1984, durchgesehene Fassung in neuer Rechtschreibung, © 1999 Deutsche Bibelgesellschaft, Stuttgart; Einheitsübersetzung der Heiligen Schrift © 1980 Katholische Bibelanstalt, Stuttgart<br/><br/>Verlinkung zu <a href="http://www.die-bibel.de">die-bibel.de</a> der Deutschen Bibelgesellschaft, Stuttgart, mit freundlicher Genehmigung]]></string>
