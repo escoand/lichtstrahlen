@@ -1,35 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item
-		android:icon="@android:drawable/ic_menu_search"
-		android:id="@+id/menuBible"
-		android:title="@string/menuBible"
-		/>
-	<item
-		android:icon="@android:drawable/ic_menu_today"
-		android:id="@+id/menuToday"
-		android:title="@string/menuToday"
-		/>
-	<item
-		android:icon="@android:drawable/ic_menu_my_calendar"
-		android:id="@+id/menuDate"
-		android:title="@string/menuDate"
-		/>
-	<item
-		android:icon="@android:drawable/ic_menu_edit"
-		android:id="@+id/menuNotes"
-		android:title="@string/menuNotes"
-		/>
-	<item
-		android:icon="@android:drawable/ic_menu_agenda"
-		android:id="@+id/menuList"
-		android:title="@string/menuList"
-		android:titleCondensed="@string/menuListCondensed"
-		/>
-	<item
-		android:icon="@android:drawable/ic_menu_info_details"
-		android:id="@+id/menuInfo"
-		android:title="@string/menuInfo"
-		/>
+	<item android:icon="@android:drawable/ic_menu_search" android:id="@+id/menuBible"
+		android:title="@string/menuBible" />
+	<item android:icon="@android:drawable/ic_menu_today" android:id="@+id/menuToday"
+		android:title="@string/menuToday" />
+	<item android:icon="@android:drawable/ic_menu_my_calendar"
+		android:id="@+id/menuDate" android:title="@string/menuDate" />
+	<item android:icon="@android:drawable/ic_menu_edit" android:id="@+id/menuNotes"
+		android:title="@string/menuNotes" />
+	<item android:icon="@android:drawable/ic_menu_agenda" android:id="@+id/menuList"
+		android:title="@string/menuList" />
+	<item android:icon="@android:drawable/ic_menu_info_details"
+		android:id="@+id/menuInfo" android:title="@string/menuInfo" />
 </menu>
