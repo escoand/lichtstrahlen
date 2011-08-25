@@ -42,7 +42,7 @@ public class Lichtstrahlen extends Activity {
 	private static final int DIALOG_ABOUT_ID = 0;
 	private static final int DIALOG_DATE_ID = 1;
 	private static final int DIALOG_NOTE_ID = 2;
-	private static final String BIBLE_URL = "http://www.die-bibel.de/nc/online-bibeln/ luther-bibel-1984/lesen-im-bibeltext/bibelstelle/";
+	private static final String BIBLE_URL = "http://www.die-bibel.de/nc/online-bibeln/luther-bibel-1984/lesen-im-bibeltext/bibelstelle/";
 
 	private Date date = new Date();
 	private final DateFormat dateformat = DateFormat.getDateInstance();
