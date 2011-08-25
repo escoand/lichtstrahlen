@@ -12,15 +12,16 @@
 		android:layout_alignParentRight="true" android:paddingRight="10dp"
 		android:paddingBottom="6dp" />
 	<ScrollView android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:layout_below="@+id/imgLichtstrahlen"
-		android:layout_above="@+id/imgBorn">
-		<TextView android:layout_height="wrap_content"
-			android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceSmallInverse"
-			android:id="@+id/txtAbout" android:paddingLeft="10dp"
-			android:paddingRight="10dp" />
+		android:layout_width="fill_parent" android:layout_below="@+id/imgLichtstrahlen">
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:orientation="vertical">
+			<TextView android:layout_height="wrap_content"
+				android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceSmallInverse"
+				android:id="@+id/txtAbout" android:paddingLeft="10dp"
+				android:paddingRight="10dp" />
+			<ImageView android:src="@drawable/born"
+				android:adjustViewBounds="true" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:paddingTop="10dp" />
+		</LinearLayout>
 	</ScrollView>
-	<ImageView android:id="@+id/imgBorn" android:src="@drawable/born"
-		android:layout_alignParentBottom="true" android:adjustViewBounds="true"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:paddingTop="10dp" />
 </RelativeLayout>
