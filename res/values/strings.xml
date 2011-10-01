@@ -2,6 +2,7 @@
 <resources>
 	<!-- app -->
 	<string name="app_name">Lichtstrahlen 2012</string>
+	<string name="data_lang">de</string>
 
 	<!-- common -->
 	<string name="msgWait">Bitte warten...</string>

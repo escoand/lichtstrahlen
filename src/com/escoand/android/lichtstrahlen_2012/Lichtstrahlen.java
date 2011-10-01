@@ -321,7 +321,8 @@ public class Lichtstrahlen extends Activity {
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 			id = new Resources(getAssets(), metrics, null).getIdentifier(
-					"data_" + yearmonth.format(date), "xml", getPackageName());
+					"data_" + getString(R.string.data_lang) + "_"
+							+ yearmonth.format(date), "xml", getPackageName());
 
 			// read xml file
 			if (id != 0) {
@@ -515,8 +516,10 @@ public class Lichtstrahlen extends Activity {
 					DisplayMetrics metrics = new DisplayMetrics();
 					getWindowManager().getDefaultDisplay().getMetrics(metrics);
 					int id = new Resources(getAssets(), metrics, null)
-							.getIdentifier("data_" + yearmonth.format(curdate),
-									"xml", getPackageName());
+							.getIdentifier("data_"
+									+ getString(R.string.data_lang) + "_"
+									+ yearmonth.format(curdate), "xml",
+									getPackageName());
 
 					// read xml file
 					if (id != 0) {
@@ -642,8 +645,9 @@ public class Lichtstrahlen extends Activity {
 				DisplayMetrics metrics = new DisplayMetrics();
 				getWindowManager().getDefaultDisplay().getMetrics(metrics);
 				int id = new Resources(getAssets(), metrics, null)
-						.getIdentifier("list_" + format_year.format(curdate),
-								"xml", getPackageName());
+						.getIdentifier("list_" + getString(R.string.data_lang)
+								+ "_" + format_year.format(curdate), "xml",
+								getPackageName());
 
 				// read xml file
 				if (id != 0) {
