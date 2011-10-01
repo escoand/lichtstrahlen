@@ -10,8 +10,9 @@ BEGIN {
 	gsub(/(^ +| +$)/, "", $3);
 	
 	if(match($3, "-")) {
-		split("01.01.2000", date, ".");
-		split("31.12.2000", until, ".");
+		split($3, dates, "-");
+		split(dates[1], date, ".");
+		split(dates[2], until, ".");
 	}
 	else {
 		$3=$3"."year"."year;
