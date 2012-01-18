@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen_2012;
+package com.escoand.android.lichtstrahlen;
 
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
