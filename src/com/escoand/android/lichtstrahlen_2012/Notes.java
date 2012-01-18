@@ -40,6 +40,7 @@ public class Notes extends Object {
 		return new Date(date.getYear(), date.getMonth(), date.getDate());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void _load() {
 		try {
 			ObjectInputStream stream = new ObjectInputStream(

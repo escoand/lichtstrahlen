@@ -18,8 +18,8 @@ BEGIN {
 	gsub(/(^ +| +$)/, "", $11);
 	
 	split($3, date, ".");
-	if(month == date[3]date[2]) {
-		printf "<entry date=\"%04d%02d%02d\">", date[3], date[2], date[1];
+	if(month == date[3]date[1]) {
+		printf "<entry date=\"%04d%02d%02d\">", date[3], date[1], date[2];
 		printf "<verse>%s</verse>", $5;
 		printf "<header>%s</header>", $7;
 		printf "<text>%s</text>", $6;
