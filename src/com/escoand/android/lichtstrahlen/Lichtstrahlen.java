@@ -120,7 +120,6 @@ public class Lichtstrahlen extends Activity {
 		case R.id.menuToday:
 
 			/* animation */
-			ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 			flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
 			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
@@ -131,6 +130,12 @@ public class Lichtstrahlen extends Activity {
 
 			/* calendar */
 		case R.id.menuDate:
+
+			/* animation */
+			flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
+			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
+			
+			/* show date picker */
 			showDialog(DIALOG_DATE_ID);
 			return true;
 
@@ -141,6 +146,12 @@ public class Lichtstrahlen extends Activity {
 
 			/* scripture list */
 		case R.id.menuList:
+
+			/* animation */
+			flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
+			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
+			
+			/* show list */
 			new AsyncVerseList(this).execute();
 			return true;
 
@@ -170,15 +181,6 @@ public class Lichtstrahlen extends Activity {
 						@Override
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
-
-							/* animation */
-							ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
-							flipper.setInAnimation(getApplicationContext(),
-									R.anim.in_alpha);
-							flipper.setOutAnimation(getApplicationContext(),
-									R.anim.out_alpha);
-
-							/* goto date */
 							date.setYear(year - 1900);
 							date.setMonth(monthOfYear);
 							date.setDate(dayOfMonth);
