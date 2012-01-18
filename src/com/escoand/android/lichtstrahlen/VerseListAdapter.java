@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen_2012;
+package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

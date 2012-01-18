@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen_2012;
+package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 import org.xmlpull.v1.XmlPullParser;
+
+import com.escoand.android.lichtstrahlen_2012.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

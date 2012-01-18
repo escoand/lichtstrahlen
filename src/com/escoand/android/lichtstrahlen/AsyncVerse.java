@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen_2012;
+package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.xmlpull.v1.XmlPullParser;
+
+import com.escoand.android.lichtstrahlen_2012.R;
 
 import android.content.Context;
 import android.os.AsyncTask;

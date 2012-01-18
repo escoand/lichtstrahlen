@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:testOnly="false" >
         <activity
-            android:name="com.escoand.android.lichtstrahlen_2012.Lichtstrahlen"
+            android:name="com.escoand.android.lichtstrahlen.Lichtstrahlen"
             android:configChanges="orientation"
             android:label="@string/app_name" >
             <intent-filter>

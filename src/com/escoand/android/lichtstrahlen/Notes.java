@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen_2012;
+package com.escoand.android.lichtstrahlen;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
