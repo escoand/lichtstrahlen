@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:background="#FFFFFF">
-	<ImageView android:id="@+id/imgLichtstrahlen" android:src="@drawable/lichtstrahlen"
-		android:layout_alignParentLeft="true" android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:adjustViewBounds="true"
-		android:padding="10dp" />
-	<TextView android:id="@+id/txtVersion" android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmallInverse"
-		android:layout_alignBottom="@+id/imgLichtstrahlen"
-		android:layout_alignParentRight="true" android:paddingRight="10dp"
-		android:paddingBottom="6dp" />
-	<ScrollView android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:layout_below="@+id/imgLichtstrahlen">
-		<LinearLayout android:layout_height="wrap_content"
-			android:layout_width="fill_parent" android:orientation="vertical">
-			<TextView android:layout_height="wrap_content"
-				android:layout_width="fill_parent" android:textAppearance="?android:attr/textAppearanceSmallInverse"
-				android:id="@+id/txtAbout" android:paddingLeft="10dp"
-				android:paddingRight="10dp" />
-			<ImageView android:src="@drawable/born"
-				android:adjustViewBounds="true" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:paddingTop="10dp" />
-		</LinearLayout>
-	</ScrollView>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF" >
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/image"
+        android:padding="10dp"
+        android:src="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/txtVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgLogo"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="6dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmallInverse" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgLogo" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txtAbout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textAppearance="?android:attr/textAppearanceSmallInverse" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/image"
+                android:paddingTop="10dp"
+                android:src="@drawable/born" />
+        </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>

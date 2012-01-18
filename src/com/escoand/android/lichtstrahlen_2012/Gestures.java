@@ -9,8 +9,10 @@ import android.view.MotionEvent;
  * @author escoand
  */
 public class Gestures extends SimpleOnGestureListener {
-	private static final int X_MIN_DISTANCE = 120;
-	private static final int Y_MAX_DISTANCE = 20;
+
+	private static final int SWIPE_MIN_DISTANCE = 120;
+	private static final int SWIPE_MAX_OFF_PATH = 250;
+	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
 	private Lichtstrahlen context = null;
 
@@ -22,16 +24,19 @@ public class Gestures extends SimpleOnGestureListener {
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		if (e1.getX() - e2.getX() > X_MIN_DISTANCE
-				&& Math.abs(e1.getY() - e2.getY()) < Y_MAX_DISTANCE) {
+
+		if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+			return false;
+
+		if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
+				&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
 			context.nextDay();
-			return true;
-		} else if (e2.getX() - e1.getX() > X_MIN_DISTANCE
-				&& Math.abs(e1.getY() - e2.getY()) < Y_MAX_DISTANCE) {
+
+		else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
+				&& Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
 			context.prevDay();
-			return true;
-		}
-		return false;
+
+		return super.onFling(e1, e2, velocityX, velocityY);
 	}
 
 }
