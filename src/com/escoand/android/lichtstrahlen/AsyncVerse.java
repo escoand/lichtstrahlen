@@ -188,7 +188,7 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 				content += "</p>";
 			}
 		} else {
-			content = parent.getString(R.string.mainNothing);
+			content = TextUtils.htmlEncode(parent.getString(R.string.mainNothing));
 		}
 
 		/* set content */
