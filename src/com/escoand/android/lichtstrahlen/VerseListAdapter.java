@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -16,6 +17,10 @@ import com.escoand.android.lichtstrahlen_2012.R;
 public class VerseListAdapter extends SimpleAdapter {
 	Context context;
 	ArrayList<? extends Map<String, ?>> data;
+	SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
+			.getDateInstance(DateFormat.SHORT);
+	SimpleDateFormat df_ym = (SimpleDateFormat) DateFormat
+			.getDateInstance(DateFormat.SHORT);
 
 	public VerseListAdapter(Context context,
 			ArrayList<? extends Map<String, ?>> data, int resource,
@@ -23,6 +28,13 @@ public class VerseListAdapter extends SimpleAdapter {
 		super(context, data, resource, from, to);
 		this.context = context;
 		this.data = data;
+
+		/* date format */
+		if (Locale.getDefault().getLanguage().equals("de"))
+			df_ym.applyPattern("dd.MM.");
+		else
+			df_ym.applyPattern(df_ym.toPattern().replaceAll(
+					"[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
 	}
 
 	@Override
@@ -30,7 +42,7 @@ public class VerseListAdapter extends SimpleAdapter {
 		View view = super.getView(position, convertView, parent);
 		TextView txt = (TextView) view.findViewById(R.id.listDate);
 
-		// get date
+		/* get date */
 		Date date = new Date(0);
 		Date until = new Date(0);
 
@@ -43,22 +55,22 @@ public class VerseListAdapter extends SimpleAdapter {
 			e.printStackTrace();
 		}
 
-		// set text
+		/* set text */
 		if (date.equals(until))
-			txt.setText(new SimpleDateFormat("dd.MM.").format(date));
+			txt.setText(df_ym.format(date));
 		else if (date.getYear() == until.getYear()
 				&& date.getMonth() == until.getMonth())
-			txt.setText(new SimpleDateFormat("dd.").format(date) + " "
+			txt.setText(df_ym.format(date) + " "
 					+ context.getString(R.string.textUntil) + " "
-					+ new SimpleDateFormat("dd.MM.").format(until));
+					+ df_ym.format(until));
 		else if (date.getYear() == until.getYear())
-			txt.setText(new SimpleDateFormat("dd.MM.").format(date) + " "
+			txt.setText(df_ym.format(date) + " "
 					+ context.getString(R.string.textUntil) + " "
-					+ new SimpleDateFormat("dd.MM.").format(until));
+					+ df_ym.format(until));
 		else
-			txt.setText(new SimpleDateFormat("dd.MM.yyyy").format(date) + " "
+			txt.setText(df_ymd.format(date) + " "
 					+ context.getString(R.string.textUntil) + " "
-					+ new SimpleDateFormat("dd.MM.yyyy").format(until));
+					+ df_ymd.format(until));
 
 		return view;
 	}

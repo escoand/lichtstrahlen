@@ -18,10 +18,10 @@ import android.widget.ViewFlipper;
 
 public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 	private final SimpleDateFormat yearmonth = new SimpleDateFormat("yyyyMM");
-	private Lichtstrahlen parent = null;
+	private MainActivity parent = null;
 	private ViewFlipper flipper = null;
 
-	public AsyncVerse(Lichtstrahlen ls) {
+	public AsyncVerse(MainActivity ls) {
 		super();
 		parent = ls;
 		flipper = (ViewFlipper) parent.findViewById(R.id.flipper);
@@ -40,7 +40,8 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 
 	@Override
 	protected HashMap<String, String> doInBackground(Void... params) {
-		String datestring = new SimpleDateFormat("yyyyMMdd").format(parent.date);
+		String datestring = new SimpleDateFormat("yyyyMMdd")
+				.format(parent.date);
 		XmlPullParser xml = null;
 		int id = 0;
 		String dateread = "";
@@ -59,24 +60,24 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 				xml = parent.getResources().getXml(id);
 				while (xml.getEventType() != XmlPullParser.END_DOCUMENT) {
 					if (xml.getEventType() == XmlPullParser.START_TAG) {
-						
+
 						/* entry tag */
 						if (xml.getName().equals("entry")) {
 							dateread = xml.getAttributeValue(null, "date");
 						} else if (dateread.equals(datestring)) {
-							
+
 							/* bible tag */
 							if (xml.getName().equals("verse")) {
 								xml.next();
 								result.put("verse", xml.getText());
 							}
-							
+
 							/* header tag */
 							else if (xml.getName().equals("header")) {
 								xml.next();
 								result.put("header", xml.getText());
 							}
-							
+
 							/* text tag */
 							else if (xml.getName().equals("text")) {
 								xml.next();
@@ -87,27 +88,28 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 								xml.next();
 								result.put("author", xml.getText());
 							}
-							
+
 							/* weektext tag */
 							else if (xml.getName().equals("weektext")) {
 								xml.next();
 								if (xml.getEventType() == XmlPullParser.TEXT)
 									result.put("weektext", xml.getText());
 							}
-							
+
 							/* weekverse tag */
 							else if (xml.getName().equals("weekverse")) {
 								xml.next();
 								if (xml.getEventType() == XmlPullParser.TEXT)
 									result.put("weekverse", xml.getText());
 							}
-							
+
 							/* monthtext tag */
 							else if (xml.getName().equals("monthtext")) {
 								xml.next();
 								if (xml.getEventType() == XmlPullParser.TEXT)
 									result.put("monthtext", xml.getText());
 							}
+
 							/* monthverse tag */
 							else if (xml.getName().equals("monthverse")) {
 								xml.next();
@@ -133,18 +135,22 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 		Vector<CharSequence> versesTemp = new Vector<CharSequence>();
 
 		parent.setTitle(parent.getString(R.string.app_name) + " "
-				+ parent.getString(R.string.textFor) + " " + DateFormat.getDateInstance().format(parent.date));
+				+ parent.getString(R.string.textFor) + " "
+				+ DateFormat.getDateInstance().format(parent.date));
 
 		/* month */
 		if (result.containsKey("monthtext")) {
 			content += "<p>";
 			content += "<div style=\"font-weight: bold;\">"
-					+ TextUtils.htmlEncode(parent.getString(R.string.mainMonth))
-					+ "</div>";
-			content += "<div>" + TextUtils.htmlEncode(result.get("monthtext"))
-					+ "</div>";
+					+ TextUtils
+							.htmlEncode(parent.getString(R.string.mainMonth))
+							.replace("%", "&#37;") + "</div>";
+			content += "<div>"
+					+ TextUtils.htmlEncode(result.get("monthtext")).replace(
+							"%", "&#37;") + "</div>";
 			content += "<div style=\"text-align: right; white-space: nowrap;\">"
-					+ TextUtils.htmlEncode(result.get("monthverse")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("monthverse")).replace(
+							"%", "&#37;") + "</div>";
 			content += "</p>";
 			versesTemp.add(result.get("monthverse"));
 		}
@@ -154,11 +160,13 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 			content += "<p>";
 			content += "<div style=\"font-weight: bold;\">"
 					+ TextUtils.htmlEncode(parent.getString(R.string.mainWeek))
-					+ "</div>";
-			content += "<div>" + TextUtils.htmlEncode(result.get("weektext"))
-					+ "</div>";
+							.replace("%", "&#37;") + "</div>";
+			content += "<div>"
+					+ TextUtils.htmlEncode(result.get("weektext")).replace("%",
+							"&#37;") + "</div>";
 			content += "<div style=\"text-align: right; white-space: nowrap;\">"
-					+ TextUtils.htmlEncode(result.get("weekverse")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("weekverse")).replace(
+							"%", "&#37;") + "</div>";
 			content += "</p>";
 			versesTemp.add(result.get("weekverse"));
 		}
@@ -167,13 +175,17 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 		if (result.containsKey("text")) {
 			content += "<p>";
 			content += "<div style=\"float: right; text-align: right; white-space: nowrap;\">"
-					+ TextUtils.htmlEncode(result.get("verse")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("verse")).replace("%",
+							"&#37;") + "</div>";
 			content += "<div style=\"font-weight: bold;\">"
-					+ TextUtils.htmlEncode(result.get("header")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("header")).replace("%",
+							"&#37;") + "</div>";
 			content += "<div style=\"clear: both;\">"
-					+ TextUtils.htmlEncode(result.get("text")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("text")).replace("%",
+							"&#37;") + "</div>";
 			content += "<div style=\"text-align: right;\">"
-					+ TextUtils.htmlEncode(result.get("author")) + "</div>";
+					+ TextUtils.htmlEncode(result.get("author")).replace("%",
+							"&#37;") + "</div>";
 			content += "</p>";
 			versesTemp.add(result.get("verse"));
 
@@ -181,26 +193,29 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 			if (parent.notes.exist(parent.date)) {
 				content += "<p>";
 				content += "<div style=\"font-weight: bold;\">"
-						+ TextUtils.htmlEncode(parent.getString(R.string.mainNote))
-						+ "</div>";
-				content += "<div>" + TextUtils.htmlEncode(parent.notes.get(parent.date))
-						+ "</div>";
+						+ TextUtils.htmlEncode(
+								parent.getString(R.string.mainNote)).replace(
+								"%", "&#37;") + "</div>";
+				content += "<div>"
+						+ TextUtils.htmlEncode(parent.notes.get(parent.date))
+								.replace("%", "&#37;") + "</div>";
 				content += "</p>";
 			}
 		} else {
-			content = TextUtils.htmlEncode(parent.getString(R.string.mainNothing));
+			content = TextUtils.htmlEncode(
+					parent.getString(R.string.mainNothing)).replace("%",
+					"&#37;");
 		}
 
 		/* set content */
-		content = "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>"
-				+ content + "</body></html>";
 		view.loadData(content, "text/html", "utf-8");
 
 		/* scale */
 		view.getSettings().setSupportZoom(true);
 		view.getSettings().setBuiltInZoomControls(true);
-		view.setInitialScale(parent.getSharedPreferences(parent.getString(R.string.app_name),
-				Context.MODE_PRIVATE).getInt("scale", 100));
+		view.setInitialScale(parent.getSharedPreferences(
+				parent.getString(R.string.app_name), Context.MODE_PRIVATE)
+				.getInt("scale", 100));
 
 		/* set verses array */
 		parent.verses = versesTemp.toArray(new CharSequence[versesTemp.size()]);

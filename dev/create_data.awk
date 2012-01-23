@@ -4,7 +4,7 @@ BEGIN {
 	printf "<data>";
 }
 
-{
+$3~month{
 	gsub(/(^ +| +$)/, "", $1);
 	gsub(/(^ +| +$)/, "", $2);
 	gsub(/(^ +| +$)/, "", $3);
@@ -18,18 +18,16 @@ BEGIN {
 	gsub(/(^ +| +$)/, "", $11);
 	
 	split($3, date, ".");
-	if(month == date[3]date[1]) {
-		printf "<entry date=\"%04d%02d%02d\">", date[3], date[1], date[2];
-		printf "<verse>%s</verse>", $5;
-		printf "<header>%s</header>", $7;
-		printf "<text>%s</text>", $6;
-		printf "<author>%s</author>", $2;
-		printf "<weektext>%s</weektext>", $8;
-		printf "<weekverse>%s</weekverse>", $9;
-		printf "<monthtext>%s</monthtext>", $10;
-		printf "<monthverse>%s</monthverse>", $11;
-		printf "</entry>";
-	}
+	printf "<entry date=\"%04d%02d%02d\">", date[3], date[2], date[1];
+	printf "<verse>%s</verse>", $5;
+	printf "<header>%s</header>", $7;
+	printf "<text>%s</text>", $6;
+	printf "<author>%s</author>", $2;
+	printf "<weektext>%s</weektext>", $8;
+	printf "<weekverse>%s</weekverse>", $9;
+	printf "<monthtext>%s</monthtext>", $10;
+	printf "<monthverse>%s</monthverse>", $11;
+	printf "</entry>";
 }
 
 END {
