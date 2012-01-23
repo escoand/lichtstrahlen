@@ -3,8 +3,6 @@ package com.escoand.android.lichtstrahlen;
 import java.text.DateFormat;
 import java.util.Date;
 
-import com.escoand.android.lichtstrahlen_2012.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -28,7 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-public class Lichtstrahlen extends Activity {
+import com.escoand.android.lichtstrahlen_2012.R;
+
+public class MainActivity extends Activity {
 	public static final int DIALOG_ABOUT_ID = 0;
 	public static final int DIALOG_DATE_ID = 1;
 	public static final int DIALOG_NOTE_ID = 2;
@@ -134,7 +134,7 @@ public class Lichtstrahlen extends Activity {
 			/* animation */
 			flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
 			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
-			
+
 			/* show date picker */
 			showDialog(DIALOG_DATE_ID);
 			return true;
@@ -150,7 +150,7 @@ public class Lichtstrahlen extends Activity {
 			/* animation */
 			flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
 			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
-			
+
 			/* show list */
 			new AsyncVerseList(this).execute();
 			return true;
@@ -184,7 +184,7 @@ public class Lichtstrahlen extends Activity {
 							date.setYear(year - 1900);
 							date.setMonth(monthOfYear);
 							date.setDate(dayOfMonth);
-							new AsyncVerse(Lichtstrahlen.this).execute();
+							new AsyncVerse(MainActivity.this).execute();
 						}
 					}, date.getYear() + 1900, date.getMonth(), date.getDate());
 
@@ -214,7 +214,7 @@ public class Lichtstrahlen extends Activity {
 
 							// back to main
 							dismissDialog(DIALOG_NOTE_ID);
-							new AsyncVerse(Lichtstrahlen.this).execute();
+							new AsyncVerse(MainActivity.this).execute();
 							Toast.makeText(getApplicationContext(),
 									getString(R.string.noteSaved),
 									Toast.LENGTH_LONG).show();
@@ -248,7 +248,7 @@ public class Lichtstrahlen extends Activity {
 													getParent().dismissDialog(
 															DIALOG_NOTE_ID);
 													new AsyncVerse(
-															Lichtstrahlen.this)
+															MainActivity.this)
 															.execute();
 													Toast.makeText(
 															getApplicationContext(),
@@ -305,7 +305,7 @@ public class Lichtstrahlen extends Activity {
 
 			return dialog;
 		}
-		
+
 		return null;
 	}
 

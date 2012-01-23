@@ -18,9 +18,9 @@ import android.util.DisplayMetrics;
 
 public class AsyncVerseList extends
 		AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
-	private Lichtstrahlen parent = null;
+	private MainActivity parent = null;
 
-	public AsyncVerseList(Lichtstrahlen ls) {
+	public AsyncVerseList(MainActivity ls) {
 		super();
 		parent = ls;
 	}

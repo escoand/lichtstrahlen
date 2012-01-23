@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 public class AsyncNotes extends
 		AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
-	private Lichtstrahlen parent = null;
+	private MainActivity parent = null;
 
-	public AsyncNotes(Lichtstrahlen ls) {
+	public AsyncNotes(MainActivity ls) {
 		super();
 		parent = ls;
 	}
@@ -110,7 +110,7 @@ public class AsyncNotes extends
 
 	@Override
 	protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
-		
+
 		/* create list dialog */
 		parent.selection = new AlertDialog.Builder(parent)
 				.setCancelable(true)
@@ -125,11 +125,11 @@ public class AsyncNotes extends
 
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								
+
 								/* show note edit dialog */
 								try {
 									if (id == 0)
-										parent.showDialog(Lichtstrahlen.DIALOG_NOTE_ID);
+										parent.showDialog(MainActivity.DIALOG_NOTE_ID);
 
 									/* go to date */
 									else {

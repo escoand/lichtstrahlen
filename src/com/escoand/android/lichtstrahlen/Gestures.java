@@ -14,9 +14,9 @@ public class Gestures extends SimpleOnGestureListener {
 	private static final int SWIPE_MAX_OFF_PATH = 250;
 	private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 
-	private Lichtstrahlen context = null;
+	private MainActivity context = null;
 
-	public Gestures(Lichtstrahlen context) {
+	public Gestures(MainActivity context) {
 		super();
 		this.context = context;
 	}
