@@ -208,7 +208,7 @@ public class AsyncVerse extends AsyncTask<Void, Void, HashMap<String, String>> {
 		}
 
 		/* set content */
-		view.loadData(content, "text/html", "utf-8");
+		view.loadDataWithBaseURL(null, content, "text/html", "UTF-8", null);
 
 		/* scale */
 		view.getSettings().setSupportZoom(true);
