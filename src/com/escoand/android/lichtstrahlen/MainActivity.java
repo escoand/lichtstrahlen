@@ -1,13 +1,18 @@
 package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,6 +28,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -32,6 +38,8 @@ public class MainActivity extends Activity {
 	public static final int DIALOG_ABOUT_ID = 0;
 	public static final int DIALOG_DATE_ID = 1;
 	public static final int DIALOG_NOTE_ID = 2;
+	public static final int DIALOG_NOTIFY_ID = 3;
+	public static final int REQUEST_CODE = 19038606;
 	public static final String BIBLE_URL = "http://www.bibleserver.com/text/";
 
 	public Date date = new Date();
@@ -88,15 +96,18 @@ public class MainActivity extends Activity {
 	/* callback for clicking option item */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
 
 		/* scripture */
 		case R.id.menuBible:
 			if (verses.length == 1) {
-				startActivity(new Intent(Intent.ACTION_VIEW,
-						Uri.parse(BIBLE_URL
-								+ verses[0].toString().replaceAll(" ", ""))));
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(BIBLE_URL
+						+ verses[0].toString().replaceAll(" ", "")));
+				startActivity(intent);
 				return true;
+
 			} else if (verses.length > 1) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(this);
 				adb.setCancelable(true);
@@ -104,10 +115,10 @@ public class MainActivity extends Activity {
 				adb.setItems(verses, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int item) {
-						startActivity(new Intent(Intent.ACTION_VIEW, Uri
-								.parse(BIBLE_URL
-										+ verses[item].toString().replaceAll(
-												" ", ""))));
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(Uri.parse(BIBLE_URL
+								+ verses[0].toString().replaceAll(" ", "")));
+						startActivity(intent);
 					}
 				});
 				selection = adb.create();
@@ -153,6 +164,20 @@ public class MainActivity extends Activity {
 
 			/* show list */
 			new AsyncVerseList(this).execute();
+			return true;
+
+			/* share */
+		case R.id.menuShare:
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_TEXT, verses[0].toString());
+			startActivity(Intent.createChooser(intent,
+					getResources().getText(R.string.menuShare)));
+			return true;
+
+			/* notify */
+		case R.id.menuRemind:
+			showDialog(DIALOG_NOTIFY_ID);
 			return true;
 
 			/* info */
@@ -283,6 +308,35 @@ public class MainActivity extends Activity {
 					});
 
 			return dialog;
+
+			/* notify */
+		case DIALOG_NOTIFY_ID:
+			TimePickerDialog.OnTimeSetListener cb = new TimePickerDialog.OnTimeSetListener() {
+				@Override
+				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+					AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+					Calendar cal = Calendar.getInstance();
+					Intent intent = new Intent(getApplicationContext(),
+							Reminder.class);
+
+					intent.putExtra("title", getString(R.string.app_name));
+					intent.putExtra("message", getString(R.string.msgRemind));
+
+					PendingIntent sender = PendingIntent.getBroadcast(
+							getApplicationContext(), 0, intent,
+							PendingIntent.FLAG_UPDATE_CURRENT);
+
+					cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+							cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute,
+							0);
+
+					manager.setRepeating(AlarmManager.RTC_WAKEUP,
+							cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+							sender);
+				}
+			};
+
+			return new TimePickerDialog(this, cb, 9, 0, true);
 
 			/* info */
 		case DIALOG_ABOUT_ID:

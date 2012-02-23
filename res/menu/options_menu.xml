@@ -21,6 +21,11 @@
         android:id="@+id/menuList"
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/menuList"/>
+    
+    <item
+        android:id="@+id/menuShare"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/menuShare"/><item android:id="@+id/menuRemind" android:title="@string/menuRemind" android:checkable="true" android:checked="true" />
     <item
         android:id="@+id/menuInfo"
         android:icon="@android:drawable/ic_menu_info_details"
