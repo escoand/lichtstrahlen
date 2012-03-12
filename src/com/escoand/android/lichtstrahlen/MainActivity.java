@@ -1,16 +1,15 @@
 package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
-import java.text.Format;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -52,24 +51,21 @@ public class MainActivity extends Activity {
 
 	private GestureDetector gesture = null;
 
-	private Intent service = null;
+	private Intent reminder = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		/* remove notification */
-		((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
-				.cancel(0);
-
-		/* service */
-		service = new Intent(this, ReminderService.class);
-		service.putExtra("icon", R.drawable.icon);
-		service.putExtra("info", getString(R.string.app_name) + " - "
+		/* reminder */
+		reminder = new Intent(this, Reminder.class);
+		reminder.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		reminder.putExtra("icon", R.drawable.icon);
+		reminder.putExtra("info", getString(R.string.app_name) + " - "
 				+ getString(R.string.msgRemind));
-		service.putExtra("title", getString(R.string.app_name));
-		service.putExtra("message", getString(R.string.msgRemind));
+		reminder.putExtra("title", getString(R.string.app_name));
+		reminder.putExtra("message", getString(R.string.msgRemind));
 
 		/* init */
 		progress = new ProgressDialog(this);
@@ -123,8 +119,10 @@ public class MainActivity extends Activity {
 
 			itm.setTitle(getString(R.string.menuRemind)
 					+ String.format(" (%02d:%02d)", hour, minute));
-			itm.setChecked(serviceIsRunning());
+			itm.setChecked(PendingIntent.getBroadcast(getApplicationContext(),
+					0, reminder, PendingIntent.FLAG_NO_CREATE) != null);
 		}
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -210,13 +208,15 @@ public class MainActivity extends Activity {
 					getResources().getText(R.string.menuShare)));
 			return true;
 
-			/* notify */
+			/* remind */
 		case R.id.menuRemind:
-			if (!serviceIsRunning()) {
+			PendingIntent recv = PendingIntent.getBroadcast(
+					getApplicationContext(), 0, reminder,
+					PendingIntent.FLAG_NO_CREATE);
+			if (recv == null)
 				showDialog(DIALOG_NOTIFY_ID);
-			} else {
-				stopService(service);
-			}
+			else
+				recv.cancel();
 			return true;
 
 			/* info */
@@ -259,24 +259,24 @@ public class MainActivity extends Activity {
 					+ DateFormat.getDateInstance().format(date));
 			dialog.setContentView(R.layout.noteedit);
 
-			// load note
+			/* load note */
 			if (notes.exist(date))
 				((TextView) dialog.findViewById(R.id.noteText)).setText(notes
 						.get(date));
 
-			// callback for save note
+			/* callback for save note */
 			dialog.findViewById(R.id.noteSave).setOnClickListener(
 					new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
-							// save note
+							/* save note */
 							View parent = (View) v.getParent().getParent();
 							notes.add(date, ((TextView) parent
 									.findViewById(R.id.noteText)).getText()
 									.toString());
 
-							// back to main
+							/* back to main */
 							dismissDialog(DIALOG_NOTE_ID);
 							new AsyncVerse(MainActivity.this).execute();
 							Toast.makeText(getApplicationContext(),
@@ -285,7 +285,7 @@ public class MainActivity extends Activity {
 						}
 					});
 
-			// callback for delete note
+			/* callback for delete note */
 			dialog.findViewById(R.id.noteDelete).setOnClickListener(
 					new View.OnClickListener() {
 
@@ -302,10 +302,10 @@ public class MainActivity extends Activity {
 										@Override
 										public void onClick(
 												DialogInterface dialog, int id) {
-											// delete note
+											/* delete note */
 											// notes.remove(date);
 
-											// back to main
+											/* back to main */
 											dialog.dismiss();
 											getParent().dismissDialog(
 													DIALOG_NOTE_ID);
@@ -329,13 +329,13 @@ public class MainActivity extends Activity {
 						}
 					});
 
-			// callback for cancel
+			/* callback for cancel */
 			dialog.findViewById(R.id.noteCancel).setOnClickListener(
 					new View.OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
-							// back to main
+							/* back to main */
 							dismissDialog(DIALOG_NOTE_ID);
 						}
 					});
@@ -354,15 +354,32 @@ public class MainActivity extends Activity {
 			/* set picker */
 			TimePickerDialog.OnTimeSetListener cb = new TimePickerDialog.OnTimeSetListener() {
 				@Override
-				public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				public void onTimeSet(TimePicker view, int hour, int minute) {
 
 					/* save settings */
 					getSharedPreferences(getString(R.string.app_name),
 							Context.MODE_PRIVATE).edit()
-							.putInt("remind_hour", hourOfDay)
+							.putInt("remind_hour", hour)
 							.putInt("remind_minute", minute).commit();
 
-					startService(service);
+					/* get time */
+					Calendar cal = Calendar.getInstance();
+					cal.set(Calendar.HOUR_OF_DAY, hour);
+					cal.set(Calendar.MINUTE, minute);
+					cal.set(Calendar.SECOND, 0);
+					if (cal.before(Calendar.getInstance()))
+						cal.add(Calendar.DAY_OF_YEAR, 1);
+
+					/* receiver */
+					PendingIntent recv = PendingIntent.getBroadcast(
+							getApplicationContext(), 0, reminder,
+							PendingIntent.FLAG_UPDATE_CURRENT);
+
+					/* set reminder */
+					((AlarmManager) getSystemService(Context.ALARM_SERVICE))
+							.setRepeating(AlarmManager.RTC_WAKEUP,
+									cal.getTimeInMillis(),
+									AlarmManager.INTERVAL_DAY, recv);
 				}
 			};
 
@@ -415,18 +432,5 @@ public class MainActivity extends Activity {
 		/* previous day */
 		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
 		new AsyncVerse(this).execute();
-	}
-
-	/* check service */
-	public boolean serviceIsRunning() {
-		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		for (RunningServiceInfo service : manager
-				.getRunningServices(Integer.MAX_VALUE)) {
-			if ("com.escoand.android.lichtstrahlen.ReminderService"
-					.equals(service.service.getClassName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 }

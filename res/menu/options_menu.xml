@@ -24,7 +24,7 @@
     <item
         android:id="@+id/menuShare"
         android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/menuShare"/>
+        android:title="@string/menuShare" android:visible="false"/>
     <item
         android:id="@+id/menuRemind"
         android:checkable="true"
