@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
 					public void onClick(DialogInterface dialog, int item) {
 						Intent intent = new Intent(Intent.ACTION_VIEW);
 						intent.setData(Uri.parse(BIBLE_URL
-								+ verses[0].toString().replaceAll(" ", "")));
+								+ verses[item].toString().replaceAll(" ", "")));
 						startActivity(intent);
 					}
 				});
