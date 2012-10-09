@@ -7,7 +7,7 @@ import java.util.Vector;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import com.escoand.android.lichtstrahlen_2012.R;
+import com.escoand.android.lichtstrahlen_2013.R;
 
 import android.content.Context;
 import android.os.AsyncTask;

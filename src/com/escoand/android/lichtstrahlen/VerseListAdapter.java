@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import com.escoand.android.lichtstrahlen_2012.R;
+
+import com.escoand.android.lichtstrahlen_2013.R;
 
 public class VerseListAdapter extends SimpleAdapter {
 	Context context;

@@ -32,13 +32,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.escoand.android.lichtstrahlen_2012.R;
+import com.escoand.android.lichtstrahlen_2013.R;
 
 public class MainActivity extends Activity {
 	public static final int DIALOG_ABOUT_ID = 0;
 	public static final int DIALOG_DATE_ID = 1;
 	public static final int DIALOG_NOTE_ID = 2;
-	public static final int DIALOG_NOTIFY_ID = 3;
+	public static final int DIALOG_REMIND_ID = 3;
 	public static final String BIBLE_URL = "http://www.bibleserver.com/text/";
 
 	public Date date = new Date();
@@ -121,6 +121,12 @@ public class MainActivity extends Activity {
 					+ String.format(" (%02d:%02d)", hour, minute));
 			itm.setChecked(PendingIntent.getBroadcast(getApplicationContext(),
 					0, reminder, PendingIntent.FLAG_NO_CREATE) != null);
+		}
+
+		itm = menu.findItem(R.id.menuSplash);
+		if (itm != null) {
+			itm.setChecked(getSharedPreferences(getString(R.string.app_name),
+					Context.MODE_PRIVATE).getBoolean("splash", true));
 		}
 
 		return super.onPrepareOptionsMenu(menu);
@@ -214,9 +220,17 @@ public class MainActivity extends Activity {
 					getApplicationContext(), 0, reminder,
 					PendingIntent.FLAG_NO_CREATE);
 			if (recv == null)
-				showDialog(DIALOG_NOTIFY_ID);
+				showDialog(DIALOG_REMIND_ID);
 			else
 				recv.cancel();
+			return true;
+
+			/* splash */
+		case R.id.menuSplash:
+			item.setChecked(!item.isChecked());
+			getSharedPreferences(getString(R.string.app_name),
+					Context.MODE_PRIVATE).edit()
+					.putBoolean("splash", item.isChecked()).commit();
 			return true;
 
 			/* info */
@@ -343,7 +357,7 @@ public class MainActivity extends Activity {
 			return dialog;
 
 			/* notify */
-		case DIALOG_NOTIFY_ID:
+		case DIALOG_REMIND_ID:
 
 			/* load settings */
 			int hour = getSharedPreferences(getString(R.string.app_name),

@@ -20,8 +20,8 @@ $3~month{
 	split($3, date, ".");
 	printf "<entry date=\"%04d%02d%02d\">", date[3], date[2], date[1];
 	printf "<verse>%s</verse>", $5;
-	printf "<header>%s</header>", $7;
-	printf "<text>%s</text>", $6;
+	printf "<header>%s</header>", $6;
+	printf "<text>%s</text>", $7;
 	printf "<author>%s</author>", $2;
 	printf "<weektext>%s</weektext>", $8;
 	printf "<weekverse>%s</weekverse>", $9;
