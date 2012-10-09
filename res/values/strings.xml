@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- app -->
-	<string name="app_name">mobile devotions 2012</string>
+	<string name="app_name">mobile devotions 2013</string>
 
 	<!-- common -->
 	<string name="msgWait">Please wait&#8230;</string>
@@ -39,6 +39,7 @@
 	<string name="menuList">Scripture List</string>
 	<string name="menuShare">Share</string>
 	<string name="menuRemind">Reminder</string>
+	<string name="menuSplash">Splashscreen</string>
 	<string name="menuInfo">Info</string>
 
 	<!-- about -->

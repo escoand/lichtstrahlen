@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import com.escoand.android.lichtstrahlen_2012.R;
+import com.escoand.android.lichtstrahlen_2013.R;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

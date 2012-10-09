@@ -31,6 +31,11 @@
         android:checked="false"
         android:title="@string/menuRemind"/>
     <item
+        android:id="@+id/menuSplash"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/menuSplash"/>
+    <item
         android:id="@+id/menuInfo"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/menuInfo"/>
