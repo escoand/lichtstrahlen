@@ -52,6 +52,7 @@ public class MainActivity extends Activity {
 	private GestureDetector gesture = null;
 
 	private Intent reminder = null;
+	VerseDatabaseHelper dbh;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +175,6 @@ public class MainActivity extends Activity {
 			flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
 			/* go to today */
-			date = new Date();
 			new AsyncVerse(this).execute();
 			return true;
 
