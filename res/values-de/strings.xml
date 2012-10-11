@@ -39,6 +39,7 @@
 	<string name="menuList">Bibelstellenliste</string>
 	<string name="menuShare">Teilen</string>
 	<string name="menuRemind">Erinnerung</string>
+	<string name="menuInverse">Umgekehrte Farben</string>
 	<string name="menuSplash">Startbildschirm</string>
 	<string name="menuInfo">Info</string>
 	

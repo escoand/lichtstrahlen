@@ -24,16 +24,18 @@
     <item
         android:id="@+id/menuShare"
         android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/menuShare" android:visible="false"/>
+        android:title="@string/menuShare"/>
     <item
         android:id="@+id/menuRemind"
         android:checkable="true"
-        android:checked="false"
         android:title="@string/menuRemind"/>
+    <item
+        android:id="@+id/menuInverse"
+        android:checkable="true"
+        android:title="@string/menuInverse"/>
     <item
         android:id="@+id/menuSplash"
         android:checkable="true"
-        android:checked="true"
         android:title="@string/menuSplash"/>
     <item
         android:id="@+id/menuInfo"

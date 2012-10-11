@@ -23,7 +23,7 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "verses";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 5;
 
 	private static final String TABLE_NAME = "verses";
 	public static final String TABLE_COLUMN_DATE = "date";
@@ -31,20 +31,14 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	public static final String TABLE_COLUMN_TITLE = "title";
 	public static final String TABLE_COLUMN_VERSE = "verse";
 	public static final String TABLE_COLUMN_TEXT = "text";
-	public static final String TABLE_COLUMN_WEEKTEXT = "weektext";
-	public static final String TABLE_COLUMN_WEEKVERSE = "weekverse";
-	public static final String TABLE_COLUMN_MONTHTEXT = "monthtext";
-	public static final String TABLE_COLUMN_MONTHVERSE = "monthverse";
 	public static final String TABLE_COLUMN_ORDERID = "orderid";
 	public static final String TABLE_SQL_DROP = "DROP TABLE IF EXISTS "
 			+ TABLE_NAME;
 	private static final String TABLE_SQL_CREATE = "CREATE VIRTUAL TABLE "
-			+ TABLE_NAME + " USING fts3(_id INTEGER PRIMARY KEY, "
-			+ TABLE_COLUMN_DATE + ", " + TABLE_COLUMN_AUTHOR + ", "
-			+ TABLE_COLUMN_VERSE + ", " + TABLE_COLUMN_TITLE + ", "
-			+ TABLE_COLUMN_TEXT + ", " + TABLE_COLUMN_WEEKTEXT + ", "
-			+ TABLE_COLUMN_WEEKVERSE + ", " + TABLE_COLUMN_MONTHTEXT + ", "
-			+ TABLE_COLUMN_MONTHVERSE + ", " + TABLE_COLUMN_ORDERID + ")";
+			+ TABLE_NAME + " USING fts3(" + TABLE_COLUMN_DATE + ", "
+			+ TABLE_COLUMN_AUTHOR + ", " + TABLE_COLUMN_VERSE + ", "
+			+ TABLE_COLUMN_TITLE + ", " + TABLE_COLUMN_TEXT + ", "
+			+ TABLE_COLUMN_ORDERID + ")";
 
 	public VerseDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -87,15 +81,27 @@ public class VerseDatabase extends SQLiteOpenHelper {
 				values.put(TABLE_COLUMN_VERSE, cols[3]);
 				values.put(TABLE_COLUMN_TITLE, cols[4]);
 				values.put(TABLE_COLUMN_TEXT, cols[5]);
-				if (cols.length >= 8) {
-					values.put(TABLE_COLUMN_WEEKTEXT, cols[6]);
-					values.put(TABLE_COLUMN_WEEKVERSE, cols[7]);
-				}
-				if (cols.length >= 10) {
-					values.put(TABLE_COLUMN_MONTHTEXT, cols[8]);
-					values.put(TABLE_COLUMN_MONTHVERSE, cols[9]);
-				}
 				database.insert(TABLE_NAME, null, values);
+				if (cols.length >= 8 && !cols[6].equals("")
+						&& !cols[7].equals("")) {
+					values.remove(TABLE_COLUMN_AUTHOR);
+					values.put(TABLE_COLUMN_ORDERID, -1);
+					values.put(TABLE_COLUMN_TITLE,
+							context.getString(R.string.mainWeek));
+					values.put(TABLE_COLUMN_TEXT, cols[6]);
+					values.put(TABLE_COLUMN_VERSE, cols[7]);
+					database.insert(TABLE_NAME, null, values);
+				}
+				if (cols.length >= 10 && !cols[8].equals("")
+						&& !cols[9].equals("")) {
+					values.remove(TABLE_COLUMN_AUTHOR);
+					values.put(TABLE_COLUMN_ORDERID, -2);
+					values.put(TABLE_COLUMN_TITLE,
+							context.getString(R.string.mainMonth));
+					values.put(TABLE_COLUMN_TEXT, cols[8]);
+					values.put(TABLE_COLUMN_VERSE, cols[9]);
+					database.insert(TABLE_NAME, null, values);
+				}
 			}
 			reader.close();
 		} catch (IOException e) {
@@ -105,12 +111,12 @@ public class VerseDatabase extends SQLiteOpenHelper {
 
 	public Cursor getDateCursor(Date date) {
 		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
-		Cursor cursor = getReadableDatabase().query(
-				TABLE_NAME,
-				new String[] { TABLE_COLUMN_TITLE, TABLE_COLUMN_VERSE,
-						TABLE_COLUMN_TEXT, TABLE_COLUMN_AUTHOR, "_id" },
-				TABLE_COLUMN_DATE + "=?", new String[] { datestring }, null,
-				null, null);
+		Cursor cursor = getReadableDatabase()
+				.query(TABLE_NAME,
+						new String[] { TABLE_COLUMN_TITLE, TABLE_COLUMN_VERSE,
+								TABLE_COLUMN_TEXT, TABLE_COLUMN_AUTHOR,
+								"rowid as _id" }, TABLE_COLUMN_DATE + "=?",
+						new String[] { datestring }, null, null, TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
 		// System.err.println(datestring + "=" + cursor.getCount());
@@ -127,9 +133,11 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	}
 
 	public Cursor getListCursor() {
-		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
-				new String[] { TABLE_COLUMN_VERSE, TABLE_COLUMN_DATE, "_id" },
-				null, new String[] {}, null, null, TABLE_COLUMN_ORDERID);
+		Cursor cursor = getReadableDatabase().query(
+				TABLE_NAME,
+				new String[] { TABLE_COLUMN_VERSE, TABLE_COLUMN_DATE,
+						"rowid as _id" }, null, new String[] {}, null, null,
+				TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
 		System.err.println(cursor.getCount());
