@@ -140,7 +140,7 @@ public class AsyncNotes extends
 										parent.date = DateFormat
 												.getDateInstance().parse(
 														element.get("date"));
-										new AsyncVerse(parent).execute();
+										parent.reloadDay();
 									}
 								} catch (ParseException e) {
 									e.printStackTrace();

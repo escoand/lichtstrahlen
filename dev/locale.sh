@@ -7,8 +7,8 @@ rm -rf $DIR-en/ 2>/dev/null
 cp -r $DIR/ $DIR-en/
 rm -rf $DIR-en/gen/
 rm -rf $DIR-en/res/*-de/
-sed -e 's| package="[^"]*"|package="com.escoand.android.mobiledevotions_2012"|g' -i $DIR-en/AndroidManifest.xml
-sed -e 's|import com\.escoand\.android\.lichtstrahlen_2012\.R;|import com.escoand.android.mobiledevotions_2012.R;|g' -i $DIR-en/src/com/escoand/android/lichtstrahlen/*
+sed -e 's|package="com.escoand.android.lichtstrahlen_\([0-9]\+\)"|package="com.escoand.android.mobiledevotions_\1"|g' -i $DIR-en/AndroidManifest.xml
+sed -e 's|import com.escoand.android.lichtstrahlen_\([0-9]\+\)\.R;|import com.escoand.android.mobiledevotions_\1.R;|g' -i $DIR-en/src/com/escoand/android/lichtstrahlen/*
 
 # german
 rm -rf $DIR-de/ 2>/dev/null

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +18,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.escoand.android.lichtstrahlen_2013.R;
 
 /* helper to access database */
-public class VerseDatabaseHelper extends SQLiteOpenHelper {
+public class VerseDatabase extends SQLiteOpenHelper {
 	private final Context context;
 	private SQLiteDatabase database;
 
@@ -27,27 +26,27 @@ public class VerseDatabaseHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	private static final String TABLE_NAME = "verses";
-	private static final String TABLE_COLUMN_DATE = "date";
-	private static final String TABLE_COLUMN_AUTHOR = "author";
-	private static final String TABLE_COLUMN_TITLE = "title";
-	private static final String TABLE_COLUMN_VERSE = "verse";
-	private static final String TABLE_COLUMN_TEXT = "text";
-	private static final String TABLE_COLUMN_WEEKTEXT = "weektext";
-	private static final String TABLE_COLUMN_WEEKVERSE = "weekverse";
-	private static final String TABLE_COLUMN_MONTHTEXT = "monthtext";
-	private static final String TABLE_COLUMN_MONTHVERSE = "monthverse";
-	private static final String TABLE_COLUMN_ORDERID = "orderid";
-	private static final String TABLE_SQL_DROP = "DROP TABLE IF EXISTS "
+	public static final String TABLE_COLUMN_DATE = "date";
+	public static final String TABLE_COLUMN_AUTHOR = "author";
+	public static final String TABLE_COLUMN_TITLE = "title";
+	public static final String TABLE_COLUMN_VERSE = "verse";
+	public static final String TABLE_COLUMN_TEXT = "text";
+	public static final String TABLE_COLUMN_WEEKTEXT = "weektext";
+	public static final String TABLE_COLUMN_WEEKVERSE = "weekverse";
+	public static final String TABLE_COLUMN_MONTHTEXT = "monthtext";
+	public static final String TABLE_COLUMN_MONTHVERSE = "monthverse";
+	public static final String TABLE_COLUMN_ORDERID = "orderid";
+	public static final String TABLE_SQL_DROP = "DROP TABLE IF EXISTS "
 			+ TABLE_NAME;
 	private static final String TABLE_SQL_CREATE = "CREATE VIRTUAL TABLE "
-			+ TABLE_NAME + " USING fts3(" + TABLE_COLUMN_DATE + ", "
-			+ TABLE_COLUMN_AUTHOR + ", " + TABLE_COLUMN_VERSE + ", "
-			+ TABLE_COLUMN_TITLE + ", " + TABLE_COLUMN_TEXT + ", "
-			+ TABLE_COLUMN_WEEKTEXT + ", " + TABLE_COLUMN_WEEKVERSE + ", "
-			+ TABLE_COLUMN_MONTHTEXT + ", " + TABLE_COLUMN_MONTHVERSE + ", "
-			+ TABLE_COLUMN_ORDERID + ")";
+			+ TABLE_NAME + " USING fts3(_id INTEGER PRIMARY KEY, "
+			+ TABLE_COLUMN_DATE + ", " + TABLE_COLUMN_AUTHOR + ", "
+			+ TABLE_COLUMN_VERSE + ", " + TABLE_COLUMN_TITLE + ", "
+			+ TABLE_COLUMN_TEXT + ", " + TABLE_COLUMN_WEEKTEXT + ", "
+			+ TABLE_COLUMN_WEEKVERSE + ", " + TABLE_COLUMN_MONTHTEXT + ", "
+			+ TABLE_COLUMN_MONTHVERSE + ", " + TABLE_COLUMN_ORDERID + ")";
 
-	public VerseDatabaseHelper(Context context) {
+	public VerseDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
@@ -106,9 +105,12 @@ public class VerseDatabaseHelper extends SQLiteOpenHelper {
 
 	public Cursor getDateCursor(Date date) {
 		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
-		Cursor cursor = getReadableDatabase().query(TABLE_NAME, null,
+		Cursor cursor = getReadableDatabase().query(
+				TABLE_NAME,
+				new String[] { TABLE_COLUMN_TITLE, TABLE_COLUMN_VERSE,
+						TABLE_COLUMN_TEXT, TABLE_COLUMN_AUTHOR, "_id" },
 				TABLE_COLUMN_DATE + "=?", new String[] { datestring }, null,
-				null, null, null);
+				null, null);
 		if (cursor != null)
 			cursor.moveToFirst();
 		// System.err.println(datestring + "=" + cursor.getCount());
@@ -125,11 +127,9 @@ public class VerseDatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public Cursor getListCursor() {
-		Cursor cursor = getReadableDatabase().query(
-				TABLE_NAME,
-				new String[] { TABLE_COLUMN_VERSE, TABLE_COLUMN_DATE,
-						TABLE_COLUMN_ORDERID }, null, new String[] {}, null,
-				null, TABLE_COLUMN_ORDERID);
+		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
+				new String[] { TABLE_COLUMN_VERSE, TABLE_COLUMN_DATE, "_id" },
+				null, new String[] {}, null, null, TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
 		System.err.println(cursor.getCount());
