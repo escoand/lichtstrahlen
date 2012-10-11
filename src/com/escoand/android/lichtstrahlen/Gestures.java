@@ -8,6 +8,7 @@ import android.view.MotionEvent;
  * 
  * @author escoand
  */
+
 public class Gestures extends SimpleOnGestureListener {
 
 	private static final int SWIPE_MIN_DISTANCE = 120;

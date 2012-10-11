@@ -66,6 +66,14 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+		/* theme */
+		if (!getSharedPreferences(getString(R.string.app_name),
+				Context.MODE_PRIVATE).getBoolean("inverse", false)) {
+			setTheme(android.R.style.Theme_Light);
+		}
+
+		/* show */
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
@@ -87,7 +95,7 @@ public class MainActivity extends Activity {
 		/* flipper */
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 
-		/* open database */
+		/* database */
 		dbh = new VerseDatabase(getApplicationContext());
 
 		/* splash */
@@ -104,9 +112,10 @@ public class MainActivity extends Activity {
 
 				}
 			}, TIMER_SPLASH);
+		}
 
-			/* no splash */
-		} else
+		/* no splash */
+		else
 			gotoDay();
 	}
 
@@ -151,6 +160,12 @@ public class MainActivity extends Activity {
 					0, reminder, PendingIntent.FLAG_NO_CREATE) != null);
 		}
 
+		item = menu.findItem(R.id.menuInverse);
+		if (item != null) {
+			item.setChecked(getSharedPreferences(getString(R.string.app_name),
+					Context.MODE_PRIVATE).getBoolean("inverse", false));
+		}
+
 		item = menu.findItem(R.id.menuSplash);
 		if (item != null) {
 			item.setChecked(getSharedPreferences(getString(R.string.app_name),
@@ -163,13 +178,14 @@ public class MainActivity extends Activity {
 	/* callback for clicking option item */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 
 		switch (item.getItemId()) {
 
 		/* scripture */
 		case R.id.menuBible:
 			if (verses.length == 1) {
-				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(BIBLE_URL
 						+ verses[0].toString().replaceAll(" ", "")));
 				startActivity(intent);
@@ -223,6 +239,8 @@ public class MainActivity extends Activity {
 
 					/* data for list */
 					.setAdapter(new CursorAdapter(this, dbh.getListCursor()) {
+						private final SimpleDateFormat df = new SimpleDateFormat(
+								"yyyyMMdd");
 
 						/* load layout */
 						@Override
@@ -240,9 +258,15 @@ public class MainActivity extends Activity {
 							((TextView) view.findViewById(R.id.listVerse))
 									.setText(cursor.getString(cursor
 											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE)));
-							((TextView) view.findViewById(R.id.listDate))
-									.setText(cursor.getString(cursor
-											.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
+							try {
+								((TextView) view.findViewById(R.id.listDate))
+										.setText(DateFormat
+												.getDateInstance()
+												.format(df.parse(cursor.getString(cursor
+														.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)))));
+							} catch (ParseException e) {
+								e.printStackTrace();
+							}
 						}
 					},
 
@@ -250,8 +274,10 @@ public class MainActivity extends Activity {
 					new OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int id) {
-							gotoDay(selection.getListView().getAdapter()
-									.getItemId(id));
+							Cursor cursor = ((Cursor) ((CursorAdapter) selection
+									.getListView().getAdapter()).getItem(id));
+							gotoDay(cursor.getString(cursor
+									.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
 						}
 					}).create();
 			selection.show();
@@ -259,7 +285,7 @@ public class MainActivity extends Activity {
 
 			/* share */
 		case R.id.menuShare:
-			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_TEXT, verses[0].toString());
 			startActivity(Intent.createChooser(intent,
@@ -275,6 +301,16 @@ public class MainActivity extends Activity {
 				showDialog(DIALOG_REMIND_ID);
 			else
 				recv.cancel();
+			return true;
+
+			/* inverse colors */
+		case R.id.menuInverse:
+			intent = getIntent();
+			getSharedPreferences(getString(R.string.app_name),
+					Context.MODE_PRIVATE).edit()
+					.putBoolean("inverse", !item.isChecked()).commit();
+			finish();
+			startActivity(intent);
 			return true;
 
 			/* splash */
@@ -509,7 +545,7 @@ public class MainActivity extends Activity {
 
 		/* get day */
 		try {
-			this.date = new SimpleDateFormat().parse(date);
+			this.date = new SimpleDateFormat("yyyyMMdd").parse(date);
 			reloadDay();
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -563,10 +599,12 @@ public class MainActivity extends Activity {
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE)));
 				((TextView) view.findViewById(R.id.verseText)).setText(cursor.getString(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_TEXT)));
-				if (cursor
-						.getString(
-								cursor.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
-						.equals(""))
+				if (cursor.isNull(cursor
+						.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
+						|| cursor
+								.getString(
+										cursor.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
+								.equals(""))
 					((TextView) view.findViewById(R.id.verseAuthor))
 							.setVisibility(View.GONE);
 				((TextView) view.findViewById(R.id.verseAuthor)).setText(cursor.getString(cursor
