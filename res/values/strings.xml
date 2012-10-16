@@ -1,51 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<!-- app -->
-	<string name="app_name">mobile devotions 2013</string>
 
-	<!-- common -->
-	<string name="msgWait">Please wait&#8230;</string>
-	<string name="msgRemind">Don\'t forget it!</string>
-	<string name="buttonYes">Yes</string>
-	<string name="buttonNo">No</string>
-	<string name="listNotes">Notes</string>
-	<string name="listVerses">Scripture List</string>
+    <!-- app -->
+    <string name="app_name">mobile devotions 2013</string>
 
-	<!-- main -->
-	<string name="mainWeek">For the week:</string>
-	<string name="mainMonth">For the month:</string>
-	<string name="mainNothing">No Text found for this date.</string>
+    <!-- common -->
+    <string name="msgWait">Please wait&#8230;</string>
+    <string name="msgRemind">Don\'t forget it!</string>
+    <string name="buttonYes">Yes</string>
+    <string name="buttonNo">No</string>
+    <string name="listNotes">Notes</string>
+    <string name="listVerses">Scripture List</string>
 
-	<!-- notes -->
-	<string name="mainNote">Notes:</string>
-	<string name="noteNote">Note</string>
-	<string name="noteAdd">Add / Edit note</string>
-	<string name="noteSave">Save</string>
-	<string name="noteDelete">Delete</string>
-	<string name="noteCancel">Cancel</string>
-	<string name="noteDeleteQuestion">Confirm deletion?</string>
-	<string name="noteSaved">Note saved</string>
-	<string name="noteDeleted">Note deleted</string>
+    <!-- main -->
+    <string name="mainWeek">For the week:</string>
+    <string name="mainMonth">For the month:</string>
+    <string name="mainNothing">No Text found for this date.</string>
 
-	<!-- text -->
-	<string name="textFor">for</string>
-	<string name="textUntil">until</string>
+    <!-- notes -->
+    <string name="mainNote">Notes:</string>
+    <string name="noteNote">Note</string>
+    <string name="noteAdd">Add / Edit note</string>
+    <string name="noteSave">Save</string>
+    <string name="noteDelete">Delete</string>
+    <string name="noteCancel">Cancel</string>
+    <string name="noteDeleteQuestion">Confirm deletion?</string>
+    <string name="noteSaved">Note saved</string>
+    <string name="noteDeleted">Note deleted</string>
 
-	<!-- menu -->
-	<string name="menuBible">Scripture</string>
-	<string name="menuToday">Today</string>
-	<string name="menuDate">Calendar</string>
-	<string name="menuNotes">Notes</string>
-	<string name="menuList">Scripture List</string>
-	<string name="menuShare">Share</string>
-	<string name="menuRemind">Reminder</string>
-	<string name="menuInverse">Inverse colors</string>
-	<string name="menuSplash">Splashscreen</string>
-	<string name="menuInfo">Info</string>
+    <!-- text -->
+    <string name="textFor">for</string>
+    <string name="textUntil">until</string>
 
-	<!-- about -->
-	<string name="about" formatted="false"><![CDATA[<b>German original edition</b><br/><b>Title:</b> Lichtstrahlen 2012<br/><b>Publisher:</b> Deutscher Jugendverband „Entschieden für Christus“ (EC) e.V., <a href="http://www.ec-jugend.d/e">ec-jugend.de</a><br/><br/><b>English edition</b><br/><b>Publisher:</b> World’s Christian Endeavor Union, <a href="http://www.worldsceunion.org/">worldsceunion.org</a><br/><b>Translation:</b> Many thanks to Emily and Shawn Rudy, Andreas Rudolph, Annie Gomado, Helen Driediger-Nortje<br/><br/><b>Publishing company</b><br/><b>&copy; 2011 BORN-VERLAG Medien für Mitarbeiter, www.bornverlag.de</b><br/><br/>Programming: <a href="https://github.com/escoand/lichtstrahlen/wiki">Andreas Sch&ouml;nfelder</a><br/><br/>Copyrights<br/>Bibelleseplan, Monatsspr&uuml;che: &Ouml;kumenische Arbeitsgemeinschaft für Bibellesen, Berlin, <a href="http://www.oeab.de/">oeab.de</a><br/>Scripture taken from the HOLY BIBLE, NEW INTERNATIONAL VERSION. Copyright &copy; 1973, 1978, 1984 International Bible Society.<br/>Linking by courtesy to <a href="http://www.bibleserver.com/">bibleserver.com</a>]]></string>
-	
-	<!-- misc -->
-	<string name="image">image</string>
+    <!-- menu -->
+    <string name="menuBible">Scripture</string>
+    <string name="menuToday">Today</string>
+    <string name="menuDate">Calendar</string>
+    <string name="menuNotes">Notes</string>
+    <string name="menuList">Scripture List</string>
+    <string name="menuShare">Share</string>
+    <string name="menuPreference">Preferences</string>
+    <string name="menuInfo">Info</string>
+
+    <!-- preferences -->
+    <string name="prefSplash">Splashscreen</string>
+    <string name="prefSplashDesc">Mobile devotions cover at start</string>
+    <string name="prefRemind">Reminder</string>
+    <string name="prefRemindDesc">Never forget to read mobile devotions</string>
+    <string name="prefInverse">Inverse colors</string>
+    <string name="prefInverseDesc">Switch black and white color</string>
+    <string name="prefScale">Font size</string>
+    <string name="prefScaleDesc">Actual size is </string>
+
+    <!-- about -->
+    <string name="about" formatted="false"><![CDATA[<b>German original edition</b><br/><b>Title:</b> Lichtstrahlen 2012<br/><b>Publisher:</b> Deutscher Jugendverband „Entschieden für Christus“ (EC) e.V., <a href="http://www.ec-jugend.d/e">ec-jugend.de</a><br/><br/><b>English edition</b><br/><b>Publisher:</b> World’s Christian Endeavor Union, <a href="http://www.worldsceunion.org/">worldsceunion.org</a><br/><b>Translation:</b> Many thanks to Emily and Shawn Rudy, Andreas Rudolph, Annie Gomado, Helen Driediger-Nortje<br/><br/><b>Publishing company</b><br/><b>&copy; 2011 BORN-VERLAG Medien für Mitarbeiter, www.bornverlag.de</b><br/><br/>Programming: <a href="https://github.com/escoand/lichtstrahlen/wiki">Andreas Sch&ouml;nfelder</a><br/><br/>Copyrights<br/>Bibelleseplan, Monatsspr&uuml;che: &Ouml;kumenische Arbeitsgemeinschaft für Bibellesen, Berlin, <a href="http://www.oeab.de/">oeab.de</a><br/>Scripture taken from the HOLY BIBLE, NEW INTERNATIONAL VERSION. Copyright &copy; 1973, 1978, 1984 International Bible Society.<br/>Linking by courtesy to <a href="http://www.bibleserver.com/">bibleserver.com</a>]]></string>
+
+    <!-- misc -->
+    <string name="image">image</string>
+
+    <!-- font size -->
+    <string-array name="listScaleValues">
+        <item>14</item>
+        <item>18</item>
+        <item>22</item>
+    </string-array>
+    <string-array name="listScale">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+
 </resources>

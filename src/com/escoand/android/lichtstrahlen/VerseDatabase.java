@@ -23,7 +23,7 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "verses";
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 12;
 
 	private static final String TABLE_NAME = "verses";
 	public static final String TABLE_COLUMN_DATE = "date";
@@ -75,12 +75,12 @@ public class VerseDatabase extends SQLiteOpenHelper {
 				if (cols.length < 6)
 					continue;
 				values.clear();
-				values.put(TABLE_COLUMN_ORDERID, cols[0]);
-				values.put(TABLE_COLUMN_DATE, cols[1]);
-				values.put(TABLE_COLUMN_AUTHOR, cols[2]);
-				values.put(TABLE_COLUMN_VERSE, cols[3]);
-				values.put(TABLE_COLUMN_TITLE, cols[4]);
-				values.put(TABLE_COLUMN_TEXT, cols[5]);
+				values.put(TABLE_COLUMN_ORDERID, Integer.parseInt(cols[0]));
+				values.put(TABLE_COLUMN_DATE, cols[1].trim());
+				values.put(TABLE_COLUMN_AUTHOR, cols[2].trim());
+				values.put(TABLE_COLUMN_VERSE, cols[3].trim());
+				values.put(TABLE_COLUMN_TITLE, cols[4].trim());
+				values.put(TABLE_COLUMN_TEXT, cols[5].trim());
 				database.insert(TABLE_NAME, null, values);
 				if (cols.length >= 8 && !cols[6].equals("")
 						&& !cols[7].equals("")) {
@@ -88,8 +88,9 @@ public class VerseDatabase extends SQLiteOpenHelper {
 					values.put(TABLE_COLUMN_ORDERID, -1);
 					values.put(TABLE_COLUMN_TITLE,
 							context.getString(R.string.mainWeek));
-					values.put(TABLE_COLUMN_TEXT, cols[6]);
-					values.put(TABLE_COLUMN_VERSE, cols[7]);
+					values.put(TABLE_COLUMN_TEXT, cols[6].trim());
+					values.put(TABLE_COLUMN_VERSE, cols[7].trim());
+					System.err.println(values);
 					database.insert(TABLE_NAME, null, values);
 				}
 				if (cols.length >= 10 && !cols[8].equals("")
@@ -98,8 +99,9 @@ public class VerseDatabase extends SQLiteOpenHelper {
 					values.put(TABLE_COLUMN_ORDERID, -2);
 					values.put(TABLE_COLUMN_TITLE,
 							context.getString(R.string.mainMonth));
-					values.put(TABLE_COLUMN_TEXT, cols[8]);
-					values.put(TABLE_COLUMN_VERSE, cols[9]);
+					values.put(TABLE_COLUMN_TEXT, cols[8].trim());
+					values.put(TABLE_COLUMN_VERSE, cols[9].trim());
+					System.err.println(values);
 					database.insert(TABLE_NAME, null, values);
 				}
 			}
@@ -116,10 +118,11 @@ public class VerseDatabase extends SQLiteOpenHelper {
 						new String[] { TABLE_COLUMN_TITLE, TABLE_COLUMN_VERSE,
 								TABLE_COLUMN_TEXT, TABLE_COLUMN_AUTHOR,
 								"rowid as _id" }, TABLE_COLUMN_DATE + "=?",
-						new String[] { datestring }, null, null, TABLE_COLUMN_ORDERID);
+						new String[] { datestring }, null, null,
+						TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
-		// System.err.println(datestring + "=" + cursor.getCount());
+		System.err.println(datestring + "=" + cursor.getCount());
 		return cursor;
 	}
 
@@ -133,11 +136,21 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	}
 
 	public Cursor getListCursor() {
-		Cursor cursor = getReadableDatabase().query(
-				TABLE_NAME,
-				new String[] { TABLE_COLUMN_VERSE, TABLE_COLUMN_DATE,
-						"rowid as _id" }, null, new String[] {}, null, null,
-				TABLE_COLUMN_ORDERID);
+		Cursor cursor = getReadableDatabase()
+				.query(TABLE_NAME,
+						new String[] {
+								TABLE_COLUMN_DATE,
+								"min(" + TABLE_COLUMN_VERSE + ") as "
+										+ TABLE_COLUMN_VERSE,
+								"min(" + TABLE_COLUMN_DATE + ") as "
+										+ TABLE_COLUMN_DATE,
+								"max(" + TABLE_COLUMN_VERSE + ") as "
+										+ TABLE_COLUMN_VERSE + "_until",
+								"max(" + TABLE_COLUMN_DATE + ") as "
+										+ TABLE_COLUMN_DATE + "_until",
+								"rowid as _id" }, TABLE_COLUMN_ORDERID + ">0",
+						new String[] {}, TABLE_COLUMN_ORDERID, null,
+						TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
 		System.err.println(cursor.getCount());

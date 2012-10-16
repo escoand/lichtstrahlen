@@ -112,48 +112,48 @@ public class AsyncNotes extends
 	protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
 
 		/* create list dialog */
-		parent.selection = new AlertDialog.Builder(parent)
-				.setCancelable(true)
-				.setTitle(parent.getString(R.string.listNotes))
-				.setAdapter(
-						new SimpleAdapter(parent.getApplicationContext(),
-								result, R.layout.noteslist, new String[] {
-										"verse", "date", "note" }, new int[] {
-										R.id.listVerse, R.id.listDate,
-										R.id.listNote }),
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int id) {
-
-								/* show note edit dialog */
-								try {
-									if (id == 0)
-										parent.showDialog(MainActivity.DIALOG_NOTE_ID);
-
-									/* go to date */
-									else {
-										@SuppressWarnings("unchecked")
-										HashMap<String, String> element = (HashMap<String, String>) parent.selection
-												.getListView()
-												.getItemAtPosition(id);
-										parent.date = DateFormat
-												.getDateInstance().parse(
-														element.get("date"));
-										parent.reloadDay();
-									}
-								} catch (ParseException e) {
-									e.printStackTrace();
-								}
-							}
-						}).create();
+//		parent.selection = new AlertDialog.Builder(parent)
+//				.setCancelable(true)
+//				.setTitle(parent.getString(R.string.listNotes))
+//				.setAdapter(
+//						new SimpleAdapter(parent.getApplicationContext(),
+//								result, R.layout.noteslist, new String[] {
+//										"verse", "date", "note" }, new int[] {
+//										R.id.listVerse, R.id.listDate,
+//										R.id.listNote }),
+//						new DialogInterface.OnClickListener() {
+//
+//							@Override
+//							public void onClick(DialogInterface dialog, int id) {
+//
+//								/* show note edit dialog */
+//								try {
+//									if (id == 0)
+//										parent.showDialog(MainActivity.DIALOG_NOTE_ID);
+//
+//									/* go to date */
+//									else {
+//										@SuppressWarnings("unchecked")
+//										HashMap<String, String> element = (HashMap<String, String>) parent.selection
+//												.getListView()
+//												.getItemAtPosition(id);
+//										parent.date = DateFormat
+//												.getDateInstance().parse(
+//														element.get("date"));
+//										parent.reloadDay();
+//									}
+//								} catch (ParseException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//						}).create();
 
 		/* add header */
-		TextView addNote = new TextView(parent.getApplicationContext());
+		/*TextView addNote = new TextView(parent.getApplicationContext());
 		addNote.setText(parent.getString(R.string.noteAdd));
 		addNote.setPadding(5, 10, 5, 10);
 		parent.selection.getListView().addHeaderView(addNote);
-		parent.selection.show();
+		parent.selection.show();*/
 
 		/* hide progress dialog */
 		parent.progress.dismiss();
