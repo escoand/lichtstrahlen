@@ -216,6 +216,7 @@ public class MainActivity extends Activity {
 					getResources().getText(R.string.menuShare)));
 			return true;
 
+			/* preferences */
 		case R.id.menuPreference:
 			intent = new Intent(getBaseContext(), Preferences.class);
 			startActivity(intent);
@@ -270,7 +271,7 @@ public class MainActivity extends Activity {
 
 			/* notes */
 		case DIALOG_NOTE_ID:
-			// ToDo: test
+			// TODO reimplement notes
 			dialog.setTitle(getString(R.string.noteNote) + " "
 					+ getString(R.string.textFor) + " "
 					+ DateFormat.getDateInstance().format(date));

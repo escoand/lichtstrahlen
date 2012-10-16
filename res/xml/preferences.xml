@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <CheckBoxPreference
-        android:key="splash"
-        android:title="@string/prefSplash" android:summary="@string/prefSplashDesc"/>
-    <CheckBoxPreference android:key="remind" android:title="@string/prefRemind" android:summary="@string/prefRemindDesc"/><CheckBoxPreference
-        android:key="inverse"
-        android:title="@string/prefInverse" android:summary="@string/prefInverseDesc"/>
-    
+    <PreferenceCategory android:title="@string/prefDisplay" >
+        <ListPreference
+            android:entries="@array/listScale"
+            android:entryValues="@array/listScaleValues"
+            android:key="scale"
+            android:summary="@string/prefScaleDesc"
+            android:title="@string/prefScale" />
 
-    <ListPreference
-        android:entries="@array/listScale"
-        android:key="scale"
-        android:title="@string/prefScale" android:entryValues="@array/listScaleValues" android:summary="@string/prefScaleDesc"/>
+        <CheckBoxPreference
+            android:key="inverse"
+            android:summary="@string/prefInverseDesc"
+            android:title="@string/prefInverse" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefOther" >
+        <CheckBoxPreference
+            android:key="splash"
+            android:summary="@string/prefSplashDesc"
+            android:title="@string/prefSplash" />
+        <CheckBoxPreference
+            android:key="remind"
+            android:summary="@string/prefRemindDesc"
+            android:title="@string/prefRemind" />
+    </PreferenceCategory>
 
 </PreferenceScreen>
