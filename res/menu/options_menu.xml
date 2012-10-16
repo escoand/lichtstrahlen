@@ -26,17 +26,8 @@
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/menuShare"/>
     <item
-        android:id="@+id/menuRemind"
-        android:checkable="true"
-        android:title="@string/menuRemind"/>
-    <item
-        android:id="@+id/menuInverse"
-        android:checkable="true"
-        android:title="@string/menuInverse"/>
-    <item
-        android:id="@+id/menuSplash"
-        android:checkable="true"
-        android:title="@string/menuSplash"/>
+        android:id="@+id/menuPreference"
+        android:title="@string/menuPreference"/>
     <item
         android:id="@+id/menuInfo"
         android:icon="@android:drawable/ic_menu_info_details"

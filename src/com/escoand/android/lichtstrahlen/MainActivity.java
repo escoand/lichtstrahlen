@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -19,13 +20,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,16 +51,18 @@ public class MainActivity extends Activity {
 	public static final int DIALOG_DATE_ID = 1;
 	public static final int DIALOG_NOTE_ID = 2;
 	public static final int DIALOG_REMIND_ID = 3;
+	public static final int DIALOG_LIST_ID = 4;
+	public static final int DIALOG_BIBLE_ID = 5;
 	public static final String BIBLE_URL = "http://www.bibleserver.com/text/";
 	private static final int TIMER_SPLASH = 2000;
 
 	public Date date = new Date();
-	public CharSequence[] verses = null;
 	public Notes notes = null;
 	ViewFlipper flipper = null;
 
 	public ProgressDialog progress = null;
-	public AlertDialog selection = null;
+	private Cursor data = null;
+	private Cursor data2 = null;
 
 	private GestureDetector gesture = null;
 
@@ -68,10 +73,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		/* theme */
-		if (!getSharedPreferences(getString(R.string.app_name),
-				Context.MODE_PRIVATE).getBoolean("inverse", false)) {
+		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+				.getBoolean("inverse", false))
 			setTheme(android.R.style.Theme_Light);
-		}
+		else
+			setTheme(android.R.style.Theme_Black);
 
 		/* show */
 		super.onCreate(savedInstanceState);
@@ -99,8 +105,8 @@ public class MainActivity extends Activity {
 		dbh = new VerseDatabase(getApplicationContext());
 
 		/* splash */
-		if (getSharedPreferences(getString(R.string.app_name),
-				Context.MODE_PRIVATE).getBoolean("splash", true)) {
+		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+				.getBoolean("splash", true)) {
 			date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
 			flipper.addView(getLayoutInflater().inflate(R.layout.splash, null));
 
@@ -109,7 +115,6 @@ public class MainActivity extends Activity {
 				@Override
 				public void run() {
 					nextDay();
-
 				}
 			}, TIMER_SPLASH);
 		}
@@ -145,32 +150,15 @@ public class MainActivity extends Activity {
 	/* callback for showing option menu */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem item = menu.findItem(R.id.menuRemind);
-		if (item != null) {
+		MenuItem item = null;
 
-			/* load settings */
-			int hour = getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getInt("remind_hour", 9);
-			int minute = getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getInt("remind_minute", 0);
-
-			item.setTitle(getString(R.string.menuRemind)
-					+ String.format(" (%02d:%02d)", hour, minute));
-			item.setChecked(PendingIntent.getBroadcast(getApplicationContext(),
-					0, reminder, PendingIntent.FLAG_NO_CREATE) != null);
-		}
-
-		item = menu.findItem(R.id.menuInverse);
-		if (item != null) {
-			item.setChecked(getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getBoolean("inverse", false));
-		}
-
-		item = menu.findItem(R.id.menuSplash);
-		if (item != null) {
-			item.setChecked(getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getBoolean("splash", true));
-		}
+		/* no data */
+		item = menu.findItem(R.id.menuBible);
+		if (item != null)
+			item.setEnabled(data != null && data.getCount() != 0);
+		item = menu.findItem(R.id.menuShare);
+		if (item != null)
+			item.setEnabled(data != null && data.getCount() != 0);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -184,31 +172,18 @@ public class MainActivity extends Activity {
 
 		/* scripture */
 		case R.id.menuBible:
-			if (verses.length == 1) {
+			if (data.getCount() == 1) {
+				data.moveToFirst();
 				intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(BIBLE_URL
-						+ verses[0].toString().replaceAll(" ", "")));
+						+ data.getString(
+								data.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
+								.replaceAll(" ", "")));
 				startActivity(intent);
 				return true;
 
-			} else if (verses.length > 1) {
-				selection = new AlertDialog.Builder(this)
-						.setCancelable(true)
-						.setTitle(getString(R.string.listVerses))
-						.setItems(verses,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int item) {
-										Intent intent = new Intent(
-												Intent.ACTION_VIEW);
-										intent.setData(Uri.parse(BIBLE_URL
-												+ verses[item].toString()
-														.replaceAll(" ", "")));
-										startActivity(intent);
-									}
-								}).create();
-				selection.show();
+			} else if (data.getCount() > 1) {
+				showDialog(DIALOG_BIBLE_ID);
 				return true;
 			}
 			return false;
@@ -220,8 +195,6 @@ public class MainActivity extends Activity {
 
 			/* calendar */
 		case R.id.menuDate:
-
-			/* show date picker */
 			showDialog(DIALOG_DATE_ID);
 			return true;
 
@@ -232,93 +205,21 @@ public class MainActivity extends Activity {
 
 			/* scripture list */
 		case R.id.menuList:
-
-			/* show list */
-			selection = new AlertDialog.Builder(this).setCancelable(true)
-					.setTitle(getString(R.string.menuList))
-
-					/* data for list */
-					.setAdapter(new CursorAdapter(this, dbh.getListCursor()) {
-						private final SimpleDateFormat df = new SimpleDateFormat(
-								"yyyyMMdd");
-
-						/* load layout */
-						@Override
-						public View newView(Context context, Cursor cursor,
-								ViewGroup parent) {
-							getLayoutInflater();
-							return LayoutInflater.from(context).inflate(
-									R.layout.list, parent, false);
-						}
-
-						/* set item data */
-						@Override
-						public void bindView(View view, Context context,
-								Cursor cursor) {
-							((TextView) view.findViewById(R.id.listVerse))
-									.setText(cursor.getString(cursor
-											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE)));
-							try {
-								((TextView) view.findViewById(R.id.listDate))
-										.setText(DateFormat
-												.getDateInstance()
-												.format(df.parse(cursor.getString(cursor
-														.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)))));
-							} catch (ParseException e) {
-								e.printStackTrace();
-							}
-						}
-					},
-
-					/* on click */
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int id) {
-							Cursor cursor = ((Cursor) ((CursorAdapter) selection
-									.getListView().getAdapter()).getItem(id));
-							gotoDay(cursor.getString(cursor
-									.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
-						}
-					}).create();
-			selection.show();
+			showDialog(DIALOG_LIST_ID);
 			return true;
 
 			/* share */
 		case R.id.menuShare:
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, verses[0].toString());
+			// intent.putExtra(Intent.EXTRA_TEXT, findView));
 			startActivity(Intent.createChooser(intent,
 					getResources().getText(R.string.menuShare)));
 			return true;
 
-			/* remind */
-		case R.id.menuRemind:
-			PendingIntent recv = PendingIntent.getBroadcast(
-					getApplicationContext(), 0, reminder,
-					PendingIntent.FLAG_NO_CREATE);
-			if (recv == null)
-				showDialog(DIALOG_REMIND_ID);
-			else
-				recv.cancel();
-			return true;
-
-			/* inverse colors */
-		case R.id.menuInverse:
-			intent = getIntent();
-			getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).edit()
-					.putBoolean("inverse", !item.isChecked()).commit();
-			finish();
+		case R.id.menuPreference:
+			intent = new Intent(getBaseContext(), Preferences.class);
 			startActivity(intent);
-			return true;
-
-			/* splash */
-		case R.id.menuSplash:
-			item.setChecked(!item.isChecked());
-			getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).edit()
-					.putBoolean("splash", item.isChecked()).commit();
 			return true;
 
 			/* info */
@@ -339,7 +240,24 @@ public class MainActivity extends Activity {
 
 		switch (id) {
 
-		/* calendar */
+		/* bible */
+		case DIALOG_BIBLE_ID:
+			return new AlertDialog.Builder(this).setCancelable(true)
+					.setTitle(getString(R.string.listVerses))
+					.setCursor(data, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							data.moveToPosition(item);
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setData(Uri.parse(BIBLE_URL
+									+ data.getString(
+											data.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
+											.replaceAll(" ", "")));
+							startActivity(intent);
+						}
+					}, VerseDatabase.TABLE_COLUMN_VERSE).create();
+
+			/* calendar */
 		case DIALOG_DATE_ID:
 			return new DatePickerDialog(this,
 					new DatePickerDialog.OnDateSetListener() {
@@ -498,10 +416,103 @@ public class MainActivity extends Activity {
 				((TextView) dialog.findViewById(R.id.txtAbout))
 						.setMovementMethod(LinkMovementMethod.getInstance());
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 
 			return dialog;
+
+		case DIALOG_LIST_ID:
+			data2 = dbh.getListCursor();
+			return new AlertDialog.Builder(this).setCancelable(true)
+					.setTitle(getString(R.string.menuList))
+
+					/* data for list */
+					.setAdapter(new CursorAdapter(this, data2) {
+						private final SimpleDateFormat df = new SimpleDateFormat(
+								"yyyyMMdd");
+						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+						SimpleDateFormat df_ym = (SimpleDateFormat) DateFormat
+								.getDateInstance(DateFormat.SHORT);
+						View tvUntil;
+						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
+						Date date, date_until;
+						String verse, verse_until;
+
+						/* load layout */
+						@Override
+						public View newView(Context context, Cursor cursor,
+								ViewGroup parent) {
+
+							/* date format */
+							if (Locale.getDefault().getLanguage().equals("de"))
+								df_ym.applyPattern("dd.MM.");
+							else
+								df_ym.applyPattern(df_ym
+										.toPattern()
+										.replaceAll(
+												"[^\\p{Alpha}]*y+[^\\p{Alpha}]*",
+												""));
+
+							/* inflate layout */
+							return getLayoutInflater().inflate(R.layout.list,
+									parent, false);
+						}
+
+						/* set item data */
+						@Override
+						public void bindView(View view, Context context,
+								Cursor cursor) {
+							tvUntil = view.findViewById(R.id.listUntil);
+							tvVerse = (TextView) view
+									.findViewById(R.id.listVerse);
+							tvVerseUntil = (TextView) view
+									.findViewById(R.id.listVerseUntil);
+							tvDate = (TextView) view
+									.findViewById(R.id.listDate);
+							tvDateUntil = (TextView) view
+									.findViewById(R.id.listDateUntil);
+							verse = cursor
+									.getString(cursor
+											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE));
+							verse_until = cursor
+									.getString(cursor
+											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE
+													+ "_until"));
+							try {
+								date = df
+										.parse(cursor.getString(cursor
+												.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
+								date_until = df
+										.parse(cursor.getString(cursor
+												.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE
+														+ "_until")));
+							} catch (Exception e) {
+								// e.printStackTrace();
+							}
+
+							/* show */
+							tvVerse.setText(verse);
+							tvDate.setText(df_ymd.format(date));
+							if (!verse.equals(verse_until)) {
+								tvUntil.setVisibility(View.VISIBLE);
+								tvVerseUntil
+										.setText(getString(R.string.textUntil)
+												+ " " + verse_until);
+								tvDateUntil.setText(df_ymd.format(date_until));
+							} else
+								tvUntil.setVisibility(View.GONE);
+						}
+					},
+
+					/* on click */
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							data.moveToPosition(item);
+							gotoDay(data2.getString(data2
+									.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
+						}
+					}).create();
 		}
 
 		return null;
@@ -580,12 +591,17 @@ public class MainActivity extends Activity {
 	public void reloadDay() {
 		ListView list = new ListView(getApplicationContext());
 		list.setDivider(null);
-		list.setAdapter(new CursorAdapter(this, dbh.getDateCursor(date)) {
+		data = dbh.getDateCursor(date);
+		list.setAdapter(new CursorAdapter(this, data) {
+
+			@Override
+			public boolean isEnabled(int position) {
+				return false;
+			}
 
 			/* load layout */
 			@Override
 			public View newView(Context context, Cursor cursor, ViewGroup parent) {
-				getLayoutInflater();
 				return getLayoutInflater().inflate(R.layout.verses, parent,
 						false);
 			}
@@ -593,11 +609,18 @@ public class MainActivity extends Activity {
 			/* set item data */
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
-				((TextView) view.findViewById(R.id.verseTitle)).setText(cursor.getString(cursor
+				TextView title = (TextView) view.findViewById(R.id.verseTitle);
+				TextView verse = (TextView) view.findViewById(R.id.verseVerse);
+				TextView text = (TextView) view.findViewById(R.id.verseText);
+				TextView author = (TextView) view
+						.findViewById(R.id.verseAuthor);
+
+				/* content */
+				title.setText(cursor.getString(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_TITLE)));
-				((TextView) view.findViewById(R.id.verseVerse)).setText(cursor.getString(cursor
+				verse.setText(cursor.getString(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE)));
-				((TextView) view.findViewById(R.id.verseText)).setText(cursor.getString(cursor
+				text.setText(cursor.getString(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_TEXT)));
 				if (cursor.isNull(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
@@ -605,10 +628,18 @@ public class MainActivity extends Activity {
 								.getString(
 										cursor.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
 								.equals(""))
-					((TextView) view.findViewById(R.id.verseAuthor))
-							.setVisibility(View.GONE);
-				((TextView) view.findViewById(R.id.verseAuthor)).setText(cursor.getString(cursor
+					author.setVisibility(View.GONE);
+				author.setText(cursor.getString(cursor
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR)));
+
+				/* font size */
+				Float size = Float.valueOf(PreferenceManager
+						.getDefaultSharedPreferences(getBaseContext())
+						.getString("scale", "18"));
+				title.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+				verse.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+				text.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+				author.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
 			}
 		});
 

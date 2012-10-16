@@ -34,6 +34,7 @@
 
         <receiver android:name="com.escoand.android.lichtstrahlen.Reminder" >
         </receiver>
+        <activity android:name="com.escoand.android.lichtstrahlen.Preferences"></activity>
     </application>
 
 </manifest>
