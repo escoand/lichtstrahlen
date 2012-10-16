@@ -22,6 +22,7 @@
         android:testOnly="false" >
         <activity
             android:name="com.escoand.android.lichtstrahlen.MainActivity"
+            android:clearTaskOnLaunch="true"
             android:configChanges="orientation"
             android:label="@string/app_name" >
             <intent-filter>
@@ -34,7 +35,9 @@
 
         <receiver android:name="com.escoand.android.lichtstrahlen.Reminder" >
         </receiver>
-        <activity android:name="com.escoand.android.lichtstrahlen.Preferences"></activity>
+
+        <activity android:name="com.escoand.android.lichtstrahlen.Preferences" >
+        </activity>
     </application>
 
 </manifest>
