@@ -20,7 +20,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -121,7 +120,7 @@ public class MainActivity extends Activity {
 
 		/* no splash */
 		else
-			gotoDay();
+			showDay(new Date());
 	}
 
 	/* callback for gestures */
@@ -190,7 +189,7 @@ public class MainActivity extends Activity {
 
 			/* today */
 		case R.id.menuToday:
-			gotoDay();
+			showDay(new Date());
 			return true;
 
 			/* calendar */
@@ -264,13 +263,14 @@ public class MainActivity extends Activity {
 						@Override
 						public void onDateSet(DatePicker view, int year,
 								int monthOfYear, int dayOfMonth) {
-							gotoDay(year * 10000 + (monthOfYear + 1) * 100
+							showDay(year * 10000 + (monthOfYear + 1) * 100
 									+ dayOfMonth);
 						}
 					}, date.getYear() + 1900, date.getMonth(), date.getDate());
 
 			/* notes */
 		case DIALOG_NOTE_ID:
+			// ToDo: test
 			dialog.setTitle(getString(R.string.noteNote) + " "
 					+ getString(R.string.textFor) + " "
 					+ DateFormat.getDateInstance().format(date));
@@ -295,7 +295,7 @@ public class MainActivity extends Activity {
 
 							/* back to main */
 							dismissDialog(DIALOG_NOTE_ID);
-							reloadDay();
+							showDay();
 							Toast.makeText(getApplicationContext(),
 									getString(R.string.noteSaved),
 									Toast.LENGTH_LONG).show();
@@ -326,7 +326,7 @@ public class MainActivity extends Activity {
 											dialog.dismiss();
 											getParent().dismissDialog(
 													DIALOG_NOTE_ID);
-											reloadDay();
+											showDay();
 											Toast.makeText(
 													getApplicationContext(),
 													getString(R.string.noteDeleted),
@@ -422,7 +422,8 @@ public class MainActivity extends Activity {
 			return dialog;
 
 		case DIALOG_LIST_ID:
-			data2 = dbh.getListCursor();
+			if (data2 == null)
+				data2 = dbh.getListCursor();
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.menuList))
 
@@ -509,58 +510,13 @@ public class MainActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
 							data.moveToPosition(item);
-							gotoDay(data2.getString(data2
+							showDay(data2.getString(data2
 									.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
 						}
 					}).create();
 		}
 
 		return null;
-	}
-
-	/* go to today */
-	public void gotoDay() {
-
-		/* animation */
-		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
-		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
-
-		/* get day */
-		date = new Date();
-		reloadDay();
-	}
-
-	/* go to day by long */
-	public void gotoDay(long date) {
-
-		/* animation */
-		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
-		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
-
-		/* get day */
-		try {
-			this.date = new SimpleDateFormat("yyyyMMdd").parse(String
-					.valueOf(date));
-			reloadDay();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/* go to day by string */
-	public void gotoDay(String date) {
-
-		/* animation */
-		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
-		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
-
-		/* get day */
-		try {
-			this.date = new SimpleDateFormat("yyyyMMdd").parse(date);
-			reloadDay();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/* go to next day */
@@ -572,7 +528,7 @@ public class MainActivity extends Activity {
 
 		/* next day */
 		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
-		reloadDay();
+		showDay();
 	}
 
 	/* go to previous day */
@@ -584,16 +540,65 @@ public class MainActivity extends Activity {
 
 		/* previous day */
 		date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
-		reloadDay();
+		showDay();
+	}
+
+	/* go to today */
+	public void showDay(Date date) {
+
+		/* animation */
+		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
+		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
+
+		/* get day */
+		this.date = date;
+		showDay();
+	}
+
+	/* go to day by long */
+	public void showDay(long date) {
+
+		/* animation */
+		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
+		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
+
+		/* get day */
+		try {
+			this.date = new SimpleDateFormat("yyyyMMdd").parse(String
+					.valueOf(date));
+			showDay();
+		} catch (ParseException e) {
+			// e.printStackTrace();
+		}
+	}
+
+	/* go to day by string */
+	public void showDay(String date) {
+
+		/* animation */
+		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
+		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
+
+		/* get day */
+		try {
+			this.date = new SimpleDateFormat("yyyyMMdd").parse(date);
+			showDay();
+		} catch (ParseException e) {
+			// e.printStackTrace();
+		}
 	}
 
 	/* refresh day text */
-	public void reloadDay() {
+	public void showDay() {
 		ListView list = new ListView(getApplicationContext());
 		list.setDivider(null);
 		data = dbh.getDateCursor(date);
 		list.setAdapter(new CursorAdapter(this, data) {
+			Float size = Float.valueOf(PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext()).getString(
+							"scale", "18"));
 
+			/* disable selecting */
 			@Override
 			public boolean isEnabled(int position) {
 				return false;
@@ -633,9 +638,6 @@ public class MainActivity extends Activity {
 						.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR)));
 
 				/* font size */
-				Float size = Float.valueOf(PreferenceManager
-						.getDefaultSharedPreferences(getBaseContext())
-						.getString("scale", "18"));
 				title.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
 				verse.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
 				text.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
@@ -643,6 +645,7 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		/* add to flipper */
 		if (list.getCount() > 0)
 			flipper.addView(list);
 		else
@@ -651,6 +654,7 @@ public class MainActivity extends Activity {
 		if (flipper.getChildCount() > 1)
 			flipper.removeViewAt(0);
 
+		/* title */
 		setTitle(getString(R.string.app_name) + " "
 				+ getString(R.string.textFor) + " "
 				+ DateFormat.getDateInstance().format(date));
