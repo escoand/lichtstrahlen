@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <CheckBoxPreference
+        android:key="splash"
+        android:title="@string/prefSplash" android:summary="@string/prefSplashDesc"/>
+    <CheckBoxPreference android:key="remind" android:title="@string/prefRemind" android:summary="@string/prefRemindDesc"/><CheckBoxPreference
+        android:key="inverse"
+        android:title="@string/prefInverse" android:summary="@string/prefInverseDesc"/>
+    
+
+    <ListPreference
+        android:entries="@array/listScale"
+        android:key="scale"
+        android:title="@string/prefScale" android:entryValues="@array/listScaleValues" android:summary="@string/prefScaleDesc"/>
+
+</PreferenceScreen>
