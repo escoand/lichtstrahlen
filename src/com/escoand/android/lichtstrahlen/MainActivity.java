@@ -210,10 +210,10 @@ public class MainActivity extends Activity {
 					+ " ("
 					+ data.getString(data
 							.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
-					+ ")\n"
+					+ ")\n\n"
 					+ data.getString(data
 							.getColumnIndex(VerseDatabase.TABLE_COLUMN_TEXT))
-					+ ")\n"
+					+ ")\n\n"
 					+ getString(R.string.shareText)
 					+ " "
 					+ getString(R.string.shareUrl);
