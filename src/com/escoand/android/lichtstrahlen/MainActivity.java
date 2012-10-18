@@ -204,7 +204,7 @@ public class MainActivity extends Activity {
 			return true;
 
 			/* share */
-			// TODO share content
+			// FIXME share content
 		case R.id.menuShare:
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
@@ -238,7 +238,7 @@ public class MainActivity extends Activity {
 		switch (id) {
 
 		/* bible */
-		// TODO dialog shows old data, but uses new one at selecting
+		// FIXME dialog shows old data, but uses new one at selecting
 		case DIALOG_BIBLE_ID:
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.listVerses))
@@ -451,7 +451,7 @@ public class MainActivity extends Activity {
 					}).create();
 
 			/* info */
-			// TODO update about dialog
+			// FIXME update about dialog
 		case DIALOG_ABOUT_ID:
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			dialog.setContentView(R.layout.about);

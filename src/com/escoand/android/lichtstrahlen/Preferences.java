@@ -23,7 +23,7 @@ public class Preferences extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO implement reminder dialog and settings
+		// FIXME implement reminder dialog and settings
 
 		// /* remind */
 		// case R.id.menuRemind:
