@@ -42,6 +42,10 @@
     <string name="menuPreference">Preferences</string>
     <string name="menuInfo">Info</string>
 
+    <!-- share -->
+    <string name="shareText">Mobile devotions for you:</string>
+    <string name="shareUrl">http://goo.gl/2V8Qd</string>
+
     <!-- preferences -->
     <string name="prefDisplay">Presentation</string>
     <string name="prefScale">Font size</string>

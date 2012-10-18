@@ -42,6 +42,10 @@
     <string name="menuPreference">Einstellungen</string>
     <string name="menuInfo">Info</string>
 
+    <!-- share -->
+    <string name="shareText">Lichtstrahlen für dich:</string>
+    <string name="shareUrl">http://goo.gl/bfHCM</string>
+
     <!-- preferences -->
     <string name="prefDisplay">Darstellung</string>
     <string name="prefScale">Schriftgröße</string>

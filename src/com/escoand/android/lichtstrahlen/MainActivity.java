@@ -204,13 +204,26 @@ public class MainActivity extends Activity {
 			return true;
 
 			/* share */
-			// FIXME share content
 		case R.id.menuShare:
+			String text = data.getString(data
+					.getColumnIndex(VerseDatabase.TABLE_COLUMN_TITLE))
+					+ " ("
+					+ data.getString(data
+							.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
+					+ ")\n"
+					+ data.getString(data
+							.getColumnIndex(VerseDatabase.TABLE_COLUMN_TEXT))
+					+ ")\n"
+					+ getString(R.string.shareText)
+					+ " "
+					+ getString(R.string.shareUrl);
+
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			// intent.putExtra(Intent.EXTRA_TEXT, findView));
+			intent.putExtra(Intent.EXTRA_SUBJECT, getTitle());
+			intent.putExtra(Intent.EXTRA_TEXT, text);
 			startActivity(Intent.createChooser(intent,
-					getResources().getText(R.string.menuShare)));
+					getText(R.string.menuShare)));
 			return true;
 
 			/* preferences */
