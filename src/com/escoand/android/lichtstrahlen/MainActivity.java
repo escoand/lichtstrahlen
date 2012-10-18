@@ -380,29 +380,15 @@ public class MainActivity extends Activity {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						SimpleDateFormat df_ym = (SimpleDateFormat) DateFormat
-								.getDateInstance(DateFormat.SHORT);
 						View tvUntil;
 						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
 						Date date, date_until;
 						String verse, verse_until;
 
-						/* load layout */
+						/* inflate layout */
 						@Override
 						public View newView(Context context, Cursor cursor,
 								ViewGroup parent) {
-
-							/* date format */
-							if (Locale.getDefault().getLanguage().equals("de"))
-								df_ym.applyPattern("dd.MM.");
-							else
-								df_ym.applyPattern(df_ym
-										.toPattern()
-										.replaceAll(
-												"[^\\p{Alpha}]*y+[^\\p{Alpha}]*",
-												""));
-
-							/* inflate layout */
 							return getLayoutInflater().inflate(R.layout.list,
 									parent, false);
 						}
