@@ -23,6 +23,7 @@ public class Preferences extends PreferenceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		// TODO implement reminder dialog and settings
 
 		// /* remind */
 		// case R.id.menuRemind:
@@ -48,6 +49,50 @@ public class Preferences extends PreferenceActivity {
 		// item.setChecked(PendingIntent.getBroadcast(getApplicationContext(),
 		// 0, reminder, PendingIntent.FLAG_NO_CREATE) != null);
 		// }
+
+		// /* notify */
+		// case DIALOG_REMIND_ID:
+		//
+		// /* load settings */
+		// int hour = getSharedPreferences(getString(R.string.app_name),
+		// Context.MODE_PRIVATE).getInt("remind_hour", 9);
+		// int minute = getSharedPreferences(getString(R.string.app_name),
+		// Context.MODE_PRIVATE).getInt("remind_minute", 0);
+		//
+		// /* set picker */
+		// TimePickerDialog.OnTimeSetListener cb = new
+		// TimePickerDialog.OnTimeSetListener() {
+		// @Override
+		// public void onTimeSet(TimePicker view, int hour, int minute) {
+		//
+		// /* save settings */
+		// getSharedPreferences(getString(R.string.app_name),
+		// Context.MODE_PRIVATE).edit()
+		// .putInt("remind_hour", hour)
+		// .putInt("remind_minute", minute).commit();
+		//
+		// /* get time */
+		// Calendar cal = Calendar.getInstance();
+		// cal.set(Calendar.HOUR_OF_DAY, hour);
+		// cal.set(Calendar.MINUTE, minute);
+		// cal.set(Calendar.SECOND, 0);
+		// if (cal.before(Calendar.getInstance()))
+		// cal.add(Calendar.DAY_OF_YEAR, 1);
+		//
+		// /* receiver */
+		// PendingIntent recv = PendingIntent.getBroadcast(
+		// getApplicationContext(), 0, reminder,
+		// PendingIntent.FLAG_UPDATE_CURRENT);
+		//
+		// /* set reminder */
+		// ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
+		// .setRepeating(AlarmManager.RTC_WAKEUP,
+		// cal.getTimeInMillis(),
+		// AlarmManager.INTERVAL_DAY, recv);
+		// }
+		// };
+		//
+		// return new TimePickerDialog(this, cb, hour, minute, true);
 
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);

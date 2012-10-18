@@ -1,20 +1,19 @@
+// TODO implement widget
+// TODO implement full text search
+
 package com.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -29,7 +28,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,7 +37,6 @@ import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -140,9 +137,8 @@ public class MainActivity extends Activity {
 	/* callback for creating option menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.options_menu, menu);
+		// super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -208,6 +204,7 @@ public class MainActivity extends Activity {
 			return true;
 
 			/* share */
+			// TODO share content
 		case R.id.menuShare:
 			intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
@@ -241,6 +238,7 @@ public class MainActivity extends Activity {
 		switch (id) {
 
 		/* bible */
+		// TODO dialog shows old data, but uses new one at selecting
 		case DIALOG_BIBLE_ID:
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.listVerses))
@@ -358,70 +356,6 @@ public class MainActivity extends Activity {
 
 			return dialog;
 
-			/* notify */
-		case DIALOG_REMIND_ID:
-
-			/* load settings */
-			int hour = getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getInt("remind_hour", 9);
-			int minute = getSharedPreferences(getString(R.string.app_name),
-					Context.MODE_PRIVATE).getInt("remind_minute", 0);
-
-			/* set picker */
-			TimePickerDialog.OnTimeSetListener cb = new TimePickerDialog.OnTimeSetListener() {
-				@Override
-				public void onTimeSet(TimePicker view, int hour, int minute) {
-
-					/* save settings */
-					getSharedPreferences(getString(R.string.app_name),
-							Context.MODE_PRIVATE).edit()
-							.putInt("remind_hour", hour)
-							.putInt("remind_minute", minute).commit();
-
-					/* get time */
-					Calendar cal = Calendar.getInstance();
-					cal.set(Calendar.HOUR_OF_DAY, hour);
-					cal.set(Calendar.MINUTE, minute);
-					cal.set(Calendar.SECOND, 0);
-					if (cal.before(Calendar.getInstance()))
-						cal.add(Calendar.DAY_OF_YEAR, 1);
-
-					/* receiver */
-					PendingIntent recv = PendingIntent.getBroadcast(
-							getApplicationContext(), 0, reminder,
-							PendingIntent.FLAG_UPDATE_CURRENT);
-
-					/* set reminder */
-					((AlarmManager) getSystemService(Context.ALARM_SERVICE))
-							.setRepeating(AlarmManager.RTC_WAKEUP,
-									cal.getTimeInMillis(),
-									AlarmManager.INTERVAL_DAY, recv);
-				}
-			};
-
-			return new TimePickerDialog(this, cb, hour, minute, true);
-
-			/* info */
-		case DIALOG_ABOUT_ID:
-			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dialog.setContentView(R.layout.about);
-
-			try {
-				((TextView) dialog.findViewById(R.id.txtVersion))
-						.setText("Version "
-								+ getPackageManager().getPackageInfo(
-										getPackageName(), 0).versionName);
-				((TextView) dialog.findViewById(R.id.txtAbout)).setText(
-						Html.fromHtml(getString(R.string.about)),
-						TextView.BufferType.SPANNABLE);
-				((TextView) dialog.findViewById(R.id.txtAbout))
-						.setMovementMethod(LinkMovementMethod.getInstance());
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-
-			return dialog;
-
 		case DIALOG_LIST_ID:
 			if (data2 == null)
 				data2 = dbh.getListCursor();
@@ -515,6 +449,28 @@ public class MainActivity extends Activity {
 									.getColumnIndex(VerseDatabase.TABLE_COLUMN_DATE)));
 						}
 					}).create();
+
+			/* info */
+			// TODO update about dialog
+		case DIALOG_ABOUT_ID:
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.setContentView(R.layout.about);
+
+			try {
+				((TextView) dialog.findViewById(R.id.txtVersion))
+						.setText("Version "
+								+ getPackageManager().getPackageInfo(
+										getPackageName(), 0).versionName);
+				((TextView) dialog.findViewById(R.id.txtAbout)).setText(
+						Html.fromHtml(getString(R.string.about)),
+						TextView.BufferType.SPANNABLE);
+				((TextView) dialog.findViewById(R.id.txtAbout))
+						.setMovementMethod(LinkMovementMethod.getInstance());
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+
+			return dialog;
 		}
 
 		return null;
@@ -650,6 +606,7 @@ public class MainActivity extends Activity {
 		if (list.getCount() > 0)
 			flipper.addView(list);
 		else
+			// TODO empty textview as default empty textview
 			flipper.addView(getLayoutInflater().inflate(R.layout.empty, null));
 		flipper.showNext();
 		if (flipper.getChildCount() > 1)
