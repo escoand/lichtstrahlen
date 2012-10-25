@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +16,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -33,6 +33,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -251,10 +253,11 @@ public class MainActivity extends Activity {
 		switch (id) {
 
 		/* bible */
-		// FIXME dialog shows old data, but uses new one at selecting
 		case DIALOG_BIBLE_ID:
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.listVerses))
+
+					// on click
 					.setCursor(data, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
@@ -266,7 +269,31 @@ public class MainActivity extends Activity {
 											.replaceAll(" ", "")));
 							startActivity(intent);
 						}
-					}, VerseDatabase.TABLE_COLUMN_VERSE).create();
+					}, VerseDatabase.TABLE_COLUMN_VERSE)
+
+					// destroy after select
+					.setOnItemSelectedListener(new OnItemSelectedListener() {
+						@Override
+						public void onItemSelected(AdapterView<?> arg0,
+								View arg1, int arg2, long arg3) {
+							removeDialog(DIALOG_BIBLE_ID);
+						}
+
+						@Override
+						public void onNothingSelected(AdapterView<?> arg0) {
+							removeDialog(DIALOG_BIBLE_ID);
+						}
+					})
+
+					// destroy after cancel
+					.setOnCancelListener(new OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							removeDialog(DIALOG_BIBLE_ID);
+						}
+					})
+
+					.create();
 
 			/* calendar */
 		case DIALOG_DATE_ID:
@@ -380,10 +407,9 @@ public class MainActivity extends Activity {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						View tvUntil;
-						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
+						TextView tvVerse, tvDate, tvDateUntil;
 						Date date, date_until;
-						String verse, verse_until;
+						String verse;
 
 						/* inflate layout */
 						@Override
@@ -397,11 +423,8 @@ public class MainActivity extends Activity {
 						@Override
 						public void bindView(View view, Context context,
 								Cursor cursor) {
-							tvUntil = view.findViewById(R.id.listUntil);
 							tvVerse = (TextView) view
 									.findViewById(R.id.listVerse);
-							tvVerseUntil = (TextView) view
-									.findViewById(R.id.listVerseUntil);
 							tvDate = (TextView) view
 									.findViewById(R.id.listDate);
 							tvDateUntil = (TextView) view
@@ -409,10 +432,6 @@ public class MainActivity extends Activity {
 							verse = cursor
 									.getString(cursor
 											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE));
-							verse_until = cursor
-									.getString(cursor
-											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE
-													+ "_until"));
 							try {
 								date = df
 										.parse(cursor.getString(cursor
@@ -428,14 +447,11 @@ public class MainActivity extends Activity {
 							/* show */
 							tvVerse.setText(verse);
 							tvDate.setText(df_ymd.format(date));
-							if (!verse.equals(verse_until)) {
-								tvUntil.setVisibility(View.VISIBLE);
-								tvVerseUntil
-										.setText(getString(R.string.textUntil)
-												+ " " + verse_until);
+							if (!date.equals(date_until)) {
+								tvDateUntil.setVisibility(View.VISIBLE);
 								tvDateUntil.setText(df_ymd.format(date_until));
 							} else
-								tvUntil.setVisibility(View.GONE);
+								tvDateUntil.setVisibility(View.GONE);
 						}
 					},
 
