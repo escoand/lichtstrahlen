@@ -52,7 +52,7 @@
     <string name="prefScaleDesc"></string>
     <string name="prefInverse">Umgekehrte Farben</string>
     <string name="prefInverseDesc">Tausche Schwarz und Weiß</string>
-    <string name="prefOther">Other</string>
+    <string name="prefOther">Sonstiges</string>
     <string name="prefSplash">Startbildschirm</string>
     <string name="prefSplashDesc"></string>
     <string name="prefRemind">Erinnerung</string>

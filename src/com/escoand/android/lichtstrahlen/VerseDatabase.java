@@ -23,7 +23,7 @@ public class VerseDatabase extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "verses";
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 13;
 
 	private static final String TABLE_NAME = "verses";
 	public static final String TABLE_COLUMN_DATE = "date";
@@ -122,7 +122,7 @@ public class VerseDatabase extends SQLiteOpenHelper {
 						TABLE_COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
-		System.err.println(datestring + "=" + cursor.getCount());
+		//System.err.println(datestring + "=" + cursor.getCount());
 		return cursor;
 	}
 
@@ -139,13 +139,9 @@ public class VerseDatabase extends SQLiteOpenHelper {
 		Cursor cursor = getReadableDatabase()
 				.query(TABLE_NAME,
 						new String[] {
-								TABLE_COLUMN_DATE,
-								"min(" + TABLE_COLUMN_VERSE + ") as "
-										+ TABLE_COLUMN_VERSE,
+								TABLE_COLUMN_VERSE,
 								"min(" + TABLE_COLUMN_DATE + ") as "
 										+ TABLE_COLUMN_DATE,
-								"max(" + TABLE_COLUMN_VERSE + ") as "
-										+ TABLE_COLUMN_VERSE + "_until",
 								"max(" + TABLE_COLUMN_DATE + ") as "
 										+ TABLE_COLUMN_DATE + "_until",
 								"rowid as _id" }, TABLE_COLUMN_ORDERID + ">0",
