@@ -6,17 +6,20 @@ package com.escoand.android.lichtstrahlen;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -48,7 +51,6 @@ public class MainActivity extends Activity {
 	public static final int DIALOG_ABOUT_ID = 0;
 	public static final int DIALOG_DATE_ID = 1;
 	public static final int DIALOG_NOTE_ID = 2;
-	public static final int DIALOG_REMIND_ID = 3;
 	public static final int DIALOG_LIST_ID = 4;
 	public static final int DIALOG_BIBLE_ID = 5;
 	public static final String BIBLE_URL = "http://www.bibleserver.com/text/";
@@ -65,6 +67,7 @@ public class MainActivity extends Activity {
 	private GestureDetector gesture = null;
 
 	private Intent reminder = null;
+
 	VerseDatabase dbh;
 
 	@Override
@@ -89,6 +92,9 @@ public class MainActivity extends Activity {
 				+ getString(R.string.msgRemind));
 		reminder.putExtra("title", getString(R.string.app_name));
 		reminder.putExtra("message", getString(R.string.msgRemind));
+		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+				.getBoolean("remind", false))
+			startReminder();
 
 		/* init */
 		progress = new ProgressDialog(this);
@@ -630,5 +636,36 @@ public class MainActivity extends Activity {
 		setTitle(getString(R.string.app_name) + " "
 				+ getString(R.string.textFor) + " "
 				+ DateFormat.getDateInstance().format(date));
+	}
+
+	/* set reminder */
+	public void startReminder() {
+		int hour = PreferenceManager.getDefaultSharedPreferences(
+				getBaseContext()).getInt("remind_hour", 9);
+		int minute = PreferenceManager.getDefaultSharedPreferences(
+				getBaseContext()).getInt("remind_minute", 0);
+
+		/* get time */
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, hour);
+		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.SECOND, 0);
+		if (cal.before(Calendar.getInstance()))
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+
+		/* receiver */
+		PendingIntent recv = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, reminder,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		/* set reminder */
+		((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setRepeating(
+				AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+				AlarmManager.INTERVAL_DAY, recv);
+	}
+
+	/* clear reminder */
+	public void stopReminder() {
+		stopService(reminder);
 	}
 }
