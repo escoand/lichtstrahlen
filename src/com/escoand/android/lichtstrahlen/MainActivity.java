@@ -466,7 +466,6 @@ public class MainActivity extends Activity {
 					}).create();
 
 			/* info */
-			// FIXME update about dialog
 		case DIALOG_ABOUT_ID:
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 			dialog.setContentView(R.layout.about);

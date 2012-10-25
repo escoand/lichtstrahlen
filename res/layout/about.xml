@@ -12,7 +12,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/image"
         android:padding="10dp"
-        android:src="@drawable/logo" />
+        android:src="@drawable/title" />
 
     <TextView
         android:id="@+id/txtVersion"
