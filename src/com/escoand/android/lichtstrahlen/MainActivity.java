@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
 					+ ")\n\n"
 					+ data.getString(data
 							.getColumnIndex(VerseDatabase.TABLE_COLUMN_AUTHOR))
-					+ ")\n\n"
+					+ "\n\n"
 					+ getString(R.string.shareText)
 					+ " "
 					+ getString(R.string.shareUrl);
