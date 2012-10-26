@@ -49,14 +49,14 @@
     <string name="shareUrl">http://goo.gl/bfHCM</string>
 
     <!-- preferences -->
-    <string name="prefDisplay">Darstellung</string>
+    <string name="prefDisplay">Darstellung (benötigt Neustart)</string>
     <string name="prefScale">Schriftgröße</string>
     <string name="prefScaleDesc"></string>
     <string name="prefInverse">Umgekehrte Farben</string>
     <string name="prefInverseDesc">Tausche Schwarz und Weiß</string>
     <string name="prefOther">Sonstiges</string>
     <string name="prefSplash">Startbildschirm</string>
-    <string name="prefSplashDesc"></string>
+    <string name="prefSplashDesc">Lichtstrahlen Cover beim Start</string>
     <string name="prefRemind">Erinnerung</string>
     <string name="prefRemindDesc">Nie wieder die Lichtstrahlen vergessen</string>
 
