@@ -16,6 +16,7 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefOther" >
         <CheckBoxPreference
+            android:defaultValue="18"
             android:key="splash"
             android:summary="@string/prefSplashDesc"
             android:title="@string/prefSplash" />
