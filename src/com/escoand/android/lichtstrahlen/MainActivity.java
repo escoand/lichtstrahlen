@@ -53,7 +53,6 @@ public class MainActivity extends Activity {
 	public static final int DIALOG_NOTE_ID = 2;
 	public static final int DIALOG_LIST_ID = 4;
 	public static final int DIALOG_BIBLE_ID = 5;
-	public static final String BIBLE_URL = "http://www.bibleserver.com/text/";
 	private static final int TIMER_SPLASH = 2000;
 
 	public Date date = new Date();
@@ -95,6 +94,8 @@ public class MainActivity extends Activity {
 		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("remind", false))
 			startReminder();
+		else
+			stopReminder();
 
 		/* init */
 		progress = new ProgressDialog(this);
@@ -178,7 +179,7 @@ public class MainActivity extends Activity {
 			if (data.getCount() == 1) {
 				data.moveToFirst();
 				intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse(BIBLE_URL
+				intent.setData(Uri.parse(getString(R.string.sciptureUrl)
 						+ data.getString(
 								data.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
 								.replaceAll(" ", "")));
@@ -269,7 +270,7 @@ public class MainActivity extends Activity {
 						public void onClick(DialogInterface dialog, int item) {
 							data.moveToPosition(item);
 							Intent intent = new Intent(Intent.ACTION_VIEW);
-							intent.setData(Uri.parse(BIBLE_URL
+							intent.setData(Uri.parse(getString(R.string.sciptureUrl)
 									+ data.getString(
 											data.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE))
 											.replaceAll(" ", "")));

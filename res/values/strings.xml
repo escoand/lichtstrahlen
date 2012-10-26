@@ -3,6 +3,7 @@
 
     <!-- app -->
     <string name="app_name">mobile devotions 2013</string>
+    <string name="sciptureUrl">http://www.bibleserver.com/text/ESV/</string>
 
     <!-- common -->
     <string name="msgWait">Please wait&#8230;</string>

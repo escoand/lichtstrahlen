@@ -3,6 +3,7 @@
 
     <!-- app -->
     <string name="app_name">Lichtstrahlen 2013</string>
+    <string name="sciptureUrl">http://www.bibleserver.com/text/LUT/</string>
 
     <!-- common -->
     <string name="msgWait">Bitte warten&#8230;</string>
