@@ -31,6 +31,7 @@
 
     <!-- text -->
     <string name="textFor">für</string>
+    <string name="textFrom">ab</string>
     <string name="textUntil">bis</string>
 
     <!-- menu -->
