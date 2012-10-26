@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
 
 	private Intent reminder = null;
 
-	VerseDatabase dbh;
+	VerseDatabase db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 
 		/* database */
-		dbh = new VerseDatabase(getApplicationContext());
+		db = new VerseDatabase(getApplicationContext());
 
 		/* splash */
 		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
@@ -405,7 +405,7 @@ public class MainActivity extends Activity {
 
 		case DIALOG_LIST_ID:
 			if (data2 == null)
-				data2 = dbh.getListCursor();
+				data2 = db.getListCursor();
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.menuList))
 
@@ -422,8 +422,8 @@ public class MainActivity extends Activity {
 						@Override
 						public View newView(Context context, Cursor cursor,
 								ViewGroup parent) {
-							return getLayoutInflater().inflate(R.layout.list,
-									parent, false);
+							return getLayoutInflater().inflate(
+									R.layout.dayentry, parent, false);
 						}
 
 						/* set item data */
@@ -568,9 +568,16 @@ public class MainActivity extends Activity {
 
 	/* refresh day text */
 	public void showDay() {
-		ListView list = new ListView(getApplicationContext());
-		list.setDivider(null);
-		data = dbh.getDateCursor(date);
+		View container = getLayoutInflater().inflate(R.layout.daylist, flipper,
+				false);
+		ListView list = (ListView) container.findViewById(R.id.listDay);
+		TextView empty = (TextView) container.findViewById(R.id.listEmpty);
+		Float size = Float.valueOf(PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext()).getString(
+						"scale", "18"));
+
+		list.setEmptyView(empty);
+		data = db.getDateCursor(date);
 		list.setAdapter(new CursorAdapter(this, data) {
 			Float size = Float.valueOf(PreferenceManager
 					.getDefaultSharedPreferences(getBaseContext()).getString(
@@ -585,8 +592,8 @@ public class MainActivity extends Activity {
 			/* load layout */
 			@Override
 			public View newView(Context context, Cursor cursor, ViewGroup parent) {
-				return getLayoutInflater().inflate(R.layout.verses, parent,
-						false);
+				return getLayoutInflater().inflate(R.layout.scripturelist,
+						parent, false);
 			}
 
 			/* set item data */
@@ -623,12 +630,11 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		/* font size */
+		empty.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+
 		/* add to flipper */
-		if (list.getCount() > 0)
-			flipper.addView(list);
-		else
-			// TODO empty textview as default empty textview
-			flipper.addView(getLayoutInflater().inflate(R.layout.empty, null));
+		flipper.addView(container);
 		flipper.showNext();
 		if (flipper.getChildCount() > 1)
 			flipper.removeViewAt(0);

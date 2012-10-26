@@ -16,7 +16,7 @@
     <!-- main -->
     <string name="mainWeek">Wochenspruch:</string>
     <string name="mainMonth">Monatsspruch:</string>
-    <string name="mainNothing">kein Tagestext für dieses Datum gefunden</string>
+    <string name="mainNothing">Leider ist kein Tagestext für dieses Datum vorhanden.</string>
 
     <!-- notes -->
     <string name="mainNote">Notizen:</string>
