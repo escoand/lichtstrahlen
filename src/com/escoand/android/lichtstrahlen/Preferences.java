@@ -27,7 +27,7 @@ public class Preferences extends PreferenceActivity {
 			Intent intent = getBaseContext().getPackageManager()
 					.getLaunchIntentForPackage(
 							getBaseContext().getPackageName());
-			finish();
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			return true;
 		}
