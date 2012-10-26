@@ -423,7 +423,7 @@ public class MainActivity extends Activity {
 						public View newView(Context context, Cursor cursor,
 								ViewGroup parent) {
 							return getLayoutInflater().inflate(
-									R.layout.dayentry, parent, false);
+									R.layout.scriptureentry, parent, false);
 						}
 
 						/* set item data */
@@ -570,8 +570,8 @@ public class MainActivity extends Activity {
 	public void showDay() {
 		View container = getLayoutInflater().inflate(R.layout.daylist, flipper,
 				false);
-		ListView list = (ListView) container.findViewById(R.id.listDay);
-		TextView empty = (TextView) container.findViewById(R.id.listEmpty);
+		ListView list = (ListView) container.findViewById(R.id.dayList);
+		TextView empty = (TextView) container.findViewById(R.id.dayEmpty);
 		Float size = Float.valueOf(PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext()).getString(
 						"scale", "18"));
@@ -592,8 +592,8 @@ public class MainActivity extends Activity {
 			/* load layout */
 			@Override
 			public View newView(Context context, Cursor cursor, ViewGroup parent) {
-				return getLayoutInflater().inflate(R.layout.scripturelist,
-						parent, false);
+				return getLayoutInflater().inflate(R.layout.dayentry, parent,
+						false);
 			}
 
 			/* set item data */
