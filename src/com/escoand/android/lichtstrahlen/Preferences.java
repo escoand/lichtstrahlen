@@ -82,7 +82,7 @@ public class Preferences extends PreferenceActivity {
 											getBaseContext()).edit()
 									.putBoolean("remind", true)
 									.putInt("remind_hour", hour)
-									.putInt("remind_minute", 0).commit();
+									.putInt("remind_minute", minute).commit();
 							((CheckBoxPreference) findPreference("remind"))
 									.setChecked(true);
 							// startReminder(hour, minute);
