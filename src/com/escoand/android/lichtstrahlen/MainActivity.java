@@ -146,7 +146,6 @@ public class MainActivity extends Activity {
 	/* callback for creating option menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -267,7 +266,7 @@ public class MainActivity extends Activity {
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.listVerses))
 
-					// on click
+					/* on click */
 					.setCursor(data, new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
@@ -281,7 +280,7 @@ public class MainActivity extends Activity {
 						}
 					}, VerseDatabase.TABLE_COLUMN_VERSE)
 
-					// destroy after select
+					/* destroy after select */
 					.setOnItemSelectedListener(new OnItemSelectedListener() {
 						@Override
 						public void onItemSelected(AdapterView<?> arg0,
@@ -295,7 +294,7 @@ public class MainActivity extends Activity {
 						}
 					})
 
-					// destroy after cancel
+					/* destroy after cancel */
 					.setOnCancelListener(new OnCancelListener() {
 						@Override
 						public void onCancel(DialogInterface dialog) {
@@ -407,6 +406,7 @@ public class MainActivity extends Activity {
 			return dialog;
 
 		case DIALOG_LIST_ID:
+			// TODO show until scripture
 			if (data2 == null)
 				data2 = db.getListCursor();
 			return new AlertDialog.Builder(this).setCancelable(true)
@@ -417,7 +417,7 @@ public class MainActivity extends Activity {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						TextView tvVerse, tvDate, tvDateUntil;
+						TextView tvVerse, tvDate;
 						Date date, date_until;
 						String verse;
 
@@ -437,8 +437,6 @@ public class MainActivity extends Activity {
 									.findViewById(R.id.listVerse);
 							tvDate = (TextView) view
 									.findViewById(R.id.listDate);
-							tvDateUntil = (TextView) view
-									.findViewById(R.id.listDateUntil);
 							verse = cursor
 									.getString(cursor
 											.getColumnIndex(VerseDatabase.TABLE_COLUMN_VERSE));
@@ -456,12 +454,11 @@ public class MainActivity extends Activity {
 
 							/* show */
 							tvVerse.setText(verse);
-							tvDate.setText(df_ymd.format(date));
-							if (!date.equals(date_until)) {
-								tvDateUntil.setVisibility(View.VISIBLE);
-								tvDateUntil.setText(df_ymd.format(date_until));
-							} else
-								tvDateUntil.setVisibility(View.GONE);
+							if (date.equals(date_until))
+								tvDate.setText(df_ymd.format(date));
+							else
+								tvDate.setText(getString(R.string.textFrom)
+										+ " " + df_ymd.format(date));
 						}
 					},
 
