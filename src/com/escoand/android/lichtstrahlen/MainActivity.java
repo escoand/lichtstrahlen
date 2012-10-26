@@ -6,15 +6,12 @@ package com.escoand.android.lichtstrahlen;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,8 +62,6 @@ public class MainActivity extends Activity {
 
 	private GestureDetector gesture = null;
 
-	private Intent reminder = null;
-
 	VerseDatabase db;
 
 	@Override
@@ -84,18 +79,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		/* reminder */
-		reminder = new Intent(this, Reminder.class);
-		reminder.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		reminder.putExtra("icon", R.drawable.icon);
-		reminder.putExtra("info", getString(R.string.app_name) + " - "
-				+ getString(R.string.msgRemind));
-		reminder.putExtra("title", getString(R.string.app_name));
-		reminder.putExtra("message", getString(R.string.msgRemind));
-		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-				.getBoolean("remind", false))
-			startReminder();
-		else
-			stopReminder();
+		startActivity(new Intent(getBaseContext(), Reminder.class));
 
 		/* init */
 		progress = new ProgressDialog(this);
@@ -240,7 +224,7 @@ public class MainActivity extends Activity {
 			/* preferences */
 		case R.id.menuPreference:
 			intent = new Intent(getBaseContext(), Preferences.class);
-			startActivity(intent);
+			startActivityForResult(intent, 0);
 			return true;
 
 			/* info */
@@ -643,36 +627,5 @@ public class MainActivity extends Activity {
 		setTitle(getString(R.string.app_name) + " "
 				+ getString(R.string.textFor) + " "
 				+ DateFormat.getDateInstance().format(date));
-	}
-
-	/* set reminder */
-	public void startReminder() {
-		int hour = PreferenceManager.getDefaultSharedPreferences(
-				getBaseContext()).getInt("remind_hour", 9);
-		int minute = PreferenceManager.getDefaultSharedPreferences(
-				getBaseContext()).getInt("remind_minute", 0);
-
-		/* get time */
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, hour);
-		cal.set(Calendar.MINUTE, minute);
-		cal.set(Calendar.SECOND, 0);
-		if (cal.before(Calendar.getInstance()))
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-
-		/* receiver */
-		PendingIntent recv = PendingIntent.getBroadcast(
-				getApplicationContext(), 0, reminder,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
-		/* set reminder */
-		((AlarmManager) getSystemService(Context.ALARM_SERVICE)).setRepeating(
-				AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-				AlarmManager.INTERVAL_DAY, recv);
-	}
-
-	/* clear reminder */
-	public void stopReminder() {
-		stopService(reminder);
 	}
 }

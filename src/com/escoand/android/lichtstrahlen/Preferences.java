@@ -85,7 +85,8 @@ public class Preferences extends PreferenceActivity {
 									.putInt("remind_minute", minute).commit();
 							((CheckBoxPreference) findPreference("remind"))
 									.setChecked(true);
-							// startReminder(hour, minute);
+							startActivity(new Intent(getBaseContext(),
+									Reminder.class));
 						}
 					}, hour, minute, true);
 
@@ -100,7 +101,8 @@ public class Preferences extends PreferenceActivity {
 									.putBoolean("remind", false).commit();
 							((CheckBoxPreference) findPreference("remind"))
 									.setChecked(false);
-							// stopReminder();
+							startActivity(new Intent(getBaseContext(),
+									Reminder.class));
 						}
 					});
 
@@ -113,7 +115,8 @@ public class Preferences extends PreferenceActivity {
 							.edit().putBoolean("remind", false).commit();
 					((CheckBoxPreference) findPreference("remind"))
 							.setChecked(false);
-					// stopReminder();
+					startActivity(new Intent(getBaseContext(),
+							Reminder.class));
 				}
 			});
 
