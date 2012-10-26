@@ -33,11 +33,12 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.escoand.android.lichtstrahlen.Reminder" >
+        <receiver android:name="com.escoand.android.lichtstrahlen.NotificationReceiver" >
         </receiver>
 
         <activity android:name="com.escoand.android.lichtstrahlen.Preferences" >
         </activity>
+        <activity android:name="com.escoand.android.lichtstrahlen.Reminder"></activity>
     </application>
 
 </manifest>

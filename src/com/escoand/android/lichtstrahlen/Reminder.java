@@ -1,37 +1,66 @@
 package com.escoand.android.lichtstrahlen;
 
-import android.app.Notification;
-import android.app.NotificationManager;
+import java.util.Calendar;
+
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
-public class Reminder extends BroadcastReceiver {
+import com.escoand.android.lichtstrahlen_2013.R;
+
+public class Reminder extends Activity {
 
 	@Override
-	public void onReceive(Context c, Intent i) {
-		PendingIntent recv = null;
-		Notification notify = new Notification();
-		Bundle bundle = i.getExtras();
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-		/* receiver */
-		recv = PendingIntent.getActivity(c, 0,
-				new Intent(c, MainActivity.class)
-						.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-				PendingIntent.FLAG_UPDATE_CURRENT);
+		/* set info */
+		Intent reminder = new Intent(getBaseContext(),
+				NotificationReceiver.class);
+		reminder.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		reminder.putExtra("icon", R.drawable.icon);
+		reminder.putExtra("info", getBaseContext().getString(R.string.app_name)
+				+ " - " + getBaseContext().getString(R.string.msgRemind));
+		reminder.putExtra("title", getBaseContext()
+				.getString(R.string.app_name));
+		reminder.putExtra("message",
+				getBaseContext().getString(R.string.msgRemind));
 
-		/* notification */
-		notify.icon = bundle.getInt("icon");
-		notify.tickerText = bundle.getString("ticker");
-		notify.when = System.currentTimeMillis();
-		notify.defaults = Notification.DEFAULT_SOUND
-				| Notification.DEFAULT_VIBRATE;
-		notify.flags = Notification.FLAG_AUTO_CANCEL;
-		notify.setLatestEventInfo(c, bundle.getString("title"),
-				bundle.getString("message"), recv);
-		((NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE))
-				.notify(0, notify);
+		/* start reminder */
+		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+				.getBoolean("remind", false)) {
+			int hour = PreferenceManager.getDefaultSharedPreferences(
+					getBaseContext()).getInt("remind_hour", 9);
+			int minute = PreferenceManager.getDefaultSharedPreferences(
+					getBaseContext()).getInt("remind_minute", 0);
+
+			/* get time */
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, hour);
+			cal.set(Calendar.MINUTE, minute);
+			cal.set(Calendar.SECOND, 0);
+			if (cal.before(Calendar.getInstance()))
+				cal.add(Calendar.DAY_OF_YEAR, 1);
+
+			/* receiver */
+			PendingIntent recv = PendingIntent.getBroadcast(getBaseContext(),
+					0, reminder, PendingIntent.FLAG_UPDATE_CURRENT);
+
+			/* set reminder */
+			((AlarmManager) getSystemService(Context.ALARM_SERVICE))
+					.setRepeating(AlarmManager.RTC_WAKEUP,
+							cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+							recv);
+		}
+
+		/* stop reminder */
+		else
+			stopService(reminder);
+		
+		finish();
 	}
 }
