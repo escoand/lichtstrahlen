@@ -56,7 +56,6 @@ public class MainActivity extends Activity {
 	public Notes notes = null;
 	ViewFlipper flipper = null;
 
-	public ProgressDialog progress = null;
 	private Cursor data = null;
 	private Cursor data2 = null;
 
@@ -78,12 +77,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		/* reminder */
-		startActivity(new Intent(getBaseContext(), Reminder.class));
-
 		/* init */
-		progress = new ProgressDialog(this);
-		progress.setMessage(getString(R.string.msgWait));
 		gesture = new GestureDetector(new Gestures(this));
 		notes = new Notes(this);
 

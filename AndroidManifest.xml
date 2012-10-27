@@ -8,8 +8,8 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="7" />
 
-    <uses-permission android:name="android.permission.VIBRATE" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -32,13 +32,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name="com.escoand.android.lichtstrahlen.NotificationReceiver" >
-        </receiver>
-
         <activity android:name="com.escoand.android.lichtstrahlen.Preferences" >
         </activity>
-        <activity android:name="com.escoand.android.lichtstrahlen.Reminder"></activity>
+
+        <receiver android:name="com.escoand.android.lichtstrahlen.Notification" />
+        <receiver android:name="com.escoand.android.lichtstrahlen.Reminder" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.escoand.android.lichtstrahlen.INIT_REMINDER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
