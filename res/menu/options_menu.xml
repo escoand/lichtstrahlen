@@ -14,10 +14,6 @@
         android:icon="@android:drawable/ic_menu_my_calendar"
         android:title="@string/menuDate"/>
     <item
-        android:id="@+id/menuNotes"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/menuNotes" android:visible="false"/>
-    <item
         android:id="@+id/menuList"
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/menuList"/>
