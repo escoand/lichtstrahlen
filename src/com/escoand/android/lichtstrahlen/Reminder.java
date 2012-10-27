@@ -2,43 +2,45 @@ package com.escoand.android.lichtstrahlen;
 
 import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.escoand.android.lichtstrahlen_2013.R;
 
-public class Reminder extends Activity {
+public class Reminder extends BroadcastReceiver {
+	Intent notification = null;
+	PendingIntent receiver = null;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onReceive(Context context, Intent intent) {
+		System.err.println("reminder started");
 
 		/* set info */
-		Intent reminder = new Intent(getBaseContext(),
-				NotificationReceiver.class);
-		reminder.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		reminder.putExtra("icon", R.drawable.icon);
-		reminder.putExtra("info", getBaseContext().getString(R.string.app_name)
-				+ " - " + getBaseContext().getString(R.string.msgRemind));
-		reminder.putExtra("title", getBaseContext()
-				.getString(R.string.app_name));
-		reminder.putExtra("message",
-				getBaseContext().getString(R.string.msgRemind));
+		notification = new Intent(context, Notification.class);
+		notification.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		notification.putExtra("icon", R.drawable.icon);
+		notification.putExtra("info", context.getString(R.string.app_name)
+				+ " - " + context.getString(R.string.msgRemind));
+		notification.putExtra("title", context.getString(R.string.app_name));
+		notification.putExtra("message", context.getString(R.string.msgRemind));
 
-		/* start reminder */
-		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-				.getBoolean("remind", false)) {
-			int hour = PreferenceManager.getDefaultSharedPreferences(
-					getBaseContext()).getInt("remind_hour", 9);
-			int minute = PreferenceManager.getDefaultSharedPreferences(
-					getBaseContext()).getInt("remind_minute", 0);
+		/* receiver */
+		receiver = PendingIntent.getBroadcast(context, 0, notification,
+				PendingIntent.FLAG_UPDATE_CURRENT);
 
-			/* get time */
+		/* start notification */
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+				"remind", false)) {
+			int hour = PreferenceManager.getDefaultSharedPreferences(context)
+					.getInt("remind_hour", 9);
+			int minute = PreferenceManager.getDefaultSharedPreferences(context)
+					.getInt("remind_minute", 0);
+
+			/* get date */
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.HOUR_OF_DAY, hour);
 			cal.set(Calendar.MINUTE, minute);
@@ -46,21 +48,16 @@ public class Reminder extends Activity {
 			if (cal.before(Calendar.getInstance()))
 				cal.add(Calendar.DAY_OF_YEAR, 1);
 
-			/* receiver */
-			PendingIntent recv = PendingIntent.getBroadcast(getBaseContext(),
-					0, reminder, PendingIntent.FLAG_UPDATE_CURRENT);
-
-			/* set reminder */
-			((AlarmManager) getSystemService(Context.ALARM_SERVICE))
+			/* schedule */
+			((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
 					.setRepeating(AlarmManager.RTC_WAKEUP,
 							cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-							recv);
+							receiver);
 		}
 
-		/* stop reminder */
+		/* stop notification */
 		else
-			stopService(reminder);
-		
-		finish();
+			((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
+					.cancel(receiver);
 	}
 }

@@ -65,6 +65,7 @@ public class Preferences extends PreferenceActivity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_REMIND_ID:
+
 			/* get settings */
 			int hour = PreferenceManager.getDefaultSharedPreferences(
 					getBaseContext()).getInt("remind_hour", 9);
@@ -85,8 +86,7 @@ public class Preferences extends PreferenceActivity {
 									.putInt("remind_minute", minute).commit();
 							((CheckBoxPreference) findPreference("remind"))
 									.setChecked(true);
-							startActivity(new Intent(getBaseContext(),
-									Reminder.class));
+							initReminder();
 						}
 					}, hour, minute, true);
 
@@ -101,12 +101,13 @@ public class Preferences extends PreferenceActivity {
 									.putBoolean("remind", false).commit();
 							((CheckBoxPreference) findPreference("remind"))
 									.setChecked(false);
-							startActivity(new Intent(getBaseContext(),
+							startService(new Intent(getBaseContext(),
 									Reminder.class));
+							initReminder();
 						}
 					});
 
-			/* cancel */
+			/* back key */
 			dialog.setOnCancelListener(new OnCancelListener() {
 				@Override
 				public void onCancel(DialogInterface dialog) {
@@ -115,13 +116,18 @@ public class Preferences extends PreferenceActivity {
 							.edit().putBoolean("remind", false).commit();
 					((CheckBoxPreference) findPreference("remind"))
 							.setChecked(false);
-					startActivity(new Intent(getBaseContext(),
-							Reminder.class));
+					initReminder();
 				}
 			});
 
 			return dialog;
 		}
 		return super.onCreateDialog(id);
+	}
+
+	private void initReminder() {
+		Intent intent = new Intent(getBaseContext(), Reminder.class);
+		intent.setAction("com.escoand.android.lichtstrahlen.INIT_REMINDER");
+		getBaseContext().sendBroadcast(intent);
 	}
 }
