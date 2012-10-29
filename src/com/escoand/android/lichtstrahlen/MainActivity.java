@@ -349,10 +349,10 @@ public class MainActivity extends Activity {
 			dialog.setContentView(R.layout.about);
 
 			try {
-				((TextView) dialog.findViewById(R.id.txtVersion))
+				/*((TextView) dialog.findViewById(R.id.txtVersion))
 						.setText("Version "
 								+ getPackageManager().getPackageInfo(
-										getPackageName(), 0).versionName);
+										getPackageName(), 0).versionName);*/
 				((TextView) dialog.findViewById(R.id.txtAbout)).setText(
 						Html.fromHtml(getString(R.string.about)),
 						TextView.BufferType.SPANNABLE);
