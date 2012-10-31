@@ -1,4 +1,5 @@
 /bin
 /dev/*~
+/res/drawable*
 /res/raw*
 /gen
