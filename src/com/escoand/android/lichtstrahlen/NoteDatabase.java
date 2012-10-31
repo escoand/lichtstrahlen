@@ -29,7 +29,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "notes";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private static final String TABLE_NAME = "notes";
 	public static final String COLUMN_DATE = "date";
@@ -37,7 +37,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
 
 	private static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
 	private static final String SQL_CREATE = "CREATE VIRTUAL TABLE "
-			+ TABLE_NAME + " USING fts3(" + COLUMN_DATE + "s, " + COLUMN_TEXT
+			+ TABLE_NAME + " USING fts3(" + COLUMN_DATE + ", " + COLUMN_TEXT
 			+ ")";
 
 	public NoteDatabase(Context context) {
