@@ -1,5 +1,17 @@
-// TODO implement widget
-// TODO implement full text search
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.escoand.android.lichtstrahlen;
 
@@ -277,7 +289,6 @@ public class MainActivity extends Activity {
 					}, date.getYear() + 1900, date.getMonth(), date.getDate());
 
 		case R.id.menuList:
-			// TODO show until scripture
 			if (data_list == null)
 				data_list = db_day.getListCursor();
 			return new AlertDialog.Builder(this).setCancelable(true)
@@ -349,10 +360,11 @@ public class MainActivity extends Activity {
 			dialog.setContentView(R.layout.about);
 
 			try {
-				/*((TextView) dialog.findViewById(R.id.txtVersion))
-						.setText("Version "
-								+ getPackageManager().getPackageInfo(
-										getPackageName(), 0).versionName);*/
+				/*
+				 * ((TextView) dialog.findViewById(R.id.txtVersion))
+				 * .setText("Version " + getPackageManager().getPackageInfo(
+				 * getPackageName(), 0).versionName);
+				 */
 				((TextView) dialog.findViewById(R.id.txtAbout)).setText(
 						Html.fromHtml(getString(R.string.about)),
 						TextView.BufferType.SPANNABLE);
@@ -451,7 +463,6 @@ public class MainActivity extends Activity {
 		list.setEmptyView(empty);
 
 		/* note */
-		// TODO save not on focus lost
 		list.addFooterView(getLayoutInflater().inflate(R.layout.noteedit, null,
 				false));
 		((TextView) list.findViewById(R.id.noteText)).setText(db_note
