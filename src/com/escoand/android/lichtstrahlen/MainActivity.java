@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -54,6 +55,7 @@ import android.widget.ViewFlipper;
 
 import com.escoand.android.lichtstrahlen_2013.R;
 
+@SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
 	private static final int TIMER_SPLASH = 2000;
 	private GestureDetector gesture = null;
@@ -180,6 +182,11 @@ public class MainActivity extends Activity {
 			/* scripture list */
 		case R.id.menuList:
 			showDialog(R.id.menuList);
+			return true;
+
+			/* notes list */
+		case R.id.menuNotes:
+			showDialog(R.id.menuNotes);
 			return true;
 
 			/* share */
@@ -354,6 +361,78 @@ public class MainActivity extends Activity {
 						}
 					}).create();
 
+		case R.id.menuNotes:
+			return new AlertDialog.Builder(this)
+					.setCancelable(true)
+					.setTitle(getString(R.string.listNotes))
+
+					/* data for list */
+					.setAdapter(
+							new CursorAdapter(this, db_note.getListCursor()) {
+								private final SimpleDateFormat df = new SimpleDateFormat(
+										"yyyyMMdd");
+								SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+								TextView tvDate, tvNote;
+								Date date;
+								String text;
+
+								/* inflate layout */
+								@Override
+								public View newView(Context context,
+										Cursor cursor, ViewGroup parent) {
+									return getLayoutInflater().inflate(
+											R.layout.noteentry, parent, false);
+								}
+
+								/* set item data */
+								@Override
+								public void bindView(View view,
+										Context context, Cursor cursor) {
+									tvDate = (TextView) view
+											.findViewById(R.id.listDate);
+									tvNote = (TextView) view
+											.findViewById(R.id.listNote);
+									try {
+										date = df
+												.parse(cursor.getString(cursor
+														.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+										text = cursor
+												.getString(cursor
+														.getColumnIndex(NoteDatabase.COLUMN_TEXT));
+									} catch (Exception e) {
+										// e.printStackTrace();
+									}
+
+									/* show */
+									tvDate.setText(df_ymd.format(date));
+									tvNote.setText(text);
+								}
+							},
+
+							/* on click */
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int item) {
+									Cursor cursor = db_note.getListCursor();
+									cursor.moveToPosition(item);
+									showDay(cursor.getString(cursor
+											.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+									removeDialog(R.id.menuNotes);
+								}
+							})
+
+					/* on cancel */
+					.setOnCancelListener(new OnCancelListener() {
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							removeDialog(R.id.menuNotes);
+						}
+					})
+
+					/* create */
+					.create();
+
 			/* info */
 		case R.id.menuInfo:
 			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -471,8 +550,8 @@ public class MainActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						System.out.println("note saved");
-						db_note.setDateNode(date,
+						// System.out.println("note saved");
+						db_note.setDateNote(date,
 								((TextView) findViewById(R.id.noteText))
 										.getText().toString());
 					}

@@ -18,6 +18,10 @@
         android:icon="@android:drawable/ic_menu_agenda"
         android:title="@string/menuList"/>
     <item
+        android:id="@+id/menuNotes"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/menuNotes"/>
+    <item
         android:id="@+id/menuShare"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/menuShare"/>
