@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.escoand.android.lichtstrahlen_2013.R;
 
+@SuppressLint("SimpleDateFormat")
 public class VerseDatabase extends SQLiteOpenHelper {
 	private final Context context;
 	private SQLiteDatabase database;

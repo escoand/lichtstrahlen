@@ -6,10 +6,7 @@
     <string name="sciptureUrl">http://www.bibleserver.com/text/ESV/</string>
 
     <!-- common -->
-    <string name="msgWait">Please wait&#8230;</string>
     <string name="msgRemind">Don\'t forget it!</string>
-    <string name="buttonYes">Yes</string>
-    <string name="buttonNo">No</string>
     <string name="listNotes">Notes</string>
     <string name="listVerses">Scripture List</string>
 
@@ -20,19 +17,11 @@
 
     <!-- notes -->
     <string name="mainNote">Notes:</string>
-    <string name="noteNote">Note</string>
-    <string name="noteAdd">Add / Edit note</string>
     <string name="noteSave">Save</string>
-    <string name="noteDelete">Delete</string>
-    <string name="noteCancel">Cancel</string>
-    <string name="noteDeleteQuestion">Confirm deletion?</string>
-    <string name="noteSaved">Note saved</string>
-    <string name="noteDeleted">Note deleted</string>
 
     <!-- text -->
     <string name="textFor">for</string>
     <string name="textFrom">from</string>
-    <string name="textUntil">until</string>
 
     <!-- menu -->
     <string name="menuBible">Scripture</string>

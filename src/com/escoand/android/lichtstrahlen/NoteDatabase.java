@@ -18,6 +18,7 @@ package com.escoand.android.lichtstrahlen;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -61,6 +62,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
 	}
 
 	/* get note for specific date */
+	@SuppressLint("SimpleDateFormat")
 	public String getDateNote(Date date) {
 		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
@@ -74,7 +76,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
 	}
 
 	/* set note for specific date */
-	public void setDateNode(Date date, String note) {
+	public void setDateNote(Date date, String note) {
 		String date_string = DateFormat.format("yyyyMMdd", date).toString();
 		ContentValues values = new ContentValues();
 		values.put(COLUMN_DATE, date_string);
@@ -83,5 +85,15 @@ public class NoteDatabase extends SQLiteOpenHelper {
 		getWritableDatabase().delete(TABLE_NAME, COLUMN_DATE + "=?",
 				new String[] { date_string });
 		getWritableDatabase().insert(TABLE_NAME, null, values);
+	}
+
+	/* get list */
+	public Cursor getListCursor() {
+		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
+				new String[] { COLUMN_DATE, COLUMN_TEXT, "rowid as _id" },
+				null, new String[] {}, null, null, COLUMN_DATE);
+		if (cursor != null)
+			cursor.moveToFirst();
+		return cursor;
 	}
 }
