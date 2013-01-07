@@ -62,6 +62,7 @@ import com.escoand.android.lichtstrahlen_2013.R;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
 	private static final int TIMER_SPLASH = 2000;
+	private static final int DEFAULT_FONT_SIZE = 18;
 	private GestureDetector gesture = null;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
@@ -76,7 +77,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
-		/* theme */
+		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false))
 			setTheme(R.style.Light);
@@ -630,9 +631,6 @@ public class MainActivity extends Activity {
 				false);
 		ListView list = (ListView) container.findViewById(R.id.dayList);
 		TextView empty = (TextView) container.findViewById(R.id.dayEmpty);
-		Float size = Float.valueOf(PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext()).getString(
-						"scale", "18"));
 
 		list.setDivider(null);
 		list.setEmptyView(empty);
@@ -655,13 +653,19 @@ public class MainActivity extends Activity {
 					});
 		}
 
+		/* text size */
+		int scale = DEFAULT_FONT_SIZE;
+		try {
+			scale = Integer.valueOf(PreferenceManager
+					.getDefaultSharedPreferences(getBaseContext()).getString(
+							"scale", Integer.toString(DEFAULT_FONT_SIZE)));
+		} catch (Exception e) {
+		}
+
 		list.setAdapter(new CursorAdapter(this, data_text) {
 			private final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
 					.getDateInstance(DateFormat.LONG);
-			Float size = Float.valueOf(PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext()).getString(
-							"scale", "18"));
 
 			/* disable selecting */
 			@Override
@@ -715,17 +719,23 @@ public class MainActivity extends Activity {
 				tvAuthor.setText(cursor.getString(cursor
 						.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
 
-				/* font size */
-				tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
-				tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
-				tvVerse.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
-				tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
-				tvAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
+				/* text size */
+				int scale = DEFAULT_FONT_SIZE;
+				try {
+					scale = Integer.valueOf(PreferenceManager
+							.getDefaultSharedPreferences(getBaseContext())
+							.getString("scale",
+									Integer.toString(DEFAULT_FONT_SIZE)));
+				} catch (Exception e) {
+				}
+				tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
+				tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
+				tvVerse.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
+				tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
+				tvAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
+
 			}
 		});
-
-		/* font size */
-		empty.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
 
 		/* add to flipper */
 		flipper.addView(container);
