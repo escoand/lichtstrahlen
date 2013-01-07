@@ -1,5 +1,6 @@
 /bin
 /dev/*~
-/res/drawable*
+/res/drawable*/icon.png
+/res/drawable*/*.jpg
 /res/raw*
 /gen
