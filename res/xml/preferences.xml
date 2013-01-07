@@ -3,6 +3,7 @@
 
     <PreferenceCategory android:title="@string/prefDisplay" >
         <ListPreference
+            android:defaultValue="18"
             android:entries="@array/listScale"
             android:entryValues="@array/listScaleValues"
             android:key="scale"
@@ -10,17 +11,19 @@
             android:title="@string/prefScale" />
 
         <CheckBoxPreference
+            android:defaultValue="false"
             android:key="inverse"
             android:summary="@string/prefInverseDesc"
             android:title="@string/prefInverse" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefOther" >
         <CheckBoxPreference
-            android:defaultValue="18"
+            android:defaultValue="true"
             android:key="splash"
             android:summary="@string/prefSplashDesc"
             android:title="@string/prefSplash" />
         <CheckBoxPreference
+            android:defaultValue="false"
             android:key="remind"
             android:summary="@string/prefRemindDesc"
             android:title="@string/prefRemind" />
