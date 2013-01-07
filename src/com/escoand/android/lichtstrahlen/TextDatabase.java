@@ -32,12 +32,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.escoand.android.lichtstrahlen_2013.R;
 
 @SuppressLint("SimpleDateFormat")
-public class VerseDatabase extends SQLiteOpenHelper {
+public class TextDatabase extends SQLiteOpenHelper {
 	private final Context context;
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "verses";
-	private static final int DATABASE_VERSION = 15;
+	private static final int DATABASE_VERSION = 16;
 
 	private static final String TABLE_NAME = "verses";
 	public static final String COLUMN_DATE = "date";
@@ -53,7 +53,7 @@ public class VerseDatabase extends SQLiteOpenHelper {
 			+ ", " + COLUMN_VERSE + ", " + COLUMN_TITLE + ", " + COLUMN_TEXT
 			+ ", " + COLUMN_ORDERID + ")";
 
-	public VerseDatabase(Context context) {
+	public TextDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		this.context = context;
 	}
@@ -138,15 +138,23 @@ public class VerseDatabase extends SQLiteOpenHelper {
 
 	/* get list */
 	public Cursor getListCursor() {
-		Cursor cursor = getReadableDatabase()
-				.query(TABLE_NAME,
-						new String[] {
-								COLUMN_VERSE,
-								"min(" + COLUMN_DATE + ") as " + COLUMN_DATE,
-								"max(" + COLUMN_DATE + ") as " + COLUMN_DATE
-										+ "_until", "rowid as _id" },
-						COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID,
-						null, COLUMN_ORDERID);
+		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
+				new String[] { COLUMN_VERSE, COLUMN_DATE, "rowid as _id" },
+				COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID, null,
+				COLUMN_ORDERID);
+		if (cursor != null)
+			cursor.moveToFirst();
+		return cursor;
+	}
+
+	/* get search result */
+	public Cursor getSearchCursor(String searchfor) {
+		Cursor cursor = getReadableDatabase().query(
+				TABLE_NAME,
+				new String[] { COLUMN_TITLE, COLUMN_VERSE, COLUMN_TEXT,
+						COLUMN_AUTHOR, COLUMN_DATE, "rowid as _id" },
+				TABLE_NAME + " MATCH ?", new String[] { searchfor },
+				null, null, COLUMN_DATE);
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
