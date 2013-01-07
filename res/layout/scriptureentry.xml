@@ -8,14 +8,14 @@
 
     <TextView
         android:id="@+id/listVerse"
+        style="@style/DialogPrimary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="@android:color/primary_text_light"
-        android:textSize="22sp" />
+        android:layout_weight="1" />
 
     <TextView
         android:id="@+id/listDate"
+        style="@style/DialogSecondary"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_gravity="right"
