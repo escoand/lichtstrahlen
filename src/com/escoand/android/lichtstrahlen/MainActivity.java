@@ -362,7 +362,7 @@ public class MainActivity extends Activity {
 			/* verse list */
 		case R.id.menuList:
 			if (data_verses == null)
-				data_verses = db_text.getListCursor();
+				data_verses = db_text.getList();
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.menuList))
 
@@ -595,7 +595,7 @@ public class MainActivity extends Activity {
 
 	/* refresh day text */
 	public void showDay() {
-		data_text = db_text.getDateCursor(this.date);
+		data_text = db_text.getDate(this.date);
 		refreshTextList(false, true);
 
 		/* title */
@@ -615,7 +615,7 @@ public class MainActivity extends Activity {
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
 		/* get data */
-		data_text = db_text.getSearchCursor(search);
+		data_text = db_text.getSearch(search);
 		refreshTextList(true, false);
 
 		/* title */

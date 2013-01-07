@@ -124,7 +124,7 @@ public class TextDatabase extends SQLiteOpenHelper {
 	}
 
 	/* get data for specific date */
-	public Cursor getDateCursor(Date date) {
+	public Cursor getDate(Date date) {
 		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 		Cursor cursor = getReadableDatabase().query(
 				TABLE_NAME,
@@ -136,8 +136,22 @@ public class TextDatabase extends SQLiteOpenHelper {
 		return cursor;
 	}
 
+	/* get data for specific date */
+	public Cursor getDateWithDate(Date date) {
+		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
+		Cursor cursor = getReadableDatabase().query(
+				TABLE_NAME,
+				new String[] { COLUMN_TITLE, COLUMN_VERSE, COLUMN_TEXT,
+						COLUMN_AUTHOR, COLUMN_DATE, "rowid as _id" },
+				COLUMN_DATE + "=?", new String[] { datestring }, null, null,
+				COLUMN_ORDERID);
+		if (cursor != null)
+			cursor.moveToFirst();
+		return cursor;
+	}
+
 	/* get list */
-	public Cursor getListCursor() {
+	public Cursor getList() {
 		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
 				new String[] { COLUMN_VERSE, COLUMN_DATE, "rowid as _id" },
 				COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID, null,
@@ -148,13 +162,13 @@ public class TextDatabase extends SQLiteOpenHelper {
 	}
 
 	/* get search result */
-	public Cursor getSearchCursor(String searchfor) {
+	public Cursor getSearch(String searchfor) {
 		Cursor cursor = getReadableDatabase().query(
 				TABLE_NAME,
 				new String[] { COLUMN_TITLE, COLUMN_VERSE, COLUMN_TEXT,
 						COLUMN_AUTHOR, COLUMN_DATE, "rowid as _id" },
-				TABLE_NAME + " MATCH ?", new String[] { searchfor },
-				null, null, COLUMN_DATE);
+				TABLE_NAME + " MATCH ?", new String[] { searchfor }, null,
+				null, COLUMN_DATE);
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
