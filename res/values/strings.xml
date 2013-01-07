@@ -27,11 +27,15 @@
     <string name="menuBible">Scripture</string>
     <string name="menuToday">Today</string>
     <string name="menuDate">Calendar</string>
+    <string name="menuSearch">Search</string>
     <string name="menuNotes">Notes</string>
     <string name="menuList">Scripture List</string>
     <string name="menuShare">Share</string>
     <string name="menuPreference">Preferences</string>
     <string name="menuInfo">Info</string>
+    
+    <!-- search -->
+    <string name="searchMessage">Please entre search term.</string>
 
     <!-- share -->
     <string name="shareText">Mobile devotions for you:</string>
