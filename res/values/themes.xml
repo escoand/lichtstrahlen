@@ -18,9 +18,4 @@
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
     </style>
 
-    <!-- list style -->
-    <style name="ListEntry">
-        <item name="android:padding">10dip</item>
-    </style>
-
 </resources>
