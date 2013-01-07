@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
 	private NoteDatabase db_note = null;
 	private Cursor data_day = null;
 	private Cursor data_list = null;
+	private Menu menu = null;
 	public Date date = new Date();
 
 	@Override
@@ -72,9 +73,9 @@ public class MainActivity extends Activity {
 		/* theme */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false))
-			setTheme(android.R.style.Theme_Light);
+			setTheme(R.style.Light);
 		else
-			setTheme(android.R.style.Theme_Black);
+			setTheme(R.style.Dark);
 
 		/* show */
 		super.onCreate(savedInstanceState);
@@ -123,6 +124,7 @@ public class MainActivity extends Activity {
 	/* callback for creating option menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		this.menu = menu;
 		getMenuInflater().inflate(R.menu.options_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -133,12 +135,14 @@ public class MainActivity extends Activity {
 		MenuItem item = null;
 
 		/* no data */
-		item = menu.findItem(R.id.menuBible);
-		if (item != null)
-			item.setEnabled(data_day != null && data_day.getCount() != 0);
-		item = menu.findItem(R.id.menuShare);
-		if (item != null)
-			item.setEnabled(data_day != null && data_day.getCount() != 0);
+		if (menu != null) {
+			item = menu.findItem(R.id.menuBible);
+			if (item != null)
+				item.setEnabled(data_day != null && data_day.getCount() != 0);
+			item = menu.findItem(R.id.menuShare);
+			if (item != null)
+				item.setEnabled(data_day != null && data_day.getCount() != 0);
+		}
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -623,5 +627,8 @@ public class MainActivity extends Activity {
 		setTitle(getString(R.string.app_name) + " "
 				+ getString(R.string.textFor) + " "
 				+ DateFormat.getDateInstance().format(date));
+
+		/* activate menu items */
+		onPrepareOptionsMenu(menu);
 	}
 }
