@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/widget_margin"
+    android:background="@drawable/appwidget_dark_bg"
+    android:padding="@dimen/widget_padding" >
+
+    <TextView
+        android:id="@+id/widgetDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="?android:attr/textColorTertiary"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/widgetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/widgetDate"
+        android:layout_toLeftOf="@+id/widgetVerse"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widgetVerse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/widgetDate" />
+
+    <TextView
+        android:id="@+id/widgetText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widgetAuthor"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/widgetTitle" />
+
+    <TextView
+        android:id="@+id/widgetAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>
