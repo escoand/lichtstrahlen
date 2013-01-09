@@ -653,15 +653,6 @@ public class MainActivity extends Activity {
 					});
 		}
 
-		/* text size */
-		int scale = DEFAULT_FONT_SIZE;
-		try {
-			scale = Integer.valueOf(PreferenceManager
-					.getDefaultSharedPreferences(getBaseContext()).getString(
-							"scale", Integer.toString(DEFAULT_FONT_SIZE)));
-		} catch (Exception e) {
-		}
-
 		list.setAdapter(new CursorAdapter(this, data_text) {
 			private final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
