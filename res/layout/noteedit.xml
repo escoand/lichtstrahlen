@@ -2,35 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/noteContainer"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
     android:padding="@dimen/listentry_margin" >
 
-    <TextView
-        android:id="@+id/noteLabel"
+    <EditText
+        android:id="@+id/noteText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="@string/mainNote"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/noteSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/mainNote"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" >
-
-        <EditText
-            android:id="@+id/noteText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textMultiLine" />
-
-        <Button
-            android:id="@+id/noteSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/noteSave" />
-    </LinearLayout>
+        android:text="@string/noteSave" />
 
 </LinearLayout>

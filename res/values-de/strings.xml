@@ -16,7 +16,7 @@
     <string name="mainNothing">Leider ist kein Tagestext für dieses Datum vorhanden.</string>
 
     <!-- notes -->
-    <string name="mainNote">Das will ich mir merken:</string>
+    <string name="mainNote">Das merk ich mir</string>
     <string name="noteSave">Speichern</string>
 
     <!-- text -->
