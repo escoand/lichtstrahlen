@@ -36,7 +36,7 @@
     <item
         android:id="@+id/menuShare"
         android:icon="@android:drawable/ic_menu_share"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/menuShare"/>
     <item
         android:id="@+id/menuPreference"
