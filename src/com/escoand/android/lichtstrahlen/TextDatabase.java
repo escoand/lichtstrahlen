@@ -123,20 +123,6 @@ public class TextDatabase extends SQLiteOpenHelper {
 		}
 	}
 
-	/* get data for specific date */
-	public Cursor getDate(Date date) {
-		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
-		Cursor cursor = getReadableDatabase().query(
-				TABLE_NAME,
-				new String[] { COLUMN_DATE, COLUMN_TITLE, COLUMN_VERSE,
-						COLUMN_TEXT, COLUMN_AUTHOR, "rowid as _id" },
-				COLUMN_DATE + "=?", new String[] { datestring }, null, null,
-				COLUMN_ORDERID);
-		if (cursor != null)
-			cursor.moveToFirst();
-		return cursor;
-	}
-
 	/* get list */
 	public Cursor getList() {
 		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
@@ -148,16 +134,26 @@ public class TextDatabase extends SQLiteOpenHelper {
 		return cursor;
 	}
 
-	/* get search result */
-	public Cursor getSearch(String searchfor) {
+	/* get full list */
+	public Cursor getFullList(String searchIn, String[] searchFor) {
 		Cursor cursor = getReadableDatabase().query(
 				TABLE_NAME,
-				new String[] { COLUMN_TITLE, COLUMN_VERSE, COLUMN_TEXT,
-						COLUMN_AUTHOR, COLUMN_DATE, "rowid as _id" },
-				TABLE_NAME + " MATCH ?", new String[] { searchfor }, null,
-				null, COLUMN_DATE + ", " + COLUMN_ORDERID);
+				new String[] { COLUMN_DATE, COLUMN_TITLE, COLUMN_VERSE,
+						COLUMN_TEXT, COLUMN_AUTHOR, "rowid as _id" }, searchIn,
+				searchFor, null, null, COLUMN_DATE + ", " + COLUMN_ORDERID);
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
+	}
+
+	/* get data for specific date */
+	public Cursor getDate(Date date) {
+		return getFullList(COLUMN_DATE + "=?",
+				new String[] { new SimpleDateFormat("yyyyMMdd").format(date) });
+	}
+
+	/* get search result */
+	public Cursor getSearch(String searchFor) {
+		return getFullList(TABLE_NAME + " MATCH ?", new String[] { searchFor });
 	}
 }
