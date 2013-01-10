@@ -49,12 +49,14 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.escoand.android.lichtstrahlen_2013.R;
@@ -598,11 +600,6 @@ public class MainActivity extends Activity {
 		data_text = db_text.getDate(this.date);
 		refreshTextList(false, true);
 
-		/* title */
-		setTitle(getString(R.string.app_name) + " "
-				+ getString(R.string.textFor) + " "
-				+ DateFormat.getDateInstance().format(date));
-
 		/* (de)activate menu items */
 		onPrepareOptionsMenu(menu);
 	}
@@ -618,9 +615,6 @@ public class MainActivity extends Activity {
 		data_text = db_text.getSearch(search);
 		refreshTextList(true, false);
 
-		/* title */
-		setTitle(getString(R.string.app_name));
-
 		/* (de)activate menu items */
 		onPrepareOptionsMenu(menu);
 	}
@@ -634,24 +628,6 @@ public class MainActivity extends Activity {
 
 		list.setDivider(null);
 		list.setEmptyView(empty);
-
-		/* note */
-		if (showFoot) {
-			list.addFooterView(getLayoutInflater().inflate(R.layout.noteedit,
-					null, false));
-			((TextView) list.findViewById(R.id.noteText)).setText(db_note
-					.getDateNote(date));
-			list.findViewById(R.id.noteSave).setOnClickListener(
-					new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// System.out.println("note saved");
-							db_note.setDateNote(date,
-									((TextView) findViewById(R.id.noteText))
-											.getText().toString());
-						}
-					});
-		}
 
 		list.setAdapter(new CursorAdapter(this, data_text) {
 			private final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -674,6 +650,9 @@ public class MainActivity extends Activity {
 			/* set item data */
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
+				Date date = null;
+				Date date_before = null;
+				Date date_after = null;
 				TextView tvDate = (TextView) view.findViewById(R.id.verseDate);
 				TextView tvTitle = (TextView) view
 						.findViewById(R.id.verseTitle);
@@ -682,16 +661,33 @@ public class MainActivity extends Activity {
 				TextView tvText = (TextView) view.findViewById(R.id.verseText);
 				TextView tvAuthor = (TextView) view
 						.findViewById(R.id.verseAuthor);
+				EditText etNote = (EditText) view.findViewById(R.id.noteText);
+				Button btSave = (Button) view.findViewById(R.id.noteSave);
+
+				/* get dates */
+				try {
+					date = df.parse(cursor.getString(cursor
+							.getColumnIndex(TextDatabase.COLUMN_DATE)));
+					if (!cursor.isFirst() && cursor.moveToPrevious()) {
+						date_before = df.parse(cursor.getString(cursor
+								.getColumnIndex(TextDatabase.COLUMN_DATE)));
+						cursor.moveToNext();
+					}
+					if (!cursor.isLast() && cursor.moveToNext()) {
+						date_after = df.parse(cursor.getString(cursor
+								.getColumnIndex(TextDatabase.COLUMN_DATE)));
+						cursor.moveToPrevious();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				/* date */
-				try {
-					Date date = df.parse(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_DATE)));
+				if (date_before == null || date_before.compareTo(date) != 0) {
 					tvDate.setText(df_ymd.format(date));
 					tvDate.setVisibility(View.VISIBLE);
-				} catch (Exception e) {
-					// e.printStackTrace();
-				}
+				} else
+					tvDate.setVisibility(View.GONE);
 
 				/* content */
 				tvTitle.setText(cursor.getString(cursor
@@ -700,15 +696,44 @@ public class MainActivity extends Activity {
 						.getColumnIndex(TextDatabase.COLUMN_VERSE)));
 				tvText.setText(cursor.getString(cursor
 						.getColumnIndex(TextDatabase.COLUMN_TEXT)));
-				if (cursor.isNull(cursor
+
+				/* author */
+				if (!cursor.isNull(cursor
 						.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-						|| cursor
+						&& !cursor
 								.getString(
 										cursor.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-								.equals(""))
+								.equals("")) {
+					tvAuthor.setText(cursor.getString(cursor
+							.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
+					tvAuthor.setVisibility(View.VISIBLE);
+				} else
 					tvAuthor.setVisibility(View.GONE);
-				tvAuthor.setText(cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
+
+				/* note */
+				if (date_after == null || date_after.compareTo(date) != 0) {
+					etNote.setText(db_note.getDateNote(date));
+					btSave.setTag(date);
+					btSave.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							try {
+								Date date = (Date) v.getTag();
+								String text = ((TextView) ((View) v.getParent())
+										.findViewById(R.id.noteText)).getText()
+										.toString();
+								db_note.setDateNote(date, text);
+								Toast.makeText(getApplicationContext(),
+										getString(R.string.noteSaved),
+										Toast.LENGTH_SHORT).show();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					((View) etNote.getParent()).setVisibility(View.VISIBLE);
+				} else
+					((View) etNote.getParent()).setVisibility(View.GONE);
 
 				/* text size */
 				int scale = DEFAULT_FONT_SIZE;
