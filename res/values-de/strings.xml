@@ -13,7 +13,7 @@
     <!-- main -->
     <string name="mainWeek">Wochenspruch:</string>
     <string name="mainMonth">Monatsspruch:</string>
-    <string name="mainNothing">Leider ist kein Tagestext für dieses Datum vorhanden.</string>
+    <string name="mainNothing">Leider ist kein Text für diese Auswahl vorhanden.</string>
 
     <!-- notes -->
     <string name="mainNote">Das merk ich mir</string>
@@ -21,7 +21,6 @@
     <string name="noteSaved">Notiz wurde gespeichert.</string>
 
     <!-- text -->
-    <string name="textFor">für</string>
     <string name="textFrom">ab</string>
 
     <!-- menu -->

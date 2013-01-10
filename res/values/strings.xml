@@ -13,7 +13,7 @@
     <!-- main -->
     <string name="mainWeek">For the week:</string>
     <string name="mainMonth">For the month:</string>
-    <string name="mainNothing">No Text found for this date.</string>
+    <string name="mainNothing">No Text found for this selection.</string>
 
     <!-- notes -->
     <string name="mainNote">Note</string>
@@ -21,7 +21,6 @@
     <string name="noteSaved">Note saved.</string>
 
     <!-- text -->
-    <string name="textFor">for</string>
     <string name="textFrom">from</string>
 
     <!-- menu -->
