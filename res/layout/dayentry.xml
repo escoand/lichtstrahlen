@@ -9,7 +9,8 @@
         android:id="@+id/verseDate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorTertiary"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold"
         android:visibility="gone" />
 
     <LinearLayout
@@ -39,6 +40,29 @@
         android:id="@+id/verseAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/listentry_margin"
+        android:visibility="gone" >
+
+        <EditText
+            android:id="@+id/noteText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/mainNote"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/noteSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/noteSave" />
+    </LinearLayout>
 
 </LinearLayout>

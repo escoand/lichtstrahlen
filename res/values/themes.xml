@@ -2,10 +2,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- dark styles -->
-    <style name="Dark" parent="@android:style/Theme.Black"></style>
+    <style name="Dark" parent="@android:style/Theme.Black.NoTitleBar"></style>
 
     <!-- light styles -->
-    <style name="Light" parent="@android:style/Theme.Light"></style>
+    <style name="Light" parent="@android:style/Theme.Light.NoTitleBar"></style>
 
     <!-- dialog styles -->
     <style name="DialogPrimary" parent="@android:style/Theme.Dialog">

@@ -18,6 +18,7 @@
     <!-- notes -->
     <string name="mainNote">Das merk ich mir</string>
     <string name="noteSave">Speichern</string>
+    <string name="noteSaved">Notiz wurde gespeichert.</string>
 
     <!-- text -->
     <string name="textFor">für</string>

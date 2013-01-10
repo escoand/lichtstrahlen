@@ -41,7 +41,7 @@ public class Widget extends AppWidgetProvider {
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget);
 		TextDatabase db = new TextDatabase(context);
-		Cursor cursor = db.getDateWithDate(new Date());
+		Cursor cursor = db.getDate(new Date());
 
 		/* content */
 		views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
