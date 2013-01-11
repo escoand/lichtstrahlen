@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- general settings -->
+    <ListPreference
+        android:entries="@array/scriptureEdition"
+        android:entryValues="@array/scriptureEditionValues"
+        android:key="translation"
+        android:title="@string/prefTranslation" />
+
+    <!-- display settings -->
     <PreferenceCategory android:title="@string/prefDisplay" >
         <ListPreference
             android:defaultValue="18"
@@ -16,6 +24,8 @@
             android:summary="@string/prefInverseDesc"
             android:title="@string/prefInverse" />
     </PreferenceCategory>
+
+    <!-- other settings -->
     <PreferenceCategory android:title="@string/prefOther" >
         <CheckBoxPreference
             android:defaultValue="true"
