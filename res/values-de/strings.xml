@@ -3,7 +3,30 @@
 
     <!-- app -->
     <string name="app_name">Lichtstrahlen 2013</string>
-    <string name="sciptureUrl">http://www.bibleserver.com/text/LUT/</string>
+    <string name="sciptureUrl">http://www.bibleserver.com/text/</string>
+
+    <string-array name="scriptureEdition">
+        <item>Luther 1984</item>
+        <item>Elberfelder Bibel</item>
+        <item>Hoffnung für alle</item>
+        <item>Schlachter 2000</item>
+        <item>Neue Genfer Übersetzung</item>
+        <item>Gute Nachricht Bibel</item>
+        <item>Einheitsübersetzung</item>
+        <item>Neues Leben. Die Bibel</item>
+        <item>Neue evangelistische Übersetzung</item>
+    </string-array>
+    <string-array name="scriptureEditionValues">
+        <item>LUT</item>
+        <item>ELB</item>
+        <item>HFA</item>
+        <item>SLT</item>
+        <item>NGÜ</item>
+        <item>GNB</item>
+        <item>EU</item>
+        <item>NLB</item>
+        <item>NeÜ</item>
+    </string-array>
 
     <!-- common -->
     <string name="msgRemind">Nicht vergessen!</string>
@@ -42,6 +65,7 @@
     <string name="shareUrl">http://goo.gl/bfHCM</string>
 
     <!-- preferences -->
+    <string name="prefTranslation">Bibelübersetzung</string>
     <string name="prefDisplay">Darstellung (benötigt Neustart)</string>
     <string name="prefScale">Schriftgröße</string>
     <string name="prefScaleDesc"></string>
