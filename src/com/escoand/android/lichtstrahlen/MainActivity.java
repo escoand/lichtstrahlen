@@ -166,15 +166,16 @@ public class MainActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem item = null;
 
-		/* no data */
-		if (menu != null) {
-			item = menu.findItem(R.id.menuBible);
-			if (item != null)
-				item.setEnabled(data_text != null && data_text.getCount() != 0);
-			item = menu.findItem(R.id.menuShare);
-			if (item != null)
-				item.setEnabled(data_text != null && data_text.getCount() != 0);
-		}
+		if (menu == null)
+			return false;
+
+		/* (un)hide items */
+		item = menu.findItem(R.id.menuBible);
+		if (item != null)
+			item.setEnabled(data_text != null && data_text.getCount() != 0);
+		item = menu.findItem(R.id.menuShare);
+		if (item != null)
+			item.setEnabled(data_text != null && data_text.getCount() != 0);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
