@@ -61,7 +61,6 @@ public class Widget extends AppWidgetProvider {
 				.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
 
 		// TODO: background image
-		// TODO: text color
 
 		/* text size */
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -69,9 +68,10 @@ public class Widget extends AppWidgetProvider {
 			try {
 				scale = Integer.valueOf(PreferenceManager
 						.getDefaultSharedPreferences(context).getString(
-								"scale",
+								"widgetScale",
 								Integer.toString(R.dimen.default_text_size)));
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			views.setTextViewTextSize(R.id.widgetDate,
 					TypedValue.COMPLEX_UNIT_SP, scale);
