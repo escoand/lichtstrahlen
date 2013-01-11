@@ -3,7 +3,22 @@
 
     <!-- app -->
     <string name="app_name">mobile devotions 2013</string>
-    <string name="sciptureUrl">http://www.bibleserver.com/text/ESV/</string>
+    <string name="sciptureUrl">http://www.bibleserver.com/text/</string>
+
+    <string-array name="scriptureEdition">
+        <item>English Standard Version</item>
+        <item>New International Version</item>
+        <item>Today\'s New International Version</item>
+        <item>New Int. Readers Version</item>
+        <item>King James Version</item>
+    </string-array>
+    <string-array name="scriptureEditionValues">
+        <item>ESV</item>
+        <item>NIV</item>
+        <item>TNIV</item>
+        <item>NIRV</item>
+        <item>KJV</item>
+    </string-array>
 
     <!-- common -->
     <string name="msgRemind">Don\'t forget it!</string>
@@ -42,6 +57,7 @@
     <string name="shareUrl">http://goo.gl/2V8Qd</string>
 
     <!-- preferences -->
+    <string name="prefTranslation">Bible translation</string>
     <string name="prefDisplay">Appearance (requires restart)</string>
     <string name="prefScale">Font size</string>
     <string name="prefScaleDesc"></string>

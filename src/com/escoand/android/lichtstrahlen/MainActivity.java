@@ -192,6 +192,9 @@ public class MainActivity extends Activity {
 				data_text.moveToFirst();
 				intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(getString(R.string.sciptureUrl)
+						+ PreferenceManager.getDefaultSharedPreferences(this)
+								.getString("translation", "")
+						+ "/"
 						+ data_text
 								.getString(
 										data_text
