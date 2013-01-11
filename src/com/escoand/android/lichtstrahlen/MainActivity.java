@@ -33,6 +33,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +76,42 @@ public class MainActivity extends Activity {
 	private EditText txt_search = null;
 	public Date date = new Date();
 
+	/* db init */
+	final class DBInit extends AsyncTask<Void, Void, Void> {
+		private Date start = new Date();
+
+		protected Void doInBackground(Void... params) {
+			db_text = new TextDatabase(getBaseContext());
+			db_note = new NoteDatabase(getBaseContext());
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			flipper.addView(getLayoutInflater().inflate(R.layout.splash, null));
+
+			/* splash */
+			if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+					.getBoolean("splash", true)) {
+				date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
+
+				/* timer */
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						nextDay();
+					}
+				}, TIMER_SPLASH + new Date().getTime() - start.getTime());
+			}
+
+			/* no splash */
+			else
+				showDay(new Date());
+
+			super.onPostExecute(result);
+		}
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -92,27 +129,7 @@ public class MainActivity extends Activity {
 		/* init */
 		gesture = new GestureDetector(new Gestures(this));
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
-		db_text = new TextDatabase(getBaseContext());
-		db_note = new NoteDatabase(getBaseContext());
-
-		/* splash */
-		if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-				.getBoolean("splash", true)) {
-			date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
-			flipper.addView(getLayoutInflater().inflate(R.layout.splash, null));
-
-			/* timer */
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					nextDay();
-				}
-			}, TIMER_SPLASH);
-		}
-
-		/* no splash */
-		else
-			showDay(new Date());
+		new DBInit().execute();
 	}
 
 	/* callback for gestures */
