@@ -64,7 +64,6 @@ import com.escoand.android.lichtstrahlen_2013.R;
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
 	private static final int TIMER_SPLASH = 2000;
-	private static final int DEFAULT_FONT_SIZE = 18;
 	private GestureDetector gesture = null;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
@@ -736,12 +735,12 @@ public class MainActivity extends Activity {
 					((View) etNote.getParent()).setVisibility(View.GONE);
 
 				/* text size */
-				int scale = DEFAULT_FONT_SIZE;
+				int scale = R.dimen.default_text_size;
 				try {
 					scale = Integer.valueOf(PreferenceManager
 							.getDefaultSharedPreferences(getBaseContext())
 							.getString("scale",
-									Integer.toString(DEFAULT_FONT_SIZE)));
+									Integer.toString(R.dimen.default_text_size)));
 				} catch (Exception e) {
 				}
 				tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
