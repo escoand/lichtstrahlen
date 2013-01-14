@@ -130,6 +130,16 @@ public class MainActivity extends Activity {
 		new DBInit().execute();
 	}
 
+	/* clean stop */
+	@Override
+	protected void onStop() {
+		if (data_text != null)
+			data_text.close();
+		db_text.close();
+		db_note.close();
+		super.onStop();
+	}
+
 	/* callback for gestures */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -613,8 +623,6 @@ public class MainActivity extends Activity {
 
 	/* refresh day text */
 	public void showDay() {
-		if (data_text != null)
-			data_text.close();
 		data_text = db_text.getDate(this.date);
 		refreshTextList(false, true);
 
@@ -630,8 +638,6 @@ public class MainActivity extends Activity {
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
 		/* get data */
-		if (data_text != null)
-			data_text.close();
 		data_text = db_text.getSearch(search);
 		refreshTextList(true, false);
 
