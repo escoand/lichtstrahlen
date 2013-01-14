@@ -5,50 +5,50 @@
     android:orientation="vertical"
     android:padding="@dimen/listentry_margin" >
 
-    <TextView
-        android:id="@+id/verseDate"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textStyle="bold"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/verseTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/verseVerse"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/listentry_margin"
+            android:layout_weight="1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/verseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp" />
+            android:textColor="?android:attr/textColorTertiary"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/verseTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold" />
+
+    <TextView
         android:id="@+id/verseText"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/verseAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:visibility="gone" />
+        android:layout_gravity="right" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/listentry_margin"
-        android:visibility="gone" >
+        android:paddingTop="@dimen/listentry_margin" >
 
         <EditText
             android:id="@+id/noteText"
