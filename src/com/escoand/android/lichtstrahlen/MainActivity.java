@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
 	private TextDatabase db_text = null;
 	private NoteDatabase db_note = null;
 	private Cursor data_text = null;
+	private Cursor data_verses = null;
 	private Menu menu = null;
 	private MenuItem menu_item = null;
 	private EditText txt_search = null;
@@ -113,6 +114,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false))
@@ -391,11 +393,13 @@ public class MainActivity extends Activity {
 
 			/* verse list */
 		case R.id.menuList:
+			if (data_verses == null)
+				data_verses = db_text.getList();
 			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.menuList))
 
 					/* data for list */
-					.setAdapter(new CursorAdapter(this, data_text) {
+					.setAdapter(new CursorAdapter(this, data_verses) {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
@@ -448,7 +452,7 @@ public class MainActivity extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int item) {
 							data_text.moveToPosition(item);
-							showDay(data_text.getString(data_text
+							showDay(data_verses.getString(data_verses
 									.getColumnIndex(TextDatabase.COLUMN_DATE)));
 						}
 					}).create();
