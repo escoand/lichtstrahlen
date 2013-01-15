@@ -15,6 +15,7 @@
 
 package com.escoand.android.lichtstrahlen;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -48,42 +49,12 @@ public class Widget extends AppWidgetProvider {
 				.getColumnIndex(TextDatabase.COLUMN_TITLE)));
 		views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
 				.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-		views.setTextViewText(
-				R.id.widgetText,
-				cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_TEXT)) + "...");
-		if (cursor.isNull(cursor.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-				|| cursor.getString(
-						cursor.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-						.equals(""))
-			views.setViewVisibility(R.id.widgetAuthor, View.GONE);
-		views.setTextViewText(R.id.widgetAuthor, cursor.getString(cursor
-				.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
+		views.setTextViewText(R.id.widgetDay,
+				new SimpleDateFormat("dd.").format(new Date()));
+		views.setTextViewText(R.id.widgetMonth,
+				new SimpleDateFormat("MMM").format(new Date()));
 
 		// TODO: background image
-
-		/* text size */
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			int scale = R.dimen.default_text_size;
-			try {
-				scale = Integer.valueOf(PreferenceManager
-						.getDefaultSharedPreferences(context).getString(
-								"widgetScale",
-								Integer.toString(R.dimen.default_text_size)));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			views.setTextViewTextSize(R.id.widgetDate,
-					TypedValue.COMPLEX_UNIT_SP, scale);
-			views.setTextViewTextSize(R.id.widgetTitle,
-					TypedValue.COMPLEX_UNIT_SP, scale);
-			views.setTextViewTextSize(R.id.widgetVerse,
-					TypedValue.COMPLEX_UNIT_SP, scale);
-			views.setTextViewTextSize(R.id.widgetText,
-					TypedValue.COMPLEX_UNIT_SP, scale);
-			views.setTextViewTextSize(R.id.widgetAuthor,
-					TypedValue.COMPLEX_UNIT_SP, scale);
-		}
 
 		/* close */
 		try {
@@ -103,3 +74,4 @@ public class Widget extends AppWidgetProvider {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 	}
 }
+
