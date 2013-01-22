@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/appwidget_dark_bg"
-    android:baselineAligned="false"
     android:orientation="vertical"
     android:paddingBottom="@dimen/widget_padding_vertical"
     android:paddingLeft="@dimen/widget_padding_horizontal"
@@ -14,48 +13,11 @@
     tools:context="com.escoand.android.lichtstrahlen.MainActivity" >
 
     <TextView
-        android:id="@+id/widgetName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/widgetDay"
-        android:singleLine="true"
-        android:text="@string/app_name"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/widgetVerse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignRight="@+id/widgetName"
-        android:layout_below="@+id/widgetName"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/widgetTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/widgetVerse"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/widgetDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="-8dp"
         android:layout_toLeftOf="@+id/widgetMonth"
         android:textColor="?android:attr/textColorTertiary"
         android:textSize="34sp" />
@@ -66,8 +28,49 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:paddingTop="3dp"
+        android:layout_marginTop="-3dp"
         android:textColor="?android:attr/textColorTertiary"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/widgetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/widgetDay"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorTertiary" />
+
+    <TextView
+        android:id="@+id/widgetVerse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widgetTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/widgetName"
+        android:layout_toLeftOf="@id/widgetDay"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/widgetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textStyle="bold" />
 
 </RelativeLayout>
