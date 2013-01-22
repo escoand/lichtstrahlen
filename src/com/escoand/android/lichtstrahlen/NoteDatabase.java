@@ -18,6 +18,8 @@ package com.escoand.android.lichtstrahlen;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.escoand.android.lichtstrahlen_2013.R;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,9 +27,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
 public class NoteDatabase extends SQLiteOpenHelper {
-	private SQLiteDatabase database;
+	private static SQLiteDatabase database;
+	private static Context context;
 
 	private static final String DATABASE_NAME = "notes";
 	private static final int DATABASE_VERSION = 2;
@@ -43,6 +47,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
 
 	public NoteDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		this.context = context;
 	}
 
 	/* create new database */
@@ -78,13 +83,21 @@ public class NoteDatabase extends SQLiteOpenHelper {
 	/* set note for specific date */
 	public void setDateNote(Date date, String note) {
 		String date_string = DateFormat.format("yyyyMMdd", date).toString();
-		ContentValues values = new ContentValues();
-		values.put(COLUMN_DATE, date_string);
-		values.put(COLUMN_TEXT, note);
 
+		/* delete note */
 		getWritableDatabase().delete(TABLE_NAME, COLUMN_DATE + "=?",
 				new String[] { date_string });
-		getWritableDatabase().insert(TABLE_NAME, null, values);
+
+		/* save note */
+		if (!note.equals("")) {
+			ContentValues values = new ContentValues();
+			values.put(COLUMN_DATE, date_string);
+			values.put(COLUMN_TEXT, note);
+			getWritableDatabase().insert(TABLE_NAME, null, values);
+		}
+
+		/* info */
+		Toast.makeText(context, R.string.noteSaved, Toast.LENGTH_SHORT).show();
 	}
 
 	/* get list */
