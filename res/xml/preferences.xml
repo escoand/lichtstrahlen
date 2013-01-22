@@ -11,7 +11,7 @@
     <!-- display settings -->
     <PreferenceCategory android:title="@string/prefDisplay" >
         <ListPreference
-            android:defaultValue="18"
+            android:defaultValue="@integer/default_text_size"
             android:entries="@array/listScale"
             android:entryValues="@array/listScaleValues"
             android:key="scale"

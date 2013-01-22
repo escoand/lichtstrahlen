@@ -783,12 +783,15 @@ public class MainActivity extends Activity {
 					((View) etNote.getParent()).setVisibility(View.GONE);
 
 				/* text size */
-				int scale = R.dimen.default_text_size;
+				int scale = getResources().getInteger(
+						R.integer.default_text_size);
 				try {
 					scale = Integer.valueOf(PreferenceManager
 							.getDefaultSharedPreferences(getBaseContext())
-							.getString("scale",
-									Integer.toString(R.dimen.default_text_size)));
+							.getString(
+									"scale",
+									Integer.toString(getResources().getInteger(
+											R.integer.default_text_size))));
 				} catch (Exception e) {
 				}
 				tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
@@ -796,7 +799,6 @@ public class MainActivity extends Activity {
 				tvVerse.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
 				tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
 				tvAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-
 			}
 		});
 
