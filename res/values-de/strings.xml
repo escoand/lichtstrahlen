@@ -30,6 +30,7 @@
 
     <!-- common -->
     <string name="msgRemind">Nicht vergessen!</string>
+    <string name="msgLoading">Daten werden geladen&#8230;</string>
     <string name="listNotes">Notizen</string>
     <string name="listVerses">Bibelstellenliste</string>
 

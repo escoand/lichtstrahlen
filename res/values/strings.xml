@@ -22,6 +22,7 @@
 
     <!-- common -->
     <string name="msgRemind">Don\'t forget it!</string>
+    <string name="msgLoading">Loading&#8230;</string>
     <string name="listNotes">Notes</string>
     <string name="listVerses">Scripture List</string>
 
