@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.escoand.android.lichtstrahlen_2013.R;
@@ -32,7 +33,8 @@ public class Reminder extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		System.err.println("reminder started");
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(context);
 
 		/* set info */
 		notification = new Intent(context, Notification.class);
@@ -48,12 +50,9 @@ public class Reminder extends BroadcastReceiver {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		/* start notification */
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-				"remind", false)) {
-			int hour = PreferenceManager.getDefaultSharedPreferences(context)
-					.getInt("remind_hour", 9);
-			int minute = PreferenceManager.getDefaultSharedPreferences(context)
-					.getInt("remind_minute", 0);
+		if (prefs.getBoolean("remind", false)) {
+			int hour = prefs.getInt("remind_hour", 9);
+			int minute = prefs.getInt("remind_minute", 0);
 
 			/* get date */
 			Calendar cal = Calendar.getInstance();
