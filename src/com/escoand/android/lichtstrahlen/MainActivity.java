@@ -79,6 +79,21 @@ public class MainActivity extends Activity {
 	/* db init */
 	final class DBInit extends AsyncTask<Void, Void, Void> {
 		private Date start = new Date();
+		public boolean fullInit = true;
+
+		/* show info and splash */
+		@Override
+		protected void onPreExecute() {
+			if (fullInit) {
+				Toast.makeText(getApplicationContext(), R.string.msgLoading,
+						Toast.LENGTH_LONG).show();
+				if (PreferenceManager.getDefaultSharedPreferences(
+						getBaseContext()).getBoolean("splash", true))
+					flipper.addView(getLayoutInflater().inflate(
+							R.layout.splash, null));
+			}
+			super.onPreExecute();
+		}
 
 		protected Void doInBackground(Void... params) {
 			db_text = new TextDatabase(getBaseContext());
@@ -86,13 +101,12 @@ public class MainActivity extends Activity {
 			return null;
 		}
 
+		/* hide info and splash */
 		@Override
 		protected void onPostExecute(Void result) {
-			flipper.addView(getLayoutInflater().inflate(R.layout.splash, null));
-
-			/* splash */
-			if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-					.getBoolean("splash", true)) {
+			if (fullInit
+					&& PreferenceManager.getDefaultSharedPreferences(
+							getBaseContext()).getBoolean("splash", true)) {
 				date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
 
 				/* timer */
@@ -114,6 +128,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		DBInit init = new DBInit();
 
 		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
@@ -129,7 +144,9 @@ public class MainActivity extends Activity {
 		/* init */
 		gesture = new GestureDetector(new Gestures(this));
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
-		new DBInit().execute();
+		if (savedInstanceState != null)
+			init.fullInit = false;
+		init.execute();
 	}
 
 	/* clean stop */
