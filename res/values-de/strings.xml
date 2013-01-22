@@ -40,7 +40,7 @@
     <string name="mainNothing">Leider ist kein Text für diese Auswahl vorhanden.</string>
 
     <!-- notes -->
-    <string name="mainNote">Das merk ich mir</string>
+    <string name="mainNote">Das merke ich mir</string>
     <string name="noteSave">Speichern</string>
     <string name="noteSaved">Notiz wurde gespeichert.</string>
 
