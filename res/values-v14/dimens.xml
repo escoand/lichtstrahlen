@@ -2,7 +2,7 @@
 <resources>
 
     <dimen name="widget_margin">0dp</dimen>
-    <dimen name="widget_padding_horizontal">5dp</dimen>
-    <dimen name="widget_padding_vertical">0dp</dimen>
+    <dimen name="widget_padding_horizontal">7dp</dimen>
+    <dimen name="widget_padding_vertical">5dp</dimen>
 
 </resources>
