@@ -770,9 +770,6 @@ public class MainActivity extends Activity {
 										.findViewById(R.id.noteText)).getText()
 										.toString();
 								db_note.setDateNote(date, text);
-								Toast.makeText(getApplicationContext(),
-										getString(R.string.noteSaved),
-										Toast.LENGTH_SHORT).show();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
