@@ -26,23 +26,16 @@
     </PreferenceCategory>
 
     <!-- widget settings -->
+    <!--
     <PreferenceCategory android:title="@string/prefWidget" >
-        <ListPreference
-            android:defaultValue="18"
-            android:entries="@array/listScale"
-            android:entryValues="@array/listScaleValues"
-            android:key="widgetScale"
-            android:summary="@string/prefScaleDesc"
-            android:title="@string/prefScale" />
-
-        <!--
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="widgetInverse"
             android:summary="@string/prefInverseDesc"
             android:title="@string/prefInverse" />
-        -->
     </PreferenceCategory>
+    -->
+
 
     <!-- other settings -->
     <PreferenceCategory android:title="@string/prefOther" >
