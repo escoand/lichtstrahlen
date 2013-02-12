@@ -101,18 +101,18 @@ public class MainActivity extends Activity {
 			return null;
 		}
 
-		/* hide info and splash */
+		/* hide splash */
 		@Override
 		protected void onPostExecute(Void result) {
 			if (fullInit
 					&& PreferenceManager.getDefaultSharedPreferences(
 							getBaseContext()).getBoolean("splash", true)) {
-				date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
 
 				/* timer */
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
+						date.setTime(date.getTime() - 24 * 60 * 60 * 1000);
 						nextDay();
 					}
 				}, TIMER_SPLASH + new Date().getTime() - start.getTime());
@@ -147,6 +147,15 @@ public class MainActivity extends Activity {
 		if (savedInstanceState != null)
 			init.fullInit = false;
 		init.execute();
+	}
+
+	/* after preferences */
+	@Override
+	protected void onResume() {
+		if (date != null && db_text != null)
+			showDay(date);
+		super.onResume();
+
 	}
 
 	/* clean stop */
@@ -309,7 +318,7 @@ public class MainActivity extends Activity {
 			/* preferences */
 		case R.id.menuPreference:
 			intent = new Intent(getBaseContext(), Preferences.class);
-			startActivityForResult(intent, 0);
+			startActivity(intent);
 			return true;
 
 			/* info */
