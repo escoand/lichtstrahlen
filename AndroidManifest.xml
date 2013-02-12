@@ -30,7 +30,7 @@
         </activity>
 
         <receiver android:name="com.escoand.android.lichtstrahlen.Notification" />
-        <receiver android:name="com.escoand.android.lichtstrahlen.Reminder" >
+        <receiver android:name="com.escoand.android.lichtstrahlen.Receiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.escoand.android.lichtstrahlen.INIT_REMINDER" />
