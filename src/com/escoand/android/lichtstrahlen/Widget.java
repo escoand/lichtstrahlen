@@ -16,19 +16,17 @@
 package com.escoand.android.lichtstrahlen;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.util.TypedValue;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import com.escoand.android.lichtstrahlen_2013.R;
@@ -43,6 +41,7 @@ public class Widget extends AppWidgetProvider {
 				R.layout.widget);
 		TextDatabase db = new TextDatabase(context);
 		Cursor cursor = db.getDate(new Date());
+		cursor.moveToLast();
 
 		/* content */
 		views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
@@ -61,6 +60,7 @@ public class Widget extends AppWidgetProvider {
 			cursor.close();
 			db.close();
 		} catch (Exception e) {
+			// e.printStackTrace();
 		}
 
 		/* onclick listener */
@@ -72,6 +72,22 @@ public class Widget extends AppWidgetProvider {
 		/* update */
 		appWidgetManager.updateAppWidget(appWidgetIds, views);
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
+
+		/* date next update */
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+
+		/* next update */
+		Intent intent2 = new Intent(context, Widget.class);
+		intent2.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+		PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, 0,
+				intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		/* schedule */
+		((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).set(
+				AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
 	}
 }
-
