@@ -27,14 +27,17 @@ import android.preference.PreferenceManager;
 
 import com.escoand.android.lichtstrahlen_2013.R;
 
-public class Reminder extends BroadcastReceiver {
-	Intent notification = null;
-	PendingIntent receiver = null;
-
+public class Receiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		final SharedPreferences prefs = PreferenceManager
+		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
+		Intent notification = null;
+		PendingIntent receiver = null;
+
+		if (!intent.getAction().equals(
+				"com.escoand.android.lichtstrahlen.INIT_REMINDER"))
+			return;
 
 		/* set info */
 		notification = new Intent(context, Notification.class);

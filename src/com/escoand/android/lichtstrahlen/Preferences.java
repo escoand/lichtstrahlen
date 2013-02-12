@@ -139,7 +139,7 @@ public class Preferences extends PreferenceActivity {
 	}
 
 	private void initReminder() {
-		Intent intent = new Intent(getBaseContext(), Reminder.class);
+		Intent intent = new Intent(getBaseContext(), Receiver.class);
 		intent.setAction("com.escoand.android.lichtstrahlen.INIT_REMINDER");
 		getBaseContext().sendBroadcast(intent);
 	}
