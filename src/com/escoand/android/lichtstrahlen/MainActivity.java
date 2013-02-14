@@ -85,12 +85,13 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			if (fullInit) {
-				Toast.makeText(getApplicationContext(), R.string.msgLoading,
-						Toast.LENGTH_LONG).show();
 				if (PreferenceManager.getDefaultSharedPreferences(
-						getBaseContext()).getBoolean("splash", true))
+						getBaseContext()).getBoolean("splash", true)) {
+					Toast.makeText(getApplicationContext(),
+							R.string.msgLoading, Toast.LENGTH_LONG).show();
 					flipper.addView(getLayoutInflater().inflate(
 							R.layout.splash, null));
+				}
 			}
 			super.onPreExecute();
 		}
