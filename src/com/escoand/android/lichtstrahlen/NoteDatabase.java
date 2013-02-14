@@ -18,8 +18,6 @@ package com.escoand.android.lichtstrahlen;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.escoand.android.lichtstrahlen_2013.R;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,6 +26,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
 import android.widget.Toast;
+
+import com.escoand.android.lichtstrahlen_2013.R;
 
 public class NoteDatabase extends SQLiteOpenHelper {
 	private static SQLiteDatabase database;
