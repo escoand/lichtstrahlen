@@ -18,6 +18,8 @@ package com.escoand.android.lichtstrahlen;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -49,6 +51,20 @@ public class Preferences extends PreferenceActivity {
 		}
 	};
 
+	OnPreferenceChangeListener updateWidget = new OnPreferenceChangeListener() {
+		@Override
+		public boolean onPreferenceChange(Preference preference, Object newValue) {
+			Intent intent = new Intent(getApplicationContext(), Widget.class);
+			intent.setAction("android.appwidget.action.APPWIDGET_UPDATE");
+			int ids[] = AppWidgetManager.getInstance(getApplicationContext())
+					.getAppWidgetIds(
+							new ComponentName(getApplication(), Widget.class));
+			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+			sendBroadcast(intent);
+			return true;
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +75,10 @@ public class Preferences extends PreferenceActivity {
 		/* restart after changed */
 		findPreference("inverse").setOnPreferenceChangeListener(changed);
 		findPreference("scale").setOnPreferenceChangeListener(changed);
+
+		/* update widget after changed */
+		findPreference("widgetInverse").setOnPreferenceChangeListener(
+				updateWidget);
 
 		/* reminder */
 		findPreference("remind").setOnPreferenceClickListener(
