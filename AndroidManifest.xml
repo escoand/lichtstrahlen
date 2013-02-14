@@ -18,7 +18,8 @@
         android:label="@string/app_name" >
         <activity
             android:name="com.escoand.android.lichtstrahlen.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="com.escoand.android.lichtstrahlen.Main" />
                 <action android:name="android.intent.action.MAIN" />
