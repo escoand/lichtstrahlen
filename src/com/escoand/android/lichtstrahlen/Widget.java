@@ -78,22 +78,5 @@ public class Widget extends AppWidgetProvider {
 		/* update */
 		appWidgetManager.updateAppWidget(appWidgetIds, views);
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-
-		/* date next update */
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-
-		/* next update */
-		Intent intent2 = new Intent(context, Widget.class);
-		intent2.setAction("android.appwidget.action.APPWIDGET_UPDATE");
-		PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, 0,
-				intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		/* schedule */
-		((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).set(
-				AlarmManager.RTC, cal.getTimeInMillis(), pendingIntent2);
 	}
 }
