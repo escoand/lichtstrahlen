@@ -1,5 +1,12 @@
+/*~
 /bin
 /dev/*~
+/dev/*.csv
+/dev/*.docx
+/dev/*.jpg
+/dev/*.png
+/dev/*.psd
+/dev/*.xlsx
 /res/drawable*/icon.png
 /res/drawable*/*.jpg
 /res/raw*
