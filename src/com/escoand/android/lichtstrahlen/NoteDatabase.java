@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class NoteDatabase extends SQLiteOpenHelper {
 	private static SQLiteDatabase database;
-	private static Context context;
+	private Context context;
 
 	private static final String DATABASE_NAME = "notes";
 	private static final int DATABASE_VERSION = 2;
@@ -69,15 +69,17 @@ public class NoteDatabase extends SQLiteOpenHelper {
 	/* get note for specific date */
 	@SuppressLint("SimpleDateFormat")
 	public String getDateNote(Date date) {
+		String note = null;
 		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
 		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
 				new String[] { COLUMN_TEXT }, COLUMN_DATE + "=?",
 				new String[] { datestring }, null, null, null);
 		if (cursor != null && cursor.getCount() > 0) {
 			cursor.moveToFirst();
-			return cursor.getString(0);
+			note = cursor.getString(0);
 		}
-		return null;
+		cursor.close();
+		return note;
 	}
 
 	/* set note for specific date */
