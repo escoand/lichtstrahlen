@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.escoand.android.lichtstrahlen_2013"
-    android:versionCode="13"
-    android:versionName="3.3" >
+    android:installLocation="auto"
+    android:versionCode="030300"
+    android:versionName="3.3RC2" >
 
     <uses-sdk
         android:minSdkVersion="7"
