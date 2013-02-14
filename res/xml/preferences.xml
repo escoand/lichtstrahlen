@@ -4,8 +4,8 @@
     <!-- general settings -->
     <ListPreference
         android:entries="@array/scriptureEdition"
-        android:entryValues="@array/scriptureEditionValues"
-        android:key="translation"
+        android:entryValues="@array/scriptureUrl"
+        android:key="scriptureUrl"
         android:title="@string/prefTranslation" />
 
     <!-- display settings -->
