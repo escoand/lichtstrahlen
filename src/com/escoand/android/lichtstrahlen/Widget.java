@@ -16,17 +16,17 @@
 package com.escoand.android.lichtstrahlen;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
 import com.escoand.android.lichtstrahlen_2013.R;
@@ -37,23 +37,29 @@ public class Widget extends AppWidgetProvider {
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
-		RemoteViews views = new RemoteViews(context.getPackageName(),
-				R.layout.widget);
+		RemoteViews views = null;
 		TextDatabase db = new TextDatabase(context);
 		Cursor cursor = db.getDate(new Date());
 		cursor.moveToLast();
+
+		/* themes */
+		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+				"widgetInverse", true))
+			views = new RemoteViews(context.getPackageName(),
+					R.layout.widget_dark);
+		else
+			views = new RemoteViews(context.getPackageName(),
+					R.layout.widget_light);
 
 		/* content */
 		views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
 				.getColumnIndex(TextDatabase.COLUMN_TITLE)));
 		views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
 				.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-		views.setTextViewText(R.id.widgetDay,
-				new SimpleDateFormat("dd.").format(new Date()));
-		views.setTextViewText(R.id.widgetMonth,
-				new SimpleDateFormat("MMM").format(new Date()));
-
-		// TODO: background image
+		views.setTextViewText(R.id.widgetDay, new SimpleDateFormat("dd.",
+				Locale.getDefault()).format(new Date()));
+		views.setTextViewText(R.id.widgetMonth, new SimpleDateFormat("MMM",
+				Locale.getDefault()).format(new Date()));
 
 		/* close */
 		try {

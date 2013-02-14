@@ -25,6 +25,15 @@
             android:title="@string/prefInverse" />
     </PreferenceCategory>
 
+    <!-- widget settings -->
+    <PreferenceCategory android:title="@string/prefWidget" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="widgetInverse"
+            android:summary="@string/prefInverseDesc"
+            android:title="@string/prefInverse" />
+    </PreferenceCategory>
+
     <!-- other settings -->
     <PreferenceCategory android:title="@string/prefOther" >
         <CheckBoxPreference
