@@ -244,17 +244,19 @@ public class MainActivity extends Activity {
 		/* scripture */
 		case R.id.menuBible:
 			if (data_text.getCount() == 1) {
-				data_text.moveToFirst();
-				intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse(getString(R.string.sciptureUrl)
-						+ PreferenceManager.getDefaultSharedPreferences(this)
-								.getString("translation", "")
-						+ "/"
+				String url = PreferenceManager
+						.getDefaultSharedPreferences(this).getString(
+								"scriptureUrl",
+								getString(R.string.scriptureUrlDefault))
 						+ data_text
 								.getString(
 										data_text
 												.getColumnIndex(TextDatabase.COLUMN_VERSE))
-								.replaceAll(" ", "")));
+								.replaceAll(" ", "");
+
+				data_text.moveToFirst();
+				intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(url));
 				startActivity(intent);
 				return true;
 
@@ -352,16 +354,22 @@ public class MainActivity extends Activity {
 								@Override
 								public void onClick(DialogInterface dialog,
 										int item) {
+									String url = PreferenceManager
+											.getDefaultSharedPreferences(
+													getApplicationContext())
+											.getString(
+													"scriptureUrl",
+													getString(R.string.scriptureUrlDefault))
+											+ data_text
+													.getString(
+															data_text
+																	.getColumnIndex(TextDatabase.COLUMN_VERSE))
+													.replaceAll(" ", "");
+
 									data_text.moveToPosition(item);
 									Intent intent = new Intent(
 											Intent.ACTION_VIEW);
-									intent.setData(Uri
-											.parse(getString(R.string.sciptureUrl)
-													+ data_text
-															.getString(
-																	data_text
-																			.getColumnIndex(TextDatabase.COLUMN_VERSE))
-															.replaceAll(" ", "")));
+									intent.setData(Uri.parse(url));
 									startActivity(intent);
 								}
 							}, TextDatabase.COLUMN_VERSE)

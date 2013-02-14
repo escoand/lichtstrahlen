@@ -3,7 +3,7 @@
 
     <!-- app -->
     <string name="app_name">mobile devotions 2013</string>
-    <string name="sciptureUrl">http://www.bibleserver.com/text/</string>
+    <string name="scriptureUrlDefault">http://www.bibleserver.com/text/</string>
 
     <string-array name="scriptureEdition">
         <item>English Standard Version</item>
@@ -12,12 +12,12 @@
         <item>New Int. Readers Version</item>
         <item>King James Version</item>
     </string-array>
-    <string-array name="scriptureEditionValues">
-        <item>ESV</item>
-        <item>NIV</item>
-        <item>TNIV</item>
-        <item>NIRV</item>
-        <item>KJV</item>
+    <string-array name="scriptureUrl">
+        <item>http://www.bibleserver.com/text/ESV/</item>
+        <item>http://www.bibleserver.com/text/NIV/</item>
+        <item>http://www.bibleserver.com/text/TNIV/</item>
+        <item>http://www.bibleserver.com/text/NIRV/</item>
+        <item>http://www.bibleserver.com/text/KJV/</item>
     </string-array>
 
     <!-- common -->

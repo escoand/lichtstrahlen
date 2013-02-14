@@ -3,7 +3,6 @@
 
     <!-- app -->
     <string name="app_name">Lichtstrahlen 2013</string>
-    <string name="sciptureUrl">http://www.bibleserver.com/text/</string>
 
     <string-array name="scriptureEdition">
         <item>Luther 1984</item>
@@ -16,16 +15,16 @@
         <item>Neues Leben. Die Bibel</item>
         <item>Neue evangelistische Übersetzung</item>
     </string-array>
-    <string-array name="scriptureEditionValues">
-        <item>LUT</item>
-        <item>ELB</item>
-        <item>HFA</item>
-        <item>SLT</item>
-        <item>NGÜ</item>
-        <item>GNB</item>
-        <item>EU</item>
-        <item>NLB</item>
-        <item>NeÜ</item>
+    <string-array name="scriptureUrl">
+        <item>http://www.bibleserver.com/text/LUT/</item>
+        <item>http://www.bibleserver.com/text/ELB/</item>
+        <item>http://www.bibleserver.com/text/HFA/</item>
+        <item>http://www.bibleserver.com/text/SLT/</item>
+        <item>http://www.bibleserver.com/text/NGÜ/</item>
+        <item>http://www.bibleserver.com/text/GNB/</item>
+        <item>http://www.bibleserver.com/text/EU/</item>
+        <item>http://www.bibleserver.com/text/NLB/</item>
+        <item>http://www.bibleserver.com/text/NeÜ/</item>
     </string-array>
 
     <!-- common -->
