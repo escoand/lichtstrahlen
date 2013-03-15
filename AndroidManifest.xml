@@ -3,7 +3,7 @@
     package="com.escoand.android.lichtstrahlen_2013"
     android:installLocation="auto"
     android:versionCode="030300"
-    android:versionName="3.3RC2" >
+    android:versionName="3.3" >
 
     <uses-sdk
         android:minSdkVersion="7"
