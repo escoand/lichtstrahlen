@@ -37,7 +37,7 @@ public class TextDatabase extends SQLiteOpenHelper {
 	private SQLiteDatabase database;
 
 	private static final String DATABASE_NAME = "verses";
-	private static final int DATABASE_VERSION = 17;
+	private static final int DATABASE_VERSION = 18;
 
 	private static final String TABLE_NAME = "verses";
 	public static final String COLUMN_DATE = "date";
