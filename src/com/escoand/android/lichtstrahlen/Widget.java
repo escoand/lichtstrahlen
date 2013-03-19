@@ -40,7 +40,6 @@ public class Widget extends AppWidgetProvider {
 		RemoteViews views = null;
 		TextDatabase db = new TextDatabase(context);
 		Cursor cursor = db.getDate(new Date());
-		cursor.moveToLast();
 
 		/* themes */
 		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
@@ -52,22 +51,35 @@ public class Widget extends AppWidgetProvider {
 					R.layout.widget_light);
 
 		/* content */
-		views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
-				.getColumnIndex(TextDatabase.COLUMN_TITLE)));
-		views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
-				.getColumnIndex(TextDatabase.COLUMN_VERSE)));
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.moveToLast();
+			views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
+					.getColumnIndex(TextDatabase.COLUMN_VERSE)));
+			views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
+					.getColumnIndex(TextDatabase.COLUMN_TITLE)));
+
+			/* close */
+			try {
+				cursor.close();
+				db.close();
+			} catch (Exception e) {
+				// e.printStackTrace();
+			}
+		}
+
+		/* no data */
+		else {
+			views.setTextViewText(R.id.widgetVerse,
+					context.getString(R.string.widgetNoData));
+			views.setTextViewText(R.id.widgetTitle,
+					context.getString(R.string.widgetNoData2));
+		}
+
+		/* date */
 		views.setTextViewText(R.id.widgetDay, new SimpleDateFormat("dd.",
 				Locale.getDefault()).format(new Date()));
 		views.setTextViewText(R.id.widgetMonth, new SimpleDateFormat("MMM",
 				Locale.getDefault()).format(new Date()));
-
-		/* close */
-		try {
-			cursor.close();
-			db.close();
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
 
 		/* onclick listener */
 		Intent intent = new Intent(context, MainActivity.class);
