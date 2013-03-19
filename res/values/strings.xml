@@ -38,6 +38,8 @@
 
     <!-- text -->
     <string name="textFrom">from</string>
+    <string name="widgetNoData">No text</string>
+    <string name="widgetNoData2">for this date</string>
 
     <!-- menu -->
     <string name="menuBible">Scripture</string>
