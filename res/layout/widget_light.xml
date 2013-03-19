@@ -78,6 +78,7 @@
             android:layout_alignParentRight="true"
             android:ellipsize="end"
             android:singleLine="true"
+            android:text="@string/msgLoading"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:attr/textColorSecondaryInverse"
             android:textStyle="bold" />

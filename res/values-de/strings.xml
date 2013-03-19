@@ -46,6 +46,8 @@
 
     <!-- text -->
     <string name="textFrom">ab</string>
+    <string name="widgetNoData">Leider kein Text</string>
+    <string name="widgetNoData2">für dieses Datum</string>
 
     <!-- menu -->
     <string name="menuBible">Bibeltext</string>
