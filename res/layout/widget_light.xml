@@ -62,7 +62,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/widgetName"
             android:layout_toLeftOf="@id/widgetDay"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
