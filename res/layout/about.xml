@@ -3,35 +3,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/txtAbout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/imgLogo"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/image"
-            android:scaleType="fitStart"
-            android:src="@drawable/title" />
-
-        <TextView
-            android:id="@+id/txtAbout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
-            android:padding="10dp"
-            android:textAppearance="@android:style/TextAppearance.Small.Inverse" />
-
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/image"
-            android:scaleType="fitEnd"
-            android:src="@drawable/born" />
-    </LinearLayout>
+        android:background="@android:color/background_light"
+        android:padding="10dp"
+        android:textAppearance="@android:style/TextAppearance.Small.Inverse" />
 
 </ScrollView>
