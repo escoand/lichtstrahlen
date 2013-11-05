@@ -440,9 +440,9 @@ public class MainActivity extends Activity {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						TextView tvVerse, tvDate;
-						Date date, date_until;
-						String verse;
+						TextView tvVerse, tvDate, tvDateUntil;
+						String verse, date, date_until;
+						int count;
 
 						/* inflate layout */
 						@Override
@@ -460,27 +460,41 @@ public class MainActivity extends Activity {
 									.findViewById(R.id.listVerse);
 							tvDate = (TextView) view
 									.findViewById(R.id.listDate);
+							tvDateUntil = (TextView) view
+									.findViewById(R.id.listDateUntil);
 							verse = cursor.getString(cursor
 									.getColumnIndex(TextDatabase.COLUMN_VERSE));
+							count = cursor.getInt(cursor
+									.getColumnIndex("count"));
 							try {
-								date = df
-										.parse(cursor.getString(cursor
-												.getColumnIndex(TextDatabase.COLUMN_DATE)));
-								date_until = df
-										.parse(cursor.getString(cursor
-												.getColumnIndex(TextDatabase.COLUMN_DATE
-														+ "_until")));
+								date = df_ymd
+										.format(df.parse(cursor.getString(cursor
+												.getColumnIndex(TextDatabase.COLUMN_DATE))));
+								date_until = df_ymd
+										.format(df.parse(cursor.getString(cursor
+												.getColumnIndex(TextDatabase.COLUMN_DATE_UNTIL))));
 							} catch (Exception e) {
 								// e.printStackTrace();
 							}
 
-							/* show */
-							tvVerse.setText(verse);
-							if (date.equals(date_until))
-								tvDate.setText(df_ymd.format(date));
-							else
+							/* single date */
+							if (count <= 1) {
+								tvVerse.setText(verse);
+								tvDate.setText(date);
+								tvDateUntil.setVisibility(View.GONE);
+							}
+
+							/* date range */
+							else {
+								tvVerse.setText(verse.replaceAll(
+										" *- *[0-9]+$", "ff"));
 								tvDate.setText(getString(R.string.textFrom)
-										+ " " + df_ymd.format(date));
+										+ " " + date);
+								tvDateUntil
+										.setText(getString(R.string.textUntil)
+												+ " " + date_until);
+								tvDateUntil.setVisibility(View.VISIBLE);
+							}
 						}
 					},
 

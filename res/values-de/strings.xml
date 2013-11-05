@@ -45,7 +45,8 @@
     <string name="noteSaved">Notiz wurde gespeichert.</string>
 
     <!-- text -->
-    <string name="textFrom">ab</string>
+    <string name="textFrom">von</string>
+    <string name="textUntil">bis</string>
     <string name="widgetNoData">Leider kein Text</string>
     <string name="widgetNoData2">für dieses Datum</string>
 

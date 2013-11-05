@@ -33,14 +33,16 @@ import com.escoand.android.lichtstrahlen_2014.R;
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {
 	public static final String DATABASE_NAME = "verses";
-	public static final int DATABASE_VERSION = 103;
+	public static final int DATABASE_VERSION = 105;
 
 	protected static final String COLUMN_DATE = "date";
+	protected static final String COLUMN_DATE_UNTIL = "date_until";
 	protected static final String COLUMN_AUTHOR = "author";
 	protected static final String COLUMN_TITLE = "title";
 	protected static final String COLUMN_VERSE = "verse";
 	protected static final String COLUMN_TEXT = "text";
 	protected static final String COLUMN_ORDERID = "orderid";
+	protected static final String COLUMN_COUNT = "count";
 
 	private final Context context;
 
@@ -109,8 +111,17 @@ public class TextDatabase extends AbstractDatabase {
 
 	/* get list */
 	public final Cursor getList() {
-		return getItems(new String[] { COLUMN_VERSE, COLUMN_DATE },
-				COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID);
+		Cursor cursor = getReadableDatabase().query(
+				TABLE_NAME,
+				new String[] { COLUMN_VERSE,
+						"min(" + COLUMN_DATE + ") as " + COLUMN_DATE,
+						"max(" + COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL,
+						"count(*) as " + COLUMN_COUNT, "rowid as _id" },
+				COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID, null,
+				COLUMN_ORDERID);
+		if (cursor != null)
+			cursor.moveToFirst();
+		return cursor;
 	}
 
 	/* get full list */
