@@ -70,7 +70,6 @@ public class TextDatabase extends AbstractDatabase {
 		try {
 			while ((line = reader.readLine()) != null) {
 				String[] cols = line.split("\t");
-				System.err.println(cols.length + ": " + cols[0]);
 				if (cols.length < 6)
 					continue;
 				values.clear();
