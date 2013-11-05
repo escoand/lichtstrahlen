@@ -258,41 +258,41 @@ public class MainActivity extends Activity {
 				intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse(url));
 				startActivity(intent);
-				return true;
+				break;
 
 			} else if (data_text.getCount() > 1) {
 				showDialog(R.id.menuBible);
-				return true;
+				break;
 			}
-			return false;
+			break;
 
-			/* today */
+		/* today */
 		case R.id.menuToday:
 			showDay(new Date());
-			return true;
+			break;
 
-			/* calendar */
+		/* calendar */
 		case R.id.menuDate:
 			showDialog(R.id.menuDate);
-			return true;
+			break;
 
-			/* search */
+		/* search */
 		case R.id.menuSearch:
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 				showDialog(R.id.menuSearch);
-			return true;
+			break;
 
-			/* scripture list */
+		/* scripture list */
 		case R.id.menuList:
 			showDialog(R.id.menuList);
-			return true;
+			break;
 
-			/* notes list */
+		/* notes list */
 		case R.id.menuNotes:
 			showDialog(R.id.menuNotes);
-			return true;
+			break;
 
-			/* share */
+		/* share */
 		case R.id.menuShare:
 			String text = data_text.getString(data_text
 					.getColumnIndex(TextDatabase.COLUMN_TITLE))
@@ -316,23 +316,25 @@ public class MainActivity extends Activity {
 			intent.putExtra(Intent.EXTRA_TEXT, text);
 			startActivity(Intent.createChooser(intent,
 					getText(R.string.menuShare)));
-			return true;
+			break;
 
-			/* preferences */
+		/* preferences */
 		case R.id.menuPreference:
 			intent = new Intent(getBaseContext(), Preferences.class);
 			startActivity(intent);
-			return true;
+			break;
 
-			/* info */
+		/* info */
 		case R.id.menuInfo:
 			showDialog(R.id.menuInfo);
-			return true;
+			break;
 
-			/* ... */
+		/* ... */
 		default:
 			return false;
 		}
+
+		return true;
 	}
 
 	/* callback for creating dialog */
@@ -494,65 +496,62 @@ public class MainActivity extends Activity {
 
 			/* notes list */
 		case R.id.menuNotes:
-			return new AlertDialog.Builder(this)
-					.setCancelable(true)
+			return new AlertDialog.Builder(this).setCancelable(true)
 					.setTitle(getString(R.string.listNotes))
 
 					/* data for list */
-					.setAdapter(
-							new CursorAdapter(this, db_note.getListCursor()) {
-								private final SimpleDateFormat df = new SimpleDateFormat(
-										"yyyyMMdd");
-								SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-								TextView tvDate, tvNote;
-								Date date;
-								String text;
+					.setAdapter(new CursorAdapter(this, db_note.getNoteList()) {
+						private final SimpleDateFormat df = new SimpleDateFormat(
+								"yyyyMMdd");
+						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+						TextView tvDate, tvNote;
+						Date date;
+						String text;
 
-								/* inflate layout */
-								@Override
-								public View newView(Context context,
-										Cursor cursor, ViewGroup parent) {
-									return getLayoutInflater().inflate(
-											R.layout.noteentry, parent, false);
-								}
+						/* inflate layout */
+						@Override
+						public View newView(Context context, Cursor cursor,
+								ViewGroup parent) {
+							return getLayoutInflater().inflate(
+									R.layout.noteentry, parent, false);
+						}
 
-								/* set item data */
-								@Override
-								public void bindView(View view,
-										Context context, Cursor cursor) {
-									tvDate = (TextView) view
-											.findViewById(R.id.listDate);
-									tvNote = (TextView) view
-											.findViewById(R.id.listNote);
-									try {
-										date = df
-												.parse(cursor.getString(cursor
-														.getColumnIndex(NoteDatabase.COLUMN_DATE)));
-										text = cursor
-												.getString(cursor
-														.getColumnIndex(NoteDatabase.COLUMN_TEXT));
-									} catch (Exception e) {
-										// e.printStackTrace();
-									}
+						/* set item data */
+						@Override
+						public void bindView(View view, Context context,
+								Cursor cursor) {
+							tvDate = (TextView) view
+									.findViewById(R.id.listDate);
+							tvNote = (TextView) view
+									.findViewById(R.id.listNote);
+							try {
+								date = df
+										.parse(cursor.getString(cursor
+												.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+								text = cursor
+										.getString(cursor
+												.getColumnIndex(NoteDatabase.COLUMN_TEXT));
+							} catch (Exception e) {
+								// e.printStackTrace();
+							}
 
-									/* show */
-									tvDate.setText(df_ymd.format(date));
-									tvNote.setText(text);
-								}
-							},
+							/* show */
+							tvDate.setText(df_ymd.format(date));
+							tvNote.setText(text);
+						}
+					},
 
-							/* on click */
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int item) {
-									Cursor cursor = db_note.getListCursor();
-									cursor.moveToPosition(item);
-									showDay(cursor.getString(cursor
-											.getColumnIndex(NoteDatabase.COLUMN_DATE)));
-									removeDialog(R.id.menuNotes);
-								}
-							})
+					/* on click */
+					new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int item) {
+							Cursor cursor = db_note.getNoteList();
+							cursor.moveToPosition(item);
+							showDay(cursor.getString(cursor
+									.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+							removeDialog(R.id.menuNotes);
+						}
+					})
 
 					/* on cancel */
 					.setOnCancelListener(new OnCancelListener() {
