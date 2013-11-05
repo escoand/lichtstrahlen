@@ -41,10 +41,8 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -60,12 +58,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.escoand.android.library.OnSwipeTouchListener;
 import com.escoand.android.lichtstrahlen_2013.R;
 
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
 	private static final int TIMER_SPLASH = 2000;
-	private GestureDetector gesture = null;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
 	private NoteDatabase db_note = null;
@@ -143,11 +141,27 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 
 		/* init */
-		gesture = new GestureDetector(new Gestures(this));
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		if (savedInstanceState != null)
 			init.fullInit = false;
 		init.execute();
+
+		/* swipe gestures */
+		findViewById(R.id.flipper).setOnTouchListener(
+				new OnSwipeTouchListener(getBaseContext()) {
+
+					@Override
+					public void onSwipeRight() {
+						prevDay();
+						super.onSwipeRight();
+					}
+
+					@Override
+					public void onSwipeLeft() {
+						nextDay();
+						super.onSwipeLeft();
+					}
+				});
 	}
 
 	/* after preferences */
@@ -167,20 +181,6 @@ public class MainActivity extends Activity {
 		db_text.close();
 		db_note.close();
 		super.onStop();
-	}
-
-	/* callback for gestures */
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		if (gesture.onTouchEvent(event))
-			return true;
-		return super.onTouchEvent(event);
-	}
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		super.dispatchTouchEvent(event);
-		return onTouchEvent(event);
 	}
 
 	/* callback for creating option menu */
