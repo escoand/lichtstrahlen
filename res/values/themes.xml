@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- dark styles -->
-    <style name="Dark" parent="@android:style/Theme.Black.NoTitleBar"></style>
-
-    <!-- light styles -->
-    <style name="Light" parent="@android:style/Theme.Light.NoTitleBar"></style>
-
     <!-- dialog styles -->
     <style name="DialogPrimary" parent="@android:style/Theme.Dialog">
         <item name="android:textColor">@android:color/primary_text_light</item>

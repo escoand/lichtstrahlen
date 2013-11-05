@@ -132,9 +132,9 @@ public class MainActivity extends Activity {
 		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false))
-			setTheme(R.style.Light);
+			setTheme(R.style.Theme_Light);
 		else
-			setTheme(R.style.Dark);
+			setTheme(R.style.Theme);
 
 		/* show */
 		super.onCreate(savedInstanceState);
