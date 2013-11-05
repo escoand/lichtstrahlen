@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.escoand.android.lichtstrahlen_2013"
+    package="com.escoand.android.lichtstrahlen_2014"
     android:installLocation="auto"
     android:versionCode="000000"
     android:versionName="devel" >

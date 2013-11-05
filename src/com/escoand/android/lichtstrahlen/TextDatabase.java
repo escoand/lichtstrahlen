@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.escoand.android.library.AbstractDatabase;
-import com.escoand.android.lichtstrahlen_2013.R;
+import com.escoand.android.lichtstrahlen_2014.R;
 
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {
