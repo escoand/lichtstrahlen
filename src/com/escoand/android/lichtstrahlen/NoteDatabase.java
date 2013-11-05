@@ -22,68 +22,27 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
-import android.widget.Toast;
 
-import com.escoand.android.lichtstrahlen_2013.R;
+import com.escoand.android.library.AbstractDatabase;
 
-public class NoteDatabase extends SQLiteOpenHelper {
-	private static SQLiteDatabase database;
-	private Context context;
+public class NoteDatabase extends AbstractDatabase {
+	public static final String DATABASE_NAME = "notes";
+	public static final int DATABASE_VERSION = 1;
 
-	private static final String DATABASE_NAME = "notes";
-	private static final int DATABASE_VERSION = 2;
+	protected static final String COLUMN_DATE = "date";
+	protected static final String COLUMN_TEXT = "text";
 
-	private static final String TABLE_NAME = "notes";
-	public static final String COLUMN_DATE = "date";
-	public static final String COLUMN_TEXT = "text";
-
-	private static final String SQL_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME;
-	private static final String SQL_CREATE = "CREATE VIRTUAL TABLE "
-			+ TABLE_NAME + " USING fts3(" + COLUMN_DATE + ", " + COLUMN_TEXT
-			+ ")";
-
-	public NoteDatabase(Context context) {
+	public NoteDatabase(final Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		this.context = context;
-	}
 
-	/* create new database */
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		database = db;
-		database.execSQL(SQL_CREATE);
-	}
-
-	/* re-create new database */
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (oldVersion != newVersion) {
-			db.execSQL(SQL_DROP);
-			onCreate(db);
-		}
-	}
-
-	/* get note for specific date */
-	@SuppressLint("SimpleDateFormat")
-	public String getDateNote(Date date) {
-		String note = null;
-		String datestring = new SimpleDateFormat("yyyyMMdd").format(date);
-		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
-				new String[] { COLUMN_TEXT }, COLUMN_DATE + "=?",
-				new String[] { datestring }, null, null, null);
-		if (cursor != null && cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			note = cursor.getString(0);
-		}
-		cursor.close();
-		return note;
+		TABLE_NAME = DATABASE_NAME;
+		COLUMNS = new String[] { COLUMN_DATE, COLUMN_TEXT };
 	}
 
 	/* set note for specific date */
-	public void setDateNote(Date date, String note) {
+	public boolean setDateNote(Date date, String note) {
+		long res = -1;
 		String date_string = DateFormat.format("yyyyMMdd", date).toString();
 
 		/* delete note */
@@ -95,20 +54,27 @@ public class NoteDatabase extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues();
 			values.put(COLUMN_DATE, date_string);
 			values.put(COLUMN_TEXT, note);
-			getWritableDatabase().insert(TABLE_NAME, null, values);
+			res = insertItem(values);
 		}
 
-		/* info */
-		Toast.makeText(context, R.string.noteSaved, Toast.LENGTH_SHORT).show();
+		return res != -1;
+	}
+
+	/* get note for specific date */
+	@SuppressLint("SimpleDateFormat")
+	public String getDateNote(Date date) {
+		Cursor cursor = getItems(new String[] { COLUMN_TEXT }, COLUMN_DATE
+				+ "=?",
+				new String[] { new SimpleDateFormat("yyyyMMdd").format(date) },
+				null);
+		if (cursor.getCount() >= 1)
+			return cursor.getString(cursor.getColumnIndex(COLUMN_TEXT));
+		else
+			return null;
 	}
 
 	/* get list */
-	public Cursor getListCursor() {
-		Cursor cursor = getReadableDatabase().query(TABLE_NAME,
-				new String[] { COLUMN_DATE, COLUMN_TEXT, "rowid as _id" },
-				null, new String[] {}, null, null, COLUMN_DATE);
-		if (cursor != null)
-			cursor.moveToFirst();
-		return cursor;
+	public Cursor getNoteList() {
+		return getItems(new String[] { COLUMN_DATE, COLUMN_TEXT }, COLUMN_DATE);
 	}
 }
