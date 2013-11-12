@@ -45,10 +45,10 @@ public class Widget extends AppWidgetProvider {
 		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
 				"widgetInverse", true))
 			views = new RemoteViews(context.getPackageName(),
-					R.layout.widget_dark);
+					R.layout.widget_light);
 		else
 			views = new RemoteViews(context.getPackageName(),
-					R.layout.widget_light);
+					R.layout.widget_dark);
 
 		/* content */
 		if (cursor != null && cursor.getCount() > 0) {
