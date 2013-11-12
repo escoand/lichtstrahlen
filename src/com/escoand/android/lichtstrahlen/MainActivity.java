@@ -74,6 +74,21 @@ public class MainActivity extends Activity {
 	private EditText txt_search = null;
 	public Date date = new Date();
 
+	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
+			getBaseContext()) {
+		@Override
+		public void onSwipeRight() {
+			prevDay();
+			super.onSwipeRight();
+		}
+
+		@Override
+		public void onSwipeLeft() {
+			nextDay();
+			super.onSwipeLeft();
+		}
+	};
+
 	/* db init */
 	final class DBInit extends AsyncTask<Void, Void, Void> {
 		private Date start = new Date();
@@ -145,23 +160,6 @@ public class MainActivity extends Activity {
 		if (savedInstanceState != null)
 			init.fullInit = false;
 		init.execute();
-
-		/* swipe gestures */
-		findViewById(R.id.flipper).setOnTouchListener(
-				new OnSwipeTouchListener(getBaseContext()) {
-
-					@Override
-					public void onSwipeRight() {
-						prevDay();
-						super.onSwipeRight();
-					}
-
-					@Override
-					public void onSwipeLeft() {
-						nextDay();
-						super.onSwipeLeft();
-					}
-				});
 	}
 
 	/* after preferences */
@@ -706,6 +704,10 @@ public class MainActivity extends Activity {
 
 		list.setDivider(null);
 		list.setEmptyView(empty);
+
+		/* swipe gestures */
+		list.setOnTouchListener(swipeListener);
+		empty.setOnTouchListener(swipeListener);
 
 		list.setAdapter(new CursorAdapter(this, data_text) {
 			private final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
