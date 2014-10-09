@@ -40,6 +40,7 @@ public class TextDatabase extends AbstractDatabase {
 	protected static final String COLUMN_AUTHOR = "author";
 	protected static final String COLUMN_TITLE = "title";
 	protected static final String COLUMN_VERSE = "verse";
+	protected static final String COLUMN_VERSE_UNTIL = "verse_until";
 	protected static final String COLUMN_TEXT = "text";
 	protected static final String COLUMN_ORDERID = "orderid";
 	protected static final String COLUMN_COUNT = "count";
@@ -110,14 +111,21 @@ public class TextDatabase extends AbstractDatabase {
 
 	/* get list */
 	public final Cursor getList() {
-		Cursor cursor = getReadableDatabase().query(
-				TABLE_NAME,
-				new String[] { COLUMN_VERSE,
-						"min(" + COLUMN_DATE + ") as " + COLUMN_DATE,
-						"max(" + COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL,
-						"count(*) as " + COLUMN_COUNT, "rowid as _id" },
-				COLUMN_ORDERID + ">0", new String[] {}, COLUMN_ORDERID, null,
-				COLUMN_ORDERID);
+		// multiple lines returned in some cases
+		Cursor cursor = getReadableDatabase().rawQuery(
+				"select distinct b." + COLUMN_VERSE + " as " + COLUMN_VERSE
+						+ ", c." + COLUMN_VERSE + " as " + COLUMN_VERSE_UNTIL
+						+ ", a.* from (select min(" + COLUMN_DATE + ") as "
+						+ COLUMN_DATE + ", max(" + COLUMN_DATE + ") as "
+						+ COLUMN_DATE_UNTIL + ", count(*) as " + COLUMN_COUNT
+						+ ", " + COLUMN_ORDERID + ", rowid as _id from "
+						+ TABLE_NAME + " where " + COLUMN_ORDERID
+						+ ">0 group by " + COLUMN_ORDERID + ") a join "
+						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
+						+ COLUMN_DATE + " left join " + TABLE_NAME + " c on a."
+						+ COLUMN_DATE_UNTIL + "=c." + COLUMN_DATE + " and a."
+						+ COLUMN_DATE + "!=a." + COLUMN_DATE_UNTIL
+						+ " order by " + COLUMN_ORDERID, new String[] {});
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
