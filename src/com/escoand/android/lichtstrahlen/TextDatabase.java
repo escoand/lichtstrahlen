@@ -113,19 +113,20 @@ public class TextDatabase extends AbstractDatabase {
 	public final Cursor getList() {
 		// multiple lines returned in some cases
 		Cursor cursor = getReadableDatabase().rawQuery(
-				"select distinct b." + COLUMN_VERSE + " as " + COLUMN_VERSE
-						+ ", c." + COLUMN_VERSE + " as " + COLUMN_VERSE_UNTIL
-						+ ", a.* from (select min(" + COLUMN_DATE + ") as "
-						+ COLUMN_DATE + ", max(" + COLUMN_DATE + ") as "
-						+ COLUMN_DATE_UNTIL + ", count(*) as " + COLUMN_COUNT
-						+ ", " + COLUMN_ORDERID + ", rowid as _id from "
-						+ TABLE_NAME + " where " + COLUMN_ORDERID
+				"select b.rowid as _id, b." + COLUMN_VERSE + " as "
+						+ COLUMN_VERSE + ", c." + COLUMN_VERSE + " as "
+						+ COLUMN_VERSE_UNTIL + ", a.* from (select min("
+						+ COLUMN_DATE + ") as " + COLUMN_DATE + ", max("
+						+ COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL + ", "
+						+ COLUMN_ORDERID + ", count(*) as " + COLUMN_COUNT
+						+ " from " + TABLE_NAME + " where " + COLUMN_ORDERID
 						+ ">0 group by " + COLUMN_ORDERID + ") a join "
 						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
-						+ COLUMN_DATE + " left join " + TABLE_NAME + " c on a."
-						+ COLUMN_DATE_UNTIL + "=c." + COLUMN_DATE + " and a."
-						+ COLUMN_DATE + "!=a." + COLUMN_DATE_UNTIL
-						+ " order by " + COLUMN_ORDERID, new String[] {});
+						+ COLUMN_DATE + " and b." + COLUMN_ORDERID
+						+ ">0 left join " + TABLE_NAME + " c on a."
+						+ COLUMN_DATE_UNTIL + "=c." + COLUMN_DATE + " and c."
+						+ COLUMN_ORDERID + ">0 order by a." + COLUMN_ORDERID,
+				new String[] {});
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
