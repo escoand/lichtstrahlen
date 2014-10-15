@@ -438,8 +438,8 @@ public class MainActivity extends Activity {
 						private final SimpleDateFormat df = new SimpleDateFormat(
 								"yyyyMMdd");
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						TextView tvVerse, tvDate, tvDateUntil;
-						String verse, date, date_until;
+						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
+						String verse, verse_until, date, date_until;
 						int count;
 
 						/* inflate layout */
@@ -456,12 +456,17 @@ public class MainActivity extends Activity {
 								Cursor cursor) {
 							tvVerse = (TextView) view
 									.findViewById(R.id.listVerse);
+							tvVerseUntil = (TextView) view
+									.findViewById(R.id.listVerseUntil);
 							tvDate = (TextView) view
 									.findViewById(R.id.listDate);
 							tvDateUntil = (TextView) view
 									.findViewById(R.id.listDateUntil);
 							verse = cursor.getString(cursor
 									.getColumnIndex(TextDatabase.COLUMN_VERSE));
+							verse_until = cursor
+									.getString(cursor
+											.getColumnIndex(TextDatabase.COLUMN_VERSE_UNTIL));
 							count = cursor.getInt(cursor
 									.getColumnIndex("count"));
 							try {
@@ -479,18 +484,27 @@ public class MainActivity extends Activity {
 							if (count <= 1) {
 								tvVerse.setText(verse);
 								tvDate.setText(date);
+								tvVerseUntil.setVisibility(View.GONE);
 								tvDateUntil.setVisibility(View.GONE);
 							}
 
 							/* date range */
 							else {
 								tvVerse.setText(verse.replaceAll(
-										" *- *[0-9]+$", "ff"));
+										"(-[0-9]+| - [0-9, ]+)$", ""));
+								tvVerseUntil
+										.setText(getString(R.string.textUntil)
+												+ " "
+												+ verse_until
+														.replaceAll(
+																"([0-9]+[a-z]?-|[0-9,]+ - )",
+																""));
 								tvDate.setText(getString(R.string.textFrom)
 										+ " " + date);
 								tvDateUntil
 										.setText(getString(R.string.textUntil)
 												+ " " + date_until);
+								tvVerseUntil.setVisibility(View.VISIBLE);
 								tvDateUntil.setVisibility(View.VISIBLE);
 							}
 						}
