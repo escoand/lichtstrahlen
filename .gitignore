@@ -7,7 +7,7 @@
 /dev/*.png
 /dev/*.psd
 /dev/*.xlsx
-/res/drawable*/icon.png
+/res/drawable*/*.png
 /res/drawable*/*.jpg
 /res/raw*
 /gen
