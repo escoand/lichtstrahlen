@@ -53,7 +53,7 @@
     <!-- menu -->
     <string name="menuBible">Bibeltext</string>
     <string name="menuToday">Heute</string>
-    <string name="menuDate">Kalender</string>
+    <string name="menuDate">Datum wählen</string>
     <string name="menuSearch">Suchen</string>
     <string name="menuNotes">Notizen</string>
     <string name="menuList">Bibelstellenliste</string>
@@ -66,7 +66,7 @@
 
     <!-- share -->
     <string name="shareText">Lichtstrahlen für dich:</string>
-    <string name="shareUrl">http://goo.gl/bfHCM</string>
+    <string name="shareUrl">http://goo.gl/KIYndX</string>
 
     <!-- preferences -->
     <string name="prefWidget">Widget</string>

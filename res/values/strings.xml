@@ -45,7 +45,7 @@
     <!-- menu -->
     <string name="menuBible">Scripture</string>
     <string name="menuToday">Today</string>
-    <string name="menuDate">Calendar</string>
+    <string name="menuDate">Select date</string>
     <string name="menuSearch">Search</string>
     <string name="menuNotes">Notes</string>
     <string name="menuList">Scripture List</string>
@@ -58,7 +58,7 @@
 
     <!-- share -->
     <string name="shareText">Mobile devotions for you:</string>
-    <string name="shareUrl">http://goo.gl/2V8Qd</string>
+    <string name="shareUrl">http://goo.gl/KIYndX</string>
 
     <!-- preferences -->
     <string name="prefWidget">Widget</string>
