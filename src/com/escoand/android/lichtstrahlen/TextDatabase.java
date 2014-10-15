@@ -122,11 +122,11 @@ public class TextDatabase extends AbstractDatabase {
 						+ " from " + TABLE_NAME + " where " + COLUMN_ORDERID
 						+ ">0 group by " + COLUMN_ORDERID + ") a join "
 						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
-						+ COLUMN_DATE + " and b." + COLUMN_ORDERID
-						+ ">0 left join " + TABLE_NAME + " c on a."
-						+ COLUMN_DATE_UNTIL + "=c." + COLUMN_DATE + " and c."
-						+ COLUMN_ORDERID + ">0 order by a." + COLUMN_ORDERID,
-				new String[] {});
+						+ COLUMN_DATE + " and a." + COLUMN_ORDERID + "=b."
+						+ COLUMN_ORDERID + " left join " + TABLE_NAME
+						+ " c on a." + COLUMN_DATE_UNTIL + "=c." + COLUMN_DATE
+						+ " and a." + COLUMN_ORDERID + "=c." + COLUMN_ORDERID
+						+ " order by a." + COLUMN_ORDERID, new String[] {});
 		if (cursor != null)
 			cursor.moveToFirst();
 		return cursor;
