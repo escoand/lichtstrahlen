@@ -59,7 +59,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.escoand.android.library.OnSwipeTouchListener;
-import com.escoand.android.lichtstrahlen_2014.R;
+import com.escoand.android.lichtstrahlen_2015.R;
 
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
