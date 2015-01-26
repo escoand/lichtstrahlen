@@ -24,7 +24,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.format.DateFormat;
 
-import com.escoand.android.library.AbstractDatabase;
+import de.escoand.android.library.AbstractDatabase;
 
 public class NoteDatabase extends AbstractDatabase {
 	public static final String DATABASE_NAME = "notes";
