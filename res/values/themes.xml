@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- activity styles -->
+    <style name="Theme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="ic_action_book">@android:drawable/ic_menu_view</item>
+        <item name="ic_action_search">@android:drawable/ic_menu_search</item>
+        <item name="ic_action_share">@android:drawable/ic_menu_share</item>
+    </style>
+
+    <style name="Theme.Light" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="ic_action_book">@android:drawable/ic_menu_view</item>
+        <item name="ic_action_search">@android:drawable/ic_menu_search</item>
+        <item name="ic_action_share">@android:drawable/ic_menu_share</item>
+    </style>
+
+    <!-- widget styles -->
+    <style name="Widget" parent="@android:style/Widget">
+        <item name="textColorPrimary">?android:attr/textColorPrimary</item>
+        <item name="textColorSecondary">?android:attr/textColorSecondary</item>
+        <item name="textColorTertiary">?android:attr/textColorTertiary</item>
+        <item name="widget_bg">@drawable/widget_bg_dark</item>
+    </style>
+
+    <style name="Widget.Light" parent="@android:style/Widget">
+        <item name="textColorPrimary">?android:attr/textColorPrimaryInverse</item>
+        <item name="textColorSecondary">?android:attr/textColorSecondaryInverse</item>
+        <item name="textColorTertiary">?android:attr/textColorTertiaryInverse</item>
+        <item name="widget_bg">@drawable/widget_bg_light</item>
+    </style>
+
     <!-- dialog styles -->
     <style name="DialogPrimary" parent="@android:style/Theme.Dialog">
         <item name="android:textColor">@android:color/primary_text_light</item>
