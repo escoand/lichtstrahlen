@@ -33,14 +33,16 @@ import com.escoand.android.lichtstrahlen_2014.R;
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {
 	public static final String DATABASE_NAME = "verses";
-	public static final int DATABASE_VERSION = 105;
+	public static final int DATABASE_VERSION = 114;
 
 	protected static final String COLUMN_DATE = "date";
 	protected static final String COLUMN_DATE_UNTIL = "date_until";
 	protected static final String COLUMN_AUTHOR = "author";
 	protected static final String COLUMN_TITLE = "title";
 	protected static final String COLUMN_VERSE = "verse";
+	protected static final String COLUMN_VERSE_SHORT = "verse_short";
 	protected static final String COLUMN_VERSE_UNTIL = "verse_until";
+	protected static final String COLUMN_VERSE_UNTIL_SHORT = "verse_until_short";
 	protected static final String COLUMN_TEXT = "text";
 	protected static final String COLUMN_ORDERID = "orderid";
 	protected static final String COLUMN_COUNT = "count";
@@ -54,7 +56,7 @@ public class TextDatabase extends AbstractDatabase {
 
 		TABLE_NAME = DATABASE_NAME;
 		COLUMNS = new String[] { COLUMN_DATE, COLUMN_AUTHOR, COLUMN_TITLE,
-				COLUMN_VERSE, COLUMN_TEXT, COLUMN_ORDERID };
+				COLUMN_VERSE, COLUMN_VERSE_SHORT, COLUMN_TEXT, COLUMN_ORDERID };
 	}
 
 	@Override
@@ -74,31 +76,32 @@ public class TextDatabase extends AbstractDatabase {
 				if (cols.length < 6)
 					continue;
 				values.clear();
-				values.put(COLUMN_ORDERID, Integer.parseInt(cols[0]));
+				values.put(COLUMN_ORDERID, Float.parseFloat(cols[0]));
 				values.put(COLUMN_DATE, cols[1].trim());
 				values.put(COLUMN_AUTHOR, cols[2].trim());
 				values.put(COLUMN_VERSE, cols[3].trim());
-				values.put(COLUMN_TITLE, cols[4].trim());
-				values.put(COLUMN_TEXT, cols[5].trim());
+				values.put(COLUMN_VERSE_SHORT, cols[4].trim());
+				values.put(COLUMN_TITLE, cols[5].trim());
+				values.put(COLUMN_TEXT, cols[6].trim());
 				db.insert(TABLE_NAME, null, values);
-				if (cols.length >= 8 && !cols[6].equals("")
-						&& !cols[7].equals("")) {
+				if (cols.length >= 8 && !cols[7].equals("")
+						&& !cols[8].equals("")) {
 					values.remove(COLUMN_AUTHOR);
 					values.put(COLUMN_ORDERID, -1);
 					values.put(COLUMN_TITLE,
 							context.getString(R.string.mainWeek));
-					values.put(COLUMN_TEXT, cols[6].trim());
-					values.put(COLUMN_VERSE, cols[7].trim());
+					values.put(COLUMN_TEXT, cols[7].trim());
+					values.put(COLUMN_VERSE, cols[8].trim());
 					db.insert(TABLE_NAME, null, values);
 				}
-				if (cols.length >= 10 && !cols[8].equals("")
+				if (cols.length >= 10 && !cols[9].equals("")
 						&& !cols[9].equals("")) {
 					values.remove(COLUMN_AUTHOR);
 					values.put(COLUMN_ORDERID, -2);
 					values.put(COLUMN_TITLE,
 							context.getString(R.string.mainMonth));
-					values.put(COLUMN_TEXT, cols[8].trim());
-					values.put(COLUMN_VERSE, cols[9].trim());
+					values.put(COLUMN_TEXT, cols[9].trim());
+					values.put(COLUMN_VERSE, cols[10].trim());
 					db.insert(TABLE_NAME, null, values);
 				}
 			}
@@ -111,11 +114,36 @@ public class TextDatabase extends AbstractDatabase {
 
 	/* get list */
 	public final Cursor getList() {
-		// multiple lines returned in some cases
 		Cursor cursor = getReadableDatabase().rawQuery(
 				"select b.rowid as _id, b." + COLUMN_VERSE + " as "
 						+ COLUMN_VERSE + ", c." + COLUMN_VERSE + " as "
 						+ COLUMN_VERSE_UNTIL + ", a.* from (select min("
+						+ COLUMN_DATE + ") as " + COLUMN_DATE + ", max("
+						+ COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL + ", "
+						+ COLUMN_ORDERID + ", count(*) as " + COLUMN_COUNT
+						+ " from " + TABLE_NAME + " where " + COLUMN_ORDERID
+						+ ">0 group by round(" + COLUMN_ORDERID + ")) a join "
+						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
+						+ COLUMN_DATE + " and round(a." + COLUMN_ORDERID
+						+ ")=round(b." + COLUMN_ORDERID + ") left join "
+						+ TABLE_NAME + " c on a." + COLUMN_DATE_UNTIL + "=c."
+						+ COLUMN_DATE + " and round(a." + COLUMN_ORDERID
+						+ ")=round(c." + COLUMN_ORDERID + ") order by a."
+						+ COLUMN_ORDERID, new String[] {});
+		if (cursor != null)
+			cursor.moveToFirst();
+		return cursor;
+	}
+
+	/* get calendar list */
+	public final Cursor getCalendarList() {
+		Cursor cursor = getReadableDatabase().rawQuery(
+				"select b.rowid as _id, b." + COLUMN_VERSE + " as "
+						+ COLUMN_VERSE + ", c." + COLUMN_VERSE + " as "
+						+ COLUMN_VERSE_UNTIL + ", b." + COLUMN_VERSE_SHORT
+						+ " as " + COLUMN_VERSE_SHORT + ", c."
+						+ COLUMN_VERSE_SHORT + " as "
+						+ COLUMN_VERSE_UNTIL_SHORT + ", a.* from (select min("
 						+ COLUMN_DATE + ") as " + COLUMN_DATE + ", max("
 						+ COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL + ", "
 						+ COLUMN_ORDERID + ", count(*) as " + COLUMN_COUNT

@@ -6,8 +6,8 @@
     android:versionName="devel" >
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="20" />
+        android:minSdkVersion="11"
+        android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />

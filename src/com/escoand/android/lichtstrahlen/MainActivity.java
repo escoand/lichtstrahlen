@@ -58,8 +58,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import de.escoand.android.library.OnSwipeTouchListener;
 import com.escoand.android.lichtstrahlen_2014.R;
+
+import de.escoand.android.library.OnSwipeTouchListener;
 
 @SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity {
@@ -271,7 +272,8 @@ public class MainActivity extends Activity {
 
 		/* calendar */
 		case R.id.menuDate:
-			showDialog(R.id.menuDate);
+			CalendarDialog calendar = new CalendarDialog();
+			calendar.show(getFragmentManager(), "calendar");
 			break;
 
 		/* search */
