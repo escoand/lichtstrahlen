@@ -13,7 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -33,7 +33,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.TimePicker;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 public class Preferences extends PreferenceActivity {
 	private static SharedPreferences prefs;
@@ -160,7 +160,7 @@ public class Preferences extends PreferenceActivity {
 
 	private void initReminder() {
 		Intent intent = new Intent(getBaseContext(), Receiver.class);
-		intent.setAction("com.escoand.android.lichtstrahlen.INIT_REMINDER");
+		intent.setAction("de.escoand.android.lichtstrahlen.INIT_REMINDER");
 		getBaseContext().sendBroadcast(intent);
 	}
 }

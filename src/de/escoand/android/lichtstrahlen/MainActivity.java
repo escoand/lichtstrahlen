@@ -13,12 +13,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -59,13 +60,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 import de.escoand.android.library.CalendarEvent;
 import de.escoand.android.library.OnCalendarEventClickListener;
 import de.escoand.android.library.OnSwipeTouchListener;
 
-@SuppressLint("SimpleDateFormat")
 public class MainActivity extends Activity implements
 		OnCalendarEventClickListener {
 	private static final int TIMER_SPLASH = 2000;
@@ -445,7 +445,7 @@ public class MainActivity extends Activity implements
 					/* data for list */
 					.setAdapter(new CursorAdapter(this, data_verses) {
 						private final SimpleDateFormat df = new SimpleDateFormat(
-								"yyyyMMdd");
+								"yyyyMMdd", Locale.getDefault());
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
 						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
 						String verse, verse_until, date, date_until;
@@ -537,7 +537,7 @@ public class MainActivity extends Activity implements
 					/* data for list */
 					.setAdapter(new CursorAdapter(this, db_note.getNoteList()) {
 						private final SimpleDateFormat df = new SimpleDateFormat(
-								"yyyyMMdd");
+								"yyyyMMdd", Locale.getDefault());
 						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
 						TextView tvDate, tvNote;
 						Date date;
@@ -687,7 +687,8 @@ public class MainActivity extends Activity implements
 
 		/* get day */
 		try {
-			this.date = new SimpleDateFormat("yyyyMMdd").parse(date);
+			this.date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+					.parse(date);
 			showDay();
 		} catch (ParseException e) {
 			// e.printStackTrace();
@@ -733,7 +734,8 @@ public class MainActivity extends Activity implements
 		empty.setOnTouchListener(swipeListener);
 
 		list.setAdapter(new CursorAdapter(this, data_text) {
-			private final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			private final SimpleDateFormat df = new SimpleDateFormat(
+					"yyyyMMdd", Locale.getDefault());
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
 					.getDateInstance(DateFormat.LONG);
 

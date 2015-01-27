@@ -13,7 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +29,7 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 public class Widget extends AppWidgetProvider {
 

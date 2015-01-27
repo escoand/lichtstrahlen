@@ -13,7 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import de.escoand.android.library.AbstractDatabase;
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {

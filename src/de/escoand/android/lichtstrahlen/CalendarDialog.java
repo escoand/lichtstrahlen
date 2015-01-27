@@ -1,4 +1,4 @@
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +13,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 import de.escoand.android.library.CalendarAdapter;
 import de.escoand.android.library.CalendarEvent;
@@ -39,7 +39,7 @@ public class CalendarDialog extends DialogFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		CalendarFragment calendar = (CalendarFragment) getFragmentManager()
 				.findFragmentById(R.id.calendar);
-		CalendarAdapter adapter =  (CalendarAdapter) calendar.getListAdapter();
+		CalendarAdapter adapter = (CalendarAdapter) calendar.getListAdapter();
 
 		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		SimpleDateFormat frmt = new SimpleDateFormat("yyyyMMdd",
@@ -81,6 +81,6 @@ public class CalendarDialog extends DialogFragment {
 	}
 
 	public void setOnCalendarEventClickListener(OnCalendarEventClickListener l) {
-		listener=l;
+		listener = l;
 	}
 }

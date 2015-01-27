@@ -13,7 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.escoand.android.lichtstrahlen;
+package de.escoand.android.lichtstrahlen;
 
 import java.util.Calendar;
 
@@ -25,7 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import de.escoand.android.lichtstrahlen.R;
 
 public class Receiver extends BroadcastReceiver {
 	@Override
@@ -36,7 +36,7 @@ public class Receiver extends BroadcastReceiver {
 		PendingIntent receiver = null;
 
 		if (!intent.getAction().equals(
-				"com.escoand.android.lichtstrahlen.INIT_REMINDER"))
+				"de.escoand.android.lichtstrahlen.INIT_REMINDER"))
 			return;
 
 		/* set info */
