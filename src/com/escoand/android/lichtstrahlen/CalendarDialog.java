@@ -1,7 +1,10 @@
 package com.escoand.android.lichtstrahlen;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,38 +30,44 @@ public class CalendarDialog extends DialogFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		CalendarFragment calendar = (CalendarFragment) getFragmentManager()
 				.findFragmentById(R.id.calendar);
 		CalendarAdapter adapter = (CalendarAdapter) calendar.getListAdapter();
 
+		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
+		SimpleDateFormat frmt = new SimpleDateFormat("yyyyMMdd",
+				Locale.getDefault());
+		String text;
+		String text_short;
+
 		Cursor cursor = new TextDatabase(getActivity()).getCalendarList();
-
 		while (cursor.moveToNext()) {
-			String begin = cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_DATE));
-			String end = cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_DATE_UNTIL));
-			String text = cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_VERSE));
-			String text_short = cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_VERSE_SHORT));
+			GregorianCalendar begin = new GregorianCalendar();
+			GregorianCalendar end = new GregorianCalendar();
 
-			events.add(new CalendarEvent(new GregorianCalendar(Integer
-					.valueOf(begin.substring(0, 4)), Integer.valueOf(begin
-					.substring(4, 6)) - 1, Integer.valueOf(begin
-					.substring(6, 8))),
-					new GregorianCalendar(Integer.valueOf(end.substring(0, 4)),
-							Integer.valueOf(end.substring(4, 6)) - 1, Integer
-									.valueOf(end.substring(6, 8))), text,
-					text_short));
+			try {
+				begin.setTime(frmt.parse(cursor.getString(cursor
+						.getColumnIndex(TextDatabase.COLUMN_DATE))));
+				end.setTime(frmt.parse(cursor.getString(cursor
+						.getColumnIndex(TextDatabase.COLUMN_DATE_UNTIL))));
+
+				text = cursor.getString(cursor
+						.getColumnIndex(TextDatabase.COLUMN_VERSE));
+				text_short = cursor.getString(cursor
+						.getColumnIndex(TextDatabase.COLUMN_VERSE_SHORT));
+
+				events.add(new CalendarEvent(begin, end, text, text_short));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 		}
-
 		cursor.close();
 
 		calendar.setEvents(events.toArray(new CalendarEvent[events.size()]));
 		adapter.zoomToEvents();
 		adapter.WEEK_NUMBERS = false;
+		adapter.EVENT_BACKGROUND = R.color.calendar_background;
+		adapter.EVENT_FOREGROUND = R.color.calendar_foreground;
 
 		super.onActivityCreated(savedInstanceState);
 	}

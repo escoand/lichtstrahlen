@@ -3,6 +3,9 @@
 
     <integer name="default_text_size">18</integer>
 
+    <color name="calendar_background">#e75328</color>
+    <color name="calendar_foreground">#ffffff</color>
+
     <dimen name="listentry_margin">10dp</dimen>
     <dimen name="widget_padding_horizontal">20dp</dimen>
     <dimen name="widget_padding_vertical">15dp</dimen>
