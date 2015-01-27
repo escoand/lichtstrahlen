@@ -18,21 +18,28 @@ import com.escoand.android.lichtstrahlen_2014.R;
 import de.escoand.android.library.CalendarAdapter;
 import de.escoand.android.library.CalendarEvent;
 import de.escoand.android.library.CalendarFragment;
+import de.escoand.android.library.OnCalendarEventClickListener;
 
 public class CalendarDialog extends DialogFragment {
+	private static AlertDialog dialog;
+	private OnCalendarEventClickListener listener;
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		LayoutInflater inflater = getActivity().getLayoutInflater();
-		builder.setView(inflater.inflate(R.layout.calendar, null));
-		return builder.create();
+		if (dialog == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			builder.setView(inflater.inflate(R.layout.calendar, null));
+			dialog = builder.create();
+		}
+		return dialog;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		CalendarFragment calendar = (CalendarFragment) getFragmentManager()
 				.findFragmentById(R.id.calendar);
-		CalendarAdapter adapter = (CalendarAdapter) calendar.getListAdapter();
+		CalendarAdapter adapter =  (CalendarAdapter) calendar.getListAdapter();
 
 		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		SimpleDateFormat frmt = new SimpleDateFormat("yyyyMMdd",
@@ -63,12 +70,17 @@ public class CalendarDialog extends DialogFragment {
 		}
 		cursor.close();
 
-		calendar.setEvents(events.toArray(new CalendarEvent[events.size()]));
+		adapter.setEvents(events.toArray(new CalendarEvent[events.size()]));
 		adapter.zoomToEvents();
 		adapter.WEEK_NUMBERS = false;
 		adapter.EVENT_BACKGROUND = R.color.calendar_background;
 		adapter.EVENT_FOREGROUND = R.color.calendar_foreground;
+		adapter.setOnCalendarEventClickedListener(listener);
 
 		super.onActivityCreated(savedInstanceState);
+	}
+
+	public void setOnCalendarEventClickListener(OnCalendarEventClickListener l) {
+		listener=l;
 	}
 }

@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -60,10 +61,13 @@ import android.widget.ViewFlipper;
 
 import com.escoand.android.lichtstrahlen_2014.R;
 
+import de.escoand.android.library.CalendarEvent;
+import de.escoand.android.library.OnCalendarEventClickListener;
 import de.escoand.android.library.OnSwipeTouchListener;
 
 @SuppressLint("SimpleDateFormat")
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements
+		OnCalendarEventClickListener {
 	private static final int TIMER_SPLASH = 2000;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
@@ -74,6 +78,7 @@ public class MainActivity extends Activity {
 	private MenuItem menu_item = null;
 	private EditText txt_search = null;
 	public Date date = new Date();
+	private DialogFragment dialog = null;
 
 	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
 			getBaseContext()) {
@@ -273,6 +278,8 @@ public class MainActivity extends Activity {
 		/* calendar */
 		case R.id.menuDate:
 			CalendarDialog calendar = new CalendarDialog();
+			calendar.setOnCalendarEventClickListener(this);
+			dialog = calendar;
 			calendar.show(getFragmentManager(), "calendar");
 			break;
 
@@ -853,5 +860,11 @@ public class MainActivity extends Activity {
 		flipper.showNext();
 		if (flipper.getChildCount() > 1)
 			flipper.removeViewAt(0);
+	}
+
+	@Override
+	public void onCalenderEventClick(CalendarEvent event) {
+		dialog.dismiss();
+		showDay(event.getBegin());
 	}
 }
