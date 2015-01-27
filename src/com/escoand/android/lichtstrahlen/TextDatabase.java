@@ -33,7 +33,7 @@ import com.escoand.android.lichtstrahlen_2014.R;
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {
 	public static final String DATABASE_NAME = "verses";
-	public static final int DATABASE_VERSION = 114;
+	public static final int DATABASE_VERSION = 115;
 
 	protected static final String COLUMN_DATE = "date";
 	protected static final String COLUMN_DATE_UNTIL = "date_until";
@@ -122,7 +122,7 @@ public class TextDatabase extends AbstractDatabase {
 						+ COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL + ", "
 						+ COLUMN_ORDERID + ", count(*) as " + COLUMN_COUNT
 						+ " from " + TABLE_NAME + " where " + COLUMN_ORDERID
-						+ ">0 group by round(" + COLUMN_ORDERID + ")) a join "
+						+ ">=1 group by round(" + COLUMN_ORDERID + ")) a join "
 						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
 						+ COLUMN_DATE + " and round(a." + COLUMN_ORDERID
 						+ ")=round(b." + COLUMN_ORDERID + ") left join "
@@ -148,7 +148,7 @@ public class TextDatabase extends AbstractDatabase {
 						+ COLUMN_DATE + ") as " + COLUMN_DATE_UNTIL + ", "
 						+ COLUMN_ORDERID + ", count(*) as " + COLUMN_COUNT
 						+ " from " + TABLE_NAME + " where " + COLUMN_ORDERID
-						+ ">0 group by " + COLUMN_ORDERID + ") a join "
+						+ ">=0 group by " + COLUMN_ORDERID + ") a join "
 						+ TABLE_NAME + " b on a." + COLUMN_DATE + "=b."
 						+ COLUMN_DATE + " and a." + COLUMN_ORDERID + "=b."
 						+ COLUMN_ORDERID + " left join " + TABLE_NAME
