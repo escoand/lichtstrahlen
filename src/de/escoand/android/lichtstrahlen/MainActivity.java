@@ -39,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -75,7 +76,7 @@ public class MainActivity extends Activity implements
 	private MenuItem menu_item = null;
 	private EditText txt_search = null;
 	public Date date = new Date();
-	private DialogFragment dialog = null;
+	private int dialogId;
 
 	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
 			getBaseContext()) {
@@ -137,17 +138,16 @@ public class MainActivity extends Activity implements
 
 			/* no splash */
 			else
-				showDay(new Date());
+				showDay(date);
 
 			super.onPostExecute(result);
 		}
 	}
 
+	/* init gui */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		DBInit init = new DBInit();
 
-		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false)) {
 			setTheme(R.style.Theme_Light);
@@ -157,33 +157,43 @@ public class MainActivity extends Activity implements
 								R.color.primary)));
 		} else
 			setTheme(R.style.Theme);
-
-		/* show */
-		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null)
-			return;
-
-		/* init */
 		setContentView(R.layout.main);
+
+		super.onCreate(savedInstanceState);
+	}
+
+	/* go to view */
+	@Override
+	protected void onResume() {
+		DBInit init = new DBInit();
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		init.fullInit = false;
 		init.execute();
+
+		super.onResume();
 	}
 
-	/* after preferences */
+	/* save current date */
 	@Override
-	protected void onResume() {
-		if (date != null && db_text != null)
-			showDay(date);
-		super.onResume();
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putLong("date", date.getTime());
+		outState.putLong("dialog", dialogId);
+		System.err.println("save dialogid " + dialogId);
+		super.onSaveInstanceState(outState);
+	}
 
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState,
+			PersistableBundle persistentState) {
+		dialogId = savedInstanceState.getInt("dialog");
+		System.err.println("load dialogid " + dialogId);
+		// super.onRestoreInstanceState(savedInstanceState, persistentState);
 	}
 
 	/* clean stop */
 	@Override
 	protected void onStop() {
-		if (data_text != null)
-			data_text.close();
+		data_text.close();
 		db_text.close();
 		db_note.close();
 		super.onStop();
@@ -281,7 +291,7 @@ public class MainActivity extends Activity implements
 		case R.id.menuDate:
 			CalendarDialog calendar = new CalendarDialog();
 			calendar.setOnCalendarEventClickListener(this);
-			dialog = calendar;
+			dialogId = calendar.getId();
 			calendar.show(getFragmentManager(), "calendar");
 			break;
 
@@ -868,7 +878,10 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onCalenderEventClick(CalendarEvent event) {
-		dialog.dismiss();
+		// TODO crashing after rotating while in dialog
+		((DialogFragment) getFragmentManager().findFragmentById(dialogId))
+				.dismiss();
+		// dialog.dismiss();
 		showDay(event.getBegin());
 	}
 }
