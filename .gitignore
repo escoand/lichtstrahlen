@@ -7,6 +7,7 @@
 /dev/*.png
 /dev/*.psd
 /dev/*.xlsx
+/libs
 /res/drawable*/cover.jpg
 /res/drawable*/icon.png
 /res/drawable*/logo.png
