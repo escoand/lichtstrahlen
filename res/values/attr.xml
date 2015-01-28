@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="ic_action_book" format="reference" />
+    <attr name="ic_action_search" format="reference" />
+    <attr name="ic_action_share" format="reference" />
+    <attr name="textColorPrimary" format="reference" />
+    <attr name="textColorSecondary" format="reference" />
+    <attr name="textColorTertiary" format="reference" />
+    <attr name="widget_bg" format="reference" />
+
+</resources>
