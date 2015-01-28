@@ -73,8 +73,8 @@ public class CalendarDialog extends DialogFragment {
 		adapter.setEvents(events.toArray(new CalendarEvent[events.size()]));
 		adapter.zoomToEvents();
 		adapter.WEEK_NUMBERS = false;
-		adapter.EVENT_BACKGROUND = R.color.calendar_background;
-		adapter.EVENT_FOREGROUND = R.color.calendar_foreground;
+		adapter.EVENT_BACKGROUND = R.color.primary;
+		adapter.EVENT_FOREGROUND = R.color.secondary;
 		adapter.setOnCalendarEventClickedListener(listener);
 
 		super.onActivityCreated(savedInstanceState);

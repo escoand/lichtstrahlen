@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,6 +33,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -59,9 +59,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
-import de.escoand.android.lichtstrahlen.R;
-
 import de.escoand.android.library.CalendarEvent;
 import de.escoand.android.library.OnCalendarEventClickListener;
 import de.escoand.android.library.OnSwipeTouchListener;
@@ -152,19 +149,24 @@ public class MainActivity extends Activity implements
 
 		/* themes */
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
-				.getBoolean("inverse", false))
+				.getBoolean("inverse", false)) {
 			setTheme(R.style.Theme_Light);
-		else
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+				getActionBar().setBackgroundDrawable(
+						new ColorDrawable(getResources().getColor(
+								R.color.primary)));
+		} else
 			setTheme(R.style.Theme);
 
 		/* show */
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		if (savedInstanceState != null)
+			return;
 
 		/* init */
+		setContentView(R.layout.main);
 		flipper = (ViewFlipper) findViewById(R.id.flipper);
-		if (savedInstanceState != null)
-			init.fullInit = false;
+		init.fullInit = false;
 		init.execute();
 	}
 

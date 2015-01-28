@@ -7,7 +7,7 @@
     <dimen name="widget_padding_horizontal">20dp</dimen>
     <dimen name="widget_padding_vertical">15dp</dimen>
 
-    <color name="calendar_background">#e75328</color>
-    <color name="calendar_foreground">#ffffff</color>
+    <color name="primary">#e75328</color>
+    <color name="secondary">#ffffff</color>
 
 </resources>

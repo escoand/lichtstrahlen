@@ -3,7 +3,7 @@
 
     <!-- activity styles -->
     <style name="Theme" parent="@android:style/Theme.Holo">
-        <item name="ic_action_book">@drawable/ic_action_book_light</item>
+        <item name="ic_action_book">@drawable/ic_action_book_dark</item>
         <item name="ic_action_search">@drawable/ic_action_search_dark</item>
         <item name="ic_action_share">@drawable/ic_action_share_dark</item>
     </style>
