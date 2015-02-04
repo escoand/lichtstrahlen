@@ -87,6 +87,11 @@ public class Widget extends AppWidgetProvider {
 				intent, 0);
 		views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
+		/* preference button */
+		intent = new Intent(context, Preferences.class);
+		pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+		views.setOnClickPendingIntent(R.id.widgetPreferences, pendingIntent);
+
 		/* update */
 		appWidgetManager.updateAppWidget(appWidgetIds, views);
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
