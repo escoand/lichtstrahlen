@@ -76,7 +76,6 @@ public class MainActivity extends Activity implements
 	private MenuItem menu_item = null;
 	private EditText txt_search = null;
 	public Date date = new Date();
-	private int dialogId;
 
 	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
 			getBaseContext()) {
@@ -177,16 +176,12 @@ public class MainActivity extends Activity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putLong("date", date.getTime());
-		outState.putLong("dialog", dialogId);
-		System.err.println("save dialogid " + dialogId);
 		super.onSaveInstanceState(outState);
 	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState,
 			PersistableBundle persistentState) {
-		dialogId = savedInstanceState.getInt("dialog");
-		System.err.println("load dialogid " + dialogId);
 		// super.onRestoreInstanceState(savedInstanceState, persistentState);
 	}
 
@@ -291,7 +286,7 @@ public class MainActivity extends Activity implements
 		case R.id.menuDate:
 			CalendarDialog calendar = new CalendarDialog();
 			calendar.setOnCalendarEventClickListener(this);
-			dialogId = calendar.getId();
+			// calendar.setRetainInstance(true);
 			calendar.show(getFragmentManager(), "calendar");
 			break;
 
@@ -879,9 +874,8 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onCalenderEventClick(CalendarEvent event) {
 		// TODO crashing after rotating while in dialog
-		((DialogFragment) getFragmentManager().findFragmentById(dialogId))
+		((DialogFragment) getFragmentManager().findFragmentByTag("calendar"))
 				.dismiss();
-		// dialog.dismiss();
 		showDay(event.getBegin());
 	}
 }
