@@ -67,7 +67,8 @@
     <string name="prefScale">Font size</string>
     <string name="prefScaleDesc"></string>
     <string name="prefInverse">Inverse colors</string>
-    <string name="prefInverseDesc">Swap black and white</string>
+    <string name="prefAppInverseDesc">Default is black on white</string>
+    <string name="prefWidgetInverseDesc">Default is white on black</string>
     <string name="prefOther">Other</string>
     <string name="prefSplash">Splashscreen</string>
     <string name="prefSplashDesc">Mobile devotions cover at start</string>

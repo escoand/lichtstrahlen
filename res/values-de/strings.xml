@@ -75,7 +75,8 @@
     <string name="prefScale">Schriftgröße</string>
     <string name="prefScaleDesc"></string>
     <string name="prefInverse">Umgekehrte Farben</string>
-    <string name="prefInverseDesc">Tausche Schwarz und Weiß</string>
+    <string name="prefAppInverseDesc">Standard ist schwarz auf weiß</string>
+    <string name="prefWidgetInverseDesc">Standard ist weiß auf schwarz</string>
     <string name="prefOther">Sonstiges</string>
     <string name="prefSplash">Startbildschirm</string>
     <string name="prefSplashDesc">Lichtstrahlen Cover beim Start</string>

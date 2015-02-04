@@ -21,7 +21,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="inverse"
-            android:summary="@string/prefInverseDesc"
+            android:summary="@string/prefAppInverseDesc"
             android:title="@string/prefInverse" />
     </PreferenceCategory>
 
@@ -30,7 +30,7 @@
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="widgetInverse"
-            android:summary="@string/prefInverseDesc"
+            android:summary="@string/prefWidgetInverseDesc"
             android:title="@string/prefInverse" />
     </PreferenceCategory>
 
