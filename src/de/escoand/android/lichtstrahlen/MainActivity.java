@@ -146,7 +146,6 @@ public class MainActivity extends Activity implements
 	/* init gui */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		if (!PreferenceManager.getDefaultSharedPreferences(getBaseContext())
 				.getBoolean("inverse", false)) {
 			setTheme(R.style.Theme_Light);
@@ -873,7 +872,6 @@ public class MainActivity extends Activity implements
 
 	@Override
 	public void onCalenderEventClick(CalendarEvent event) {
-		// TODO crashing after rotating while in dialog
 		((DialogFragment) getFragmentManager().findFragmentByTag("calendar"))
 				.dismiss();
 		showDay(event.getBegin());
