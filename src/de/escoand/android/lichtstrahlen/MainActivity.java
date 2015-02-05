@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,14 +42,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -60,18 +58,14 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import de.escoand.android.library.CalendarEvent;
-import de.escoand.android.library.OnCalendarEventClickListener;
 import de.escoand.android.library.OnSwipeTouchListener;
 
-public class MainActivity extends Activity implements
-		OnCalendarEventClickListener {
+public class MainActivity extends Activity implements DateClickListener {
 	private static final int TIMER_SPLASH = 2000;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
 	private NoteDatabase db_note = null;
 	private Cursor data_text = null;
-	private Cursor data_verses = null;
 	private Menu menu = null;
 	private MenuItem menu_item = null;
 	private EditText txt_search = null;
@@ -98,6 +92,7 @@ public class MainActivity extends Activity implements
 		public boolean fullInit = true;
 
 		/* show info and splash */
+		@SuppressLint("InflateParams")
 		@Override
 		protected void onPreExecute() {
 			if (fullInit) {
@@ -284,8 +279,6 @@ public class MainActivity extends Activity implements
 		/* calendar */
 		case R.id.menuDate:
 			CalendarDialog calendar = new CalendarDialog();
-			calendar.setOnCalendarEventClickListener(this);
-			// calendar.setRetainInstance(true);
 			calendar.show(getFragmentManager(), "calendar");
 			break;
 
@@ -297,7 +290,8 @@ public class MainActivity extends Activity implements
 
 		/* scripture list */
 		case R.id.menuList:
-			showDialog(R.id.menuList);
+			DialogFragment scriptures = new ScriptureDialog();
+			scriptures.show(getFragmentManager(), "scriptures");
 			break;
 
 		/* notes list */
@@ -339,7 +333,8 @@ public class MainActivity extends Activity implements
 
 		/* info */
 		case R.id.menuInfo:
-			showDialog(R.id.menuInfo);
+			DialogFragment about = new AboutDialog();
+			about.show(getFragmentManager(), "about");
 			break;
 
 		/* ... */
@@ -441,100 +436,6 @@ public class MainActivity extends Activity implements
 								}
 							}).create();
 
-			/* verse list */
-		case R.id.menuList:
-			if (data_verses == null)
-				data_verses = db_text.getList();
-			return new AlertDialog.Builder(this).setCancelable(true)
-					.setTitle(getString(R.string.menuList))
-
-					/* data for list */
-					.setAdapter(new CursorAdapter(this, data_verses) {
-						private final SimpleDateFormat df = new SimpleDateFormat(
-								"yyyyMMdd", Locale.getDefault());
-						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
-						String verse, verse_until, date, date_until;
-						int count;
-
-						/* inflate layout */
-						@Override
-						public View newView(Context context, Cursor cursor,
-								ViewGroup parent) {
-							return getLayoutInflater().inflate(
-									R.layout.scriptureentry, parent, false);
-						}
-
-						/* set item data */
-						@Override
-						public void bindView(View view, Context context,
-								Cursor cursor) {
-							tvVerse = (TextView) view
-									.findViewById(R.id.listVerse);
-							tvVerseUntil = (TextView) view
-									.findViewById(R.id.listVerseUntil);
-							tvDate = (TextView) view
-									.findViewById(R.id.listDate);
-							tvDateUntil = (TextView) view
-									.findViewById(R.id.listDateUntil);
-							verse = cursor.getString(cursor
-									.getColumnIndex(TextDatabase.COLUMN_VERSE));
-							verse_until = cursor
-									.getString(cursor
-											.getColumnIndex(TextDatabase.COLUMN_VERSE_UNTIL));
-							count = cursor.getInt(cursor
-									.getColumnIndex("count"));
-							try {
-								date = df_ymd
-										.format(df.parse(cursor.getString(cursor
-												.getColumnIndex(TextDatabase.COLUMN_DATE))));
-								date_until = df_ymd
-										.format(df.parse(cursor.getString(cursor
-												.getColumnIndex(TextDatabase.COLUMN_DATE_UNTIL))));
-							} catch (Exception e) {
-								// e.printStackTrace();
-							}
-
-							/* single date */
-							if (count <= 1) {
-								tvVerse.setText(verse);
-								tvDate.setText(date);
-								tvVerseUntil.setVisibility(View.GONE);
-								tvDateUntil.setVisibility(View.GONE);
-							}
-
-							/* date range */
-							else {
-								tvVerse.setText(verse.replaceAll(
-										"(-[0-9]+| - [0-9, ]+)$", ""));
-								tvVerseUntil
-										.setText(getString(R.string.textUntil)
-												+ " "
-												+ verse_until
-														.replaceAll(
-																"([0-9]+[a-z]?-|[0-9,]+ - )",
-																""));
-								tvDate.setText(getString(R.string.textFrom)
-										+ " " + date);
-								tvDateUntil
-										.setText(getString(R.string.textUntil)
-												+ " " + date_until);
-								tvVerseUntil.setVisibility(View.VISIBLE);
-								tvDateUntil.setVisibility(View.VISIBLE);
-							}
-						}
-					},
-
-					/* on click */
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int item) {
-							data_text.moveToPosition(item);
-							showDay(data_verses.getString(data_verses
-									.getColumnIndex(TextDatabase.COLUMN_DATE)));
-						}
-					}).create();
-
 			/* notes list */
 		case R.id.menuNotes:
 			return new AlertDialog.Builder(this).setCancelable(true)
@@ -604,28 +505,6 @@ public class MainActivity extends Activity implements
 
 					/* create */
 					.create();
-
-			/* info */
-		case R.id.menuInfo:
-			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dialog.setContentView(R.layout.about);
-
-			try {
-				/*
-				 * ((TextView) dialog.findViewById(R.id.txtVersion))
-				 * .setText("Version " + getPackageManager().getPackageInfo(
-				 * getPackageName(), 0).versionName);
-				 */
-				((TextView) dialog.findViewById(R.id.txtAbout)).setText(
-						Html.fromHtml(getString(R.string.about)),
-						TextView.BufferType.SPANNABLE);
-				((TextView) dialog.findViewById(R.id.txtAbout))
-						.setMovementMethod(LinkMovementMethod.getInstance());
-			} catch (Exception e) {
-				// e.printStackTrace();
-			}
-
-			return dialog;
 		}
 
 		return null;
@@ -871,9 +750,14 @@ public class MainActivity extends Activity implements
 	}
 
 	@Override
-	public void onCalenderEventClick(CalendarEvent event) {
-		((DialogFragment) getFragmentManager().findFragmentByTag("calendar"))
-				.dismiss();
-		showDay(event.getBegin());
+	public void onDateClick(Date date) {
+		DialogFragment dialog;
+		for (String tag : new String[] { "calendar", "scriptures" }) {
+			dialog = (DialogFragment) getFragmentManager().findFragmentByTag(
+					tag);
+			if (dialog != null)
+				dialog.dismiss();
+		}
+		showDay(date);
 	}
 }

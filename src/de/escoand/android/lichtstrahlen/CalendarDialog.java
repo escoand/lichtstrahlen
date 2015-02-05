@@ -3,10 +3,12 @@ package de.escoand.android.lichtstrahlen;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -18,10 +20,17 @@ import de.escoand.android.library.CalendarEvent;
 import de.escoand.android.library.CalendarFragment;
 import de.escoand.android.library.OnCalendarEventClickListener;
 
-public class CalendarDialog extends DialogFragment {
+public class CalendarDialog extends DialogFragment implements
+		OnCalendarEventClickListener {
 	private static AlertDialog dialog;
 	private static CalendarAdapter adapter;
-	private OnCalendarEventClickListener listener;
+	private DateClickListener listener;
+
+	@Override
+	public void onAttach(Activity activity) {
+		listener = (DateClickListener) activity;
+		super.onAttach(activity);
+	}
 
 	@SuppressLint("InflateParams")
 	@Override
@@ -38,6 +47,7 @@ public class CalendarDialog extends DialogFragment {
 		CalendarFragment calendar = (CalendarFragment) getFragmentManager()
 				.findFragmentById(R.id.calendar);
 		adapter = (CalendarAdapter) calendar.getListAdapter();
+		adapter.setOnCalendarEventClickedListener(this);
 
 		/* create events */
 		ArrayList<CalendarEvent> events = new ArrayList<CalendarEvent>();
@@ -79,14 +89,11 @@ public class CalendarDialog extends DialogFragment {
 		adapter.EVENT_BACKGROUND = R.color.primary;
 		adapter.EVENT_FOREGROUND = R.color.secondary;
 
-		/* listener */
-		if (listener != null)
-			adapter.setOnCalendarEventClickedListener(listener);
-
 		return dialog;
 	}
 
-	public void setOnCalendarEventClickListener(OnCalendarEventClickListener l) {
-		listener = l;
+	@Override
+	public void onCalenderEventClick(CalendarEvent event) {
+		listener.onDateClick(event.getBegin());
 	}
 }
