@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import com.escoand.android.lichtstrahlen_2015.R;
 
 public class ScriptureDialog extends DialogFragment {
 	DateSelectListener listener;

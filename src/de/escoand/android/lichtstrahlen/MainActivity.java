@@ -38,6 +38,7 @@ import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
+import com.escoand.android.lichtstrahlen_2015.R;
 import de.escoand.android.library.OnSwipeTouchListener;
 
 public class MainActivity extends Activity implements DateSelectListener,

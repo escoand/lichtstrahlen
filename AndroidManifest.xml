@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.escoand.android.lichtstrahlen"
+    package="com.escoand.android.lichtstrahlen_2015"
     android:installLocation="auto"
-    android:versionCode="000000"
-    android:versionName="devel" >
+    android:versionCode="050090"
+    android:versionName="5.0.90 beta" >
 
     <uses-sdk
         android:minSdkVersion="14"
