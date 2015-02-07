@@ -22,10 +22,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -51,7 +49,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CursorAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -60,7 +57,6 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.escoand.android.library.OnSwipeTouchListener;
 
-@SuppressWarnings("unused")
 public class MainActivity extends Activity implements DateSelectListener {
 	private static final int TIMER_SPLASH = 2000;
 	private ViewFlipper flipper = null;
@@ -69,7 +65,6 @@ public class MainActivity extends Activity implements DateSelectListener {
 	private Cursor data_text = null;
 	private Menu menu = null;
 	private MenuItem menu_item = null;
-	private EditText txt_search = null;
 	public Date date = new Date();
 
 	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
@@ -340,7 +335,6 @@ public class MainActivity extends Activity implements DateSelectListener {
 	/* callback for creating dialog */
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = new Dialog(this);
 
 		switch (id) {
 
