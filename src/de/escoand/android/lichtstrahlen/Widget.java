@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
-import com.escoand.android.lichtstrahlen_2015.R;
 
 public class Widget extends AppWidgetProvider {
 

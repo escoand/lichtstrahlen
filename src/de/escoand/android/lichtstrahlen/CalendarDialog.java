@@ -14,7 +14,6 @@ import android.app.DialogFragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import com.escoand.android.lichtstrahlen_2015.R;
 import de.escoand.android.library.CalendarAdapter;
 import de.escoand.android.library.CalendarEvent;
 import de.escoand.android.library.CalendarFragment;

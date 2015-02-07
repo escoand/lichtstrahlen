@@ -10,7 +10,6 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import com.escoand.android.lichtstrahlen_2015.R;
 
 public class AboutDialog extends DialogFragment {
 

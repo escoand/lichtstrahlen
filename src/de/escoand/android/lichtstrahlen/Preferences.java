@@ -33,7 +33,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.TimePicker;
 
-import com.escoand.android.lichtstrahlen_2015.R;
+import de.escoand.android.lichtstrahlen.R;
 
 public class Preferences extends PreferenceActivity {
 	private static SharedPreferences prefs;
