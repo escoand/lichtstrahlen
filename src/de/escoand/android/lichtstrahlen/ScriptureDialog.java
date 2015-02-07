@@ -37,10 +37,10 @@ public class ScriptureDialog extends DialogFragment {
 		TextDatabase db = new TextDatabase(getActivity());
 		cursor = db.getList();
 
-		dialog.setCancelable(true).setTitle(getString(R.string.menuList))
+		dialog.setCancelable(true)
 
 		/* data for list */
-		.setAdapter(new CursorAdapter(getActivity(), cursor) {
+		.setAdapter(new CursorAdapter(getActivity(), cursor, 0) {
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
 			TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
 			String verse, verse_until, date, date_until;
@@ -105,13 +105,13 @@ public class ScriptureDialog extends DialogFragment {
 			public void onClick(DialogInterface dialog, int item) {
 				cursor.moveToPosition(item);
 				try {
+					listener.onDateSelect(df.parse(cursor.getString(cursor
+							.getColumnIndex(TextDatabase.COLUMN_DATE))));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		});
-							listener.onDateSelect(df.parse(cursor.getString(cursor
-									.getColumnIndex(TextDatabase.COLUMN_DATE))));
 
 		return dialog.create();
 	}
