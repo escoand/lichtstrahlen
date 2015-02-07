@@ -60,7 +60,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.escoand.android.library.OnSwipeTouchListener;
 
-public class MainActivity extends Activity implements DateClickListener {
+public class MainActivity extends Activity implements DateSelectListener {
 	private static final int TIMER_SPLASH = 2000;
 	private ViewFlipper flipper = null;
 	private TextDatabase db_text = null;
@@ -750,7 +750,7 @@ public class MainActivity extends Activity implements DateClickListener {
 	}
 
 	@Override
-	public void onDateClick(Date date) {
+	public void onDateSelect(Date date) {
 		DialogFragment dialog;
 		for (String tag : new String[] { "calendar", "scriptures" }) {
 			dialog = (DialogFragment) getFragmentManager().findFragmentByTag(

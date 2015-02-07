@@ -24,11 +24,11 @@ public class CalendarDialog extends DialogFragment implements
 		OnCalendarEventClickListener {
 	private static AlertDialog dialog;
 	private static CalendarAdapter adapter;
-	private DateClickListener listener;
+	private DateSelectListener listener;
 
 	@Override
 	public void onAttach(Activity activity) {
-		listener = (DateClickListener) activity;
+		listener = (DateSelectListener) activity;
 		super.onAttach(activity);
 	}
 
@@ -94,6 +94,6 @@ public class CalendarDialog extends DialogFragment implements
 
 	@Override
 	public void onCalenderEventClick(CalendarEvent event) {
-		listener.onDateClick(event.getBegin());
+		listener.onDateSelect(event.getBegin());
 	}
 }

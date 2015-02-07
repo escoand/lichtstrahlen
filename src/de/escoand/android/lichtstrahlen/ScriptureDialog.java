@@ -21,13 +21,13 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 public class ScriptureDialog extends DialogFragment {
-	DateClickListener listener;
+	DateSelectListener listener;
 	Cursor cursor;
 	SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
 	@Override
 	public void onAttach(Activity activity) {
-		listener = (DateClickListener) activity;
+		listener = (DateSelectListener) activity;
 		super.onAttach(activity);
 	}
 
@@ -105,13 +105,13 @@ public class ScriptureDialog extends DialogFragment {
 			public void onClick(DialogInterface dialog, int item) {
 				cursor.moveToPosition(item);
 				try {
-					listener.onDateClick(df.parse(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_DATE))));
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
 			}
 		});
+							listener.onDateSelect(df.parse(cursor.getString(cursor
+									.getColumnIndex(TextDatabase.COLUMN_DATE))));
 
 		return dialog.create();
 	}
