@@ -19,11 +19,11 @@ import android.widget.TextView;
 
 public class DaysAdapter extends CursorAdapter {
 	NoteDatabase db;
-	
+
 	static final SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd",
 			Locale.getDefault());
 	static final SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
-			.getDateInstance(DateFormat.SHORT);
+			.getDateInstance(DateFormat.LONG);
 
 	public DaysAdapter(Context context, Cursor cursor) {
 		super(context, cursor, 0);
