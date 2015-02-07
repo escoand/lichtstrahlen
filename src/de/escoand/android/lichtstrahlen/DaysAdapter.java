@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.escoand.android.lichtstrahlen_2015.R;
 
 public class DaysAdapter extends CursorAdapter {
 	NoteDatabase db;
