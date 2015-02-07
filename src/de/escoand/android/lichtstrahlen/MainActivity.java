@@ -319,7 +319,7 @@ public class MainActivity extends Activity implements DateSelectListener {
 			break;
 
 		/* info */
-		case R.id.menuInfo:
+		case R.id.menuAbout:
 			DialogFragment about = new AboutDialog();
 			about.show(getFragmentManager(), "about");
 			break;
