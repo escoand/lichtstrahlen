@@ -3,6 +3,7 @@ package de.escoand.android.lichtstrahlen;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -20,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-public class ScriptureDialog extends DialogFragment {
+public class NotesDialog extends DialogFragment {
 	DateSelectListener listener;
 	Cursor cursor;
 	SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
@@ -34,69 +35,42 @@ public class ScriptureDialog extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-		TextDatabase db = new TextDatabase(getActivity());
-		cursor = db.getList();
+		NoteDatabase db = new NoteDatabase(getActivity());
+		cursor = db.getNoteList();
 
 		dialog.setCancelable(true)
 
 		/* data for list */
 		.setAdapter(new CursorAdapter(getActivity(), cursor, 0) {
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-			TextView tvVerse, tvVerseUntil, tvDate, tvDateUntil;
-			String verse, verse_until, date, date_until;
-			int count;
+			TextView tvDate, tvNote;
+			Date date;
+			String text;
 
 			/* inflate layout */
 			@Override
 			public View newView(Context context, Cursor cursor, ViewGroup parent) {
 				LayoutInflater inflater = getActivity().getLayoutInflater();
-				return inflater.inflate(R.layout.scriptureentry, parent, false);
+				return inflater.inflate(R.layout.noteentry, parent, false);
 			}
 
 			/* set item data */
 			@Override
 			public void bindView(View view, Context context, Cursor cursor) {
-				tvVerse = (TextView) view.findViewById(R.id.listVerse);
-				tvVerseUntil = (TextView) view
-						.findViewById(R.id.listVerseUntil);
 				tvDate = (TextView) view.findViewById(R.id.listDate);
-				tvDateUntil = (TextView) view.findViewById(R.id.listDateUntil);
-				verse = cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_VERSE));
-				verse_until = cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_VERSE_UNTIL));
-				count = cursor.getInt(cursor.getColumnIndex("count"));
+				tvNote = (TextView) view.findViewById(R.id.listNote);
 				try {
-					date = df_ymd.format(df.parse(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_DATE))));
-					date_until = df_ymd.format(df.parse(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_DATE_UNTIL))));
+					date = df.parse(cursor.getString(cursor
+							.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+					text = cursor.getString(cursor
+							.getColumnIndex(NoteDatabase.COLUMN_TEXT));
 				} catch (Exception e) {
-					// e.printStackTrace();
+					e.printStackTrace();
 				}
 
-				/* single date */
-				if (count <= 1) {
-					tvVerse.setText(verse);
-					tvDate.setText(date);
-					tvVerseUntil.setVisibility(View.GONE);
-					tvDateUntil.setVisibility(View.GONE);
-				}
-
-				/* date range */
-				else {
-					tvVerse.setText(verse.replaceAll("(-[0-9]+| - [0-9, ]+)$",
-							""));
-					tvVerseUntil.setText(getString(R.string.textUntil)
-							+ " "
-							+ verse_until.replaceAll(
-									"([0-9]+[a-z]?-|[0-9,]+ - )", ""));
-					tvDate.setText(getString(R.string.textFrom) + " " + date);
-					tvDateUntil.setText(getString(R.string.textUntil) + " "
-							+ date_until);
-					tvVerseUntil.setVisibility(View.VISIBLE);
-					tvDateUntil.setVisibility(View.VISIBLE);
-				}
+				/* show */
+				tvDate.setText(df_ymd.format(date));
+				tvNote.setText(text);
 			}
 		},
 
