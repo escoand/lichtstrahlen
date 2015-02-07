@@ -60,6 +60,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.escoand.android.library.OnSwipeTouchListener;
 
+@SuppressWarnings("unused")
 public class MainActivity extends Activity implements DateSelectListener {
 	private static final int TIMER_SPLASH = 2000;
 	private ViewFlipper flipper = null;
@@ -198,10 +199,7 @@ public class MainActivity extends Activity implements DateSelectListener {
 	}
 
 	/* init action view */
-	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	private void createActionView() {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-			return;
 		menu_item = menu.findItem(R.id.menuSearch);
 		SearchView search = (SearchView) menu_item.getActionView();
 		if (menu_item != null && search != null)
@@ -280,12 +278,6 @@ public class MainActivity extends Activity implements DateSelectListener {
 		case R.id.menuDate:
 			CalendarDialog calendar = new CalendarDialog();
 			calendar.show(getFragmentManager(), "calendar");
-			break;
-
-		/* search */
-		case R.id.menuSearch:
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-				showDialog(R.id.menuSearch);
 			break;
 
 		/* scripture list */
@@ -408,92 +400,67 @@ public class MainActivity extends Activity implements DateSelectListener {
 
 					.create();
 
-			/* calendar */
-		case R.id.menuDate:
-			return new DatePickerDialog(this,
-					new DatePickerDialog.OnDateSetListener() {
-						@Override
-						public void onDateSet(DatePicker view, int year,
-								int monthOfYear, int dayOfMonth) {
-							showDay(year * 10000 + (monthOfYear + 1) * 100
-									+ dayOfMonth);
-						}
-					}, date.getYear() + 1900, date.getMonth(), date.getDate());
-
-			/* search */
-		case R.id.menuSearch:
-			txt_search = new EditText(this);
-			return new AlertDialog.Builder(this)
-					.setCancelable(true)
-					.setTitle(R.string.menuSearch)
-					.setMessage(R.string.searchMessage)
-					.setView(txt_search)
-					.setPositiveButton(android.R.string.search_go,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int whichButton) {
-									showSearch(txt_search.getText().toString());
-								}
-							}).create();
-
 			/* notes list */
 		case R.id.menuNotes:
-			return new AlertDialog.Builder(this).setCancelable(true)
+			return new AlertDialog.Builder(this)
+					.setCancelable(true)
 					.setTitle(getString(R.string.listNotes))
 
 					/* data for list */
-					.setAdapter(new CursorAdapter(this, db_note.getNoteList()) {
-						private final SimpleDateFormat df = new SimpleDateFormat(
-								"yyyyMMdd", Locale.getDefault());
-						SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
-						TextView tvDate, tvNote;
-						Date date;
-						String text;
+					.setAdapter(
+							new CursorAdapter(this, db_note.getNoteList(), 0) {
+								private final SimpleDateFormat df = new SimpleDateFormat(
+										"yyyyMMdd", Locale.getDefault());
+								SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT);
+								TextView tvDate, tvNote;
+								Date date;
+								String text;
 
-						/* inflate layout */
-						@Override
-						public View newView(Context context, Cursor cursor,
-								ViewGroup parent) {
-							return getLayoutInflater().inflate(
-									R.layout.noteentry, parent, false);
-						}
+								/* inflate layout */
+								@Override
+								public View newView(Context context,
+										Cursor cursor, ViewGroup parent) {
+									return getLayoutInflater().inflate(
+											R.layout.noteentry, parent, false);
+								}
 
-						/* set item data */
-						@Override
-						public void bindView(View view, Context context,
-								Cursor cursor) {
-							tvDate = (TextView) view
-									.findViewById(R.id.listDate);
-							tvNote = (TextView) view
-									.findViewById(R.id.listNote);
-							try {
-								date = df
-										.parse(cursor.getString(cursor
-												.getColumnIndex(NoteDatabase.COLUMN_DATE)));
-								text = cursor
-										.getString(cursor
-												.getColumnIndex(NoteDatabase.COLUMN_TEXT));
-							} catch (Exception e) {
-								// e.printStackTrace();
-							}
+								/* set item data */
+								@Override
+								public void bindView(View view,
+										Context context, Cursor cursor) {
+									tvDate = (TextView) view
+											.findViewById(R.id.listDate);
+									tvNote = (TextView) view
+											.findViewById(R.id.listNote);
+									try {
+										date = df
+												.parse(cursor.getString(cursor
+														.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+										text = cursor
+												.getString(cursor
+														.getColumnIndex(NoteDatabase.COLUMN_TEXT));
+									} catch (Exception e) {
+										// e.printStackTrace();
+									}
 
-							/* show */
-							tvDate.setText(df_ymd.format(date));
-							tvNote.setText(text);
-						}
-					},
+									/* show */
+									tvDate.setText(df_ymd.format(date));
+									tvNote.setText(text);
+								}
+							},
 
-					/* on click */
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int item) {
-							Cursor cursor = db_note.getNoteList();
-							cursor.moveToPosition(item);
-							showDay(cursor.getString(cursor
-									.getColumnIndex(NoteDatabase.COLUMN_DATE)));
-							removeDialog(R.id.menuNotes);
-						}
-					})
+							/* on click */
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int item) {
+									Cursor cursor = db_note.getNoteList();
+									cursor.moveToPosition(item);
+									showDay(cursor.getString(cursor
+											.getColumnIndex(NoteDatabase.COLUMN_DATE)));
+									removeDialog(R.id.menuNotes);
+								}
+							})
 
 					/* on cancel */
 					.setOnCancelListener(new OnCancelListener() {
@@ -555,8 +522,8 @@ public class MainActivity extends Activity implements DateSelectListener {
 
 		/* get day */
 		try {
-			this.date = new SimpleDateFormat("yyyyMMdd").parse(String
-					.valueOf(date));
+			this.date = new SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+					.parse(String.valueOf(date));
 			showDay();
 		} catch (ParseException e) {
 			// e.printStackTrace();
@@ -618,7 +585,7 @@ public class MainActivity extends Activity implements DateSelectListener {
 		list.setOnTouchListener(swipeListener);
 		empty.setOnTouchListener(swipeListener);
 
-		list.setAdapter(new CursorAdapter(this, data_text) {
+		list.setAdapter(new CursorAdapter(this, data_text, 0) {
 			private final SimpleDateFormat df = new SimpleDateFormat(
 					"yyyyMMdd", Locale.getDefault());
 			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
