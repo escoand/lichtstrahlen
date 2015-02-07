@@ -15,15 +15,11 @@
 
 package de.escoand.android.lichtstrahlen;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
@@ -34,29 +30,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 import de.escoand.android.library.OnSwipeTouchListener;
 
 public class MainActivity extends Activity implements DateSelectListener,
 		ScriptureSelectListener, OnQueryTextListener {
 	static final int TIMER_SPLASH = 2000;
-	ViewFlipper flipper = null;
-	TextDatabase db_text = null;
-	NoteDatabase db_note = null;
-	Cursor data_text = null;
+
+	TextDatabase db = null;
+	Cursor data = null;
 	Date date = new Date();
 
 	private OnSwipeTouchListener swipeListener = new OnSwipeTouchListener(
@@ -83,21 +72,16 @@ public class MainActivity extends Activity implements DateSelectListener,
 		@SuppressLint("InflateParams")
 		@Override
 		protected void onPreExecute() {
-			if (fullInit) {
-				if (PreferenceManager.getDefaultSharedPreferences(
-						getBaseContext()).getBoolean("splash", true)) {
-					Toast.makeText(getApplicationContext(),
-							R.string.msgLoading, Toast.LENGTH_LONG).show();
-					flipper.addView(getLayoutInflater().inflate(
-							R.layout.splash, null));
-				}
-			}
+			ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
+			if (PreferenceManager.getDefaultSharedPreferences(getBaseContext())
+					.getBoolean("splash", true))
+				flipper.addView(getLayoutInflater().inflate(R.layout.splash,
+						null));
 			super.onPreExecute();
 		}
 
 		protected Void doInBackground(Void... params) {
-			db_text = new TextDatabase(getBaseContext());
-			db_note = new NoteDatabase(getBaseContext());
+			db = new TextDatabase(getBaseContext());
 			return null;
 		}
 
@@ -139,44 +123,42 @@ public class MainActivity extends Activity implements DateSelectListener,
 		} else
 			setTheme(R.style.Theme);
 		setContentView(R.layout.main);
-
 		super.onCreate(savedInstanceState);
 	}
 
-	/* go to view */
+	/* init database */
 	@Override
 	protected void onResume() {
 		DBInit init = new DBInit();
-		flipper = (ViewFlipper) findViewById(R.id.flipper);
 		init.fullInit = false;
 		init.execute();
-
 		super.onResume();
 	}
 
-	/* save current date */
+	/* save current state */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putLong("date", date.getTime());
 		super.onSaveInstanceState(outState);
 	}
 
+	/* load last state */
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState,
 			PersistableBundle persistentState) {
+		date = new Date(savedInstanceState.getLong("date"));
 		// super.onRestoreInstanceState(savedInstanceState, persistentState);
 	}
 
 	/* clean stop */
 	@Override
 	protected void onStop() {
-		data_text.close();
-		db_text.close();
-		db_note.close();
+		data.close();
+		db.close();
 		super.onStop();
 	}
 
-	/* callback for creating option menu */
+	/* create option menu */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.options_menu, menu);
@@ -185,7 +167,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	/* callback for showing option menu */
+	/* show option menu */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem item = null;
@@ -194,17 +176,17 @@ public class MainActivity extends Activity implements DateSelectListener,
 			return false;
 
 		/* (un)hide items */
-		item = menu.findItem(R.id.menuBible);
+		item = menu.findItem(R.id.menuDayScriptures);
 		if (item != null)
-			item.setEnabled(data_text != null && data_text.getCount() != 0);
+			item.setEnabled(data != null && data.getCount() != 0);
 		item = menu.findItem(R.id.menuShare);
 		if (item != null)
-			item.setEnabled(data_text != null && data_text.getCount() != 0);
+			item.setEnabled(data != null && data.getCount() != 0);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	/* callback for clicking option item */
+	/* option item clicked */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = null;
@@ -212,28 +194,29 @@ public class MainActivity extends Activity implements DateSelectListener,
 		switch (item.getItemId()) {
 
 		/* scripture */
-		case R.id.menuBible:
-			if (data_text.getCount() == 1)
-				onScriptureSelect(data_text.getString(data_text
+		case R.id.menuDayScriptures:
+			if (data.getCount() == 1)
+				onScriptureSelect(data.getString(data
 						.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-			else if (data_text.getCount() > 1) {
-				String[] items = new String[data_text.getCount()];
+			else if (data.getCount() > 1) {
+				String[] items = new String[data.getCount()];
 				int i = 0;
 
-				data_text.moveToFirst();
-				data_text.moveToPrevious();
-				while (data_text.moveToNext()) {
+				data.moveToFirst();
+				data.moveToPrevious();
+				while (data.moveToNext()) {
 					System.err
 							.println(i
 									+ " "
-									+ data_text.getString(data_text
+									+ data.getString(data
 											.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-					items[i++] = data_text.getString(data_text
+					items[i++] = data.getString(data
 							.getColumnIndex(TextDatabase.COLUMN_VERSE));
 				}
 
 				DayScriptureDialog scriptures = new DayScriptureDialog(items);
-				scriptures.show(getFragmentManager(), "dayscriptures");
+				scriptures.show(getFragmentManager(),
+						getString(R.id.menuDayScriptures));
 			}
 			break;
 
@@ -243,35 +226,36 @@ public class MainActivity extends Activity implements DateSelectListener,
 			break;
 
 		/* calendar */
-		case R.id.menuDate:
+		case R.id.menuCalendar:
 			DialogFragment calendar = new CalendarDialog();
-			calendar.show(getFragmentManager(), "calendar");
+			calendar.show(getFragmentManager(), getString(R.id.menuCalendar));
 			break;
 
 		/* scripture list */
-		case R.id.menuList:
+		case R.id.menuScriptures:
 			DialogFragment scriptures = new ScriptureDialog();
-			scriptures.show(getFragmentManager(), "scriptures");
+			scriptures.show(getFragmentManager(),
+					getString(R.id.menuScriptures));
 			break;
 
 		/* notes list */
 		case R.id.menuNotes:
 			DialogFragment notes = new NotesDialog();
-			notes.show(getFragmentManager(), "notes");
+			notes.show(getFragmentManager(), getString(R.id.menuNotes));
 			break;
 
 		/* share */
 		case R.id.menuShare:
-			String text = data_text.getString(data_text
+			String text = data.getString(data
 					.getColumnIndex(TextDatabase.COLUMN_TITLE))
 					+ " ("
-					+ data_text.getString(data_text
+					+ data.getString(data
 							.getColumnIndex(TextDatabase.COLUMN_VERSE))
 					+ ")\n\n"
-					+ data_text.getString(data_text
+					+ data.getString(data
 							.getColumnIndex(TextDatabase.COLUMN_TEXT))
 					+ ")\n\n"
-					+ data_text.getString(data_text
+					+ data.getString(data
 							.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
 					+ "\n\n"
 					+ getString(R.string.shareText)
@@ -295,7 +279,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 		/* info */
 		case R.id.menuAbout:
 			DialogFragment about = new AboutDialog();
-			about.show(getFragmentManager(), "about");
+			about.show(getFragmentManager(), getString(R.id.menuAbout));
 			break;
 
 		/* ... */
@@ -310,6 +294,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 	public void nextDay() {
 
 		/* animation */
+		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 		flipper.setInAnimation(getApplicationContext(), R.anim.in_right);
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_left);
 
@@ -322,6 +307,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 	public void prevDay() {
 
 		/* animation */
+		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 		flipper.setInAnimation(getApplicationContext(), R.anim.in_left);
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_right);
 
@@ -334,6 +320,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 	public void showDay(Date date) {
 
 		/* animation */
+		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
@@ -344,7 +331,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 
 	/* refresh day text */
 	public void showDay() {
-		data_text = db_text.getDate(this.date);
+		data = db.getDate(this.date);
 		refreshTextList(false, true);
 	}
 
@@ -352,16 +339,18 @@ public class MainActivity extends Activity implements DateSelectListener,
 	private void showSearch(String search) {
 
 		/* animation */
+		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 		flipper.setInAnimation(getApplicationContext(), R.anim.in_alpha);
 		flipper.setOutAnimation(getApplicationContext(), R.anim.out_alpha);
 
 		/* get data */
-		data_text = db_text.getSearch(search);
+		data = db.getSearch(search);
 		refreshTextList(true, false);
 	}
 
 	/* show new entry in text list */
 	private void refreshTextList(boolean showDate, boolean showFoot) {
+		ViewFlipper flipper = (ViewFlipper) findViewById(R.id.flipper);
 		View container = getLayoutInflater().inflate(R.layout.daylist, flipper,
 				false);
 		ListView list = (ListView) container.findViewById(R.id.dayList);
@@ -374,129 +363,7 @@ public class MainActivity extends Activity implements DateSelectListener,
 		list.setOnTouchListener(swipeListener);
 		empty.setOnTouchListener(swipeListener);
 
-		list.setAdapter(new CursorAdapter(this, data_text, 0) {
-			private final SimpleDateFormat df = new SimpleDateFormat(
-					"yyyyMMdd", Locale.getDefault());
-			SimpleDateFormat df_ymd = (SimpleDateFormat) DateFormat
-					.getDateInstance(DateFormat.LONG);
-
-			/* disable selecting */
-			@Override
-			public boolean isEnabled(int position) {
-				return false;
-			}
-
-			/* load layout */
-			@Override
-			public View newView(Context context, Cursor cursor, ViewGroup parent) {
-				return getLayoutInflater().inflate(R.layout.dayentry, parent,
-						false);
-			}
-
-			/* set item data */
-			@Override
-			public void bindView(View view, Context context, Cursor cursor) {
-				Date date = null;
-				Date date_before = null;
-				Date date_after = null;
-				TextView tvDate = (TextView) view.findViewById(R.id.verseDate);
-				TextView tvTitle = (TextView) view
-						.findViewById(R.id.verseTitle);
-				TextView tvVerse = (TextView) view
-						.findViewById(R.id.verseVerse);
-				TextView tvText = (TextView) view.findViewById(R.id.verseText);
-				TextView tvAuthor = (TextView) view
-						.findViewById(R.id.verseAuthor);
-				EditText etNote = (EditText) view.findViewById(R.id.noteText);
-				Button btSave = (Button) view.findViewById(R.id.noteSave);
-
-				/* get dates */
-				try {
-					date = df.parse(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_DATE)));
-					if (!cursor.isFirst() && cursor.moveToPrevious()) {
-						date_before = df.parse(cursor.getString(cursor
-								.getColumnIndex(TextDatabase.COLUMN_DATE)));
-						cursor.moveToNext();
-					}
-					if (!cursor.isLast() && cursor.moveToNext()) {
-						date_after = df.parse(cursor.getString(cursor
-								.getColumnIndex(TextDatabase.COLUMN_DATE)));
-						cursor.moveToPrevious();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				/* date */
-				if (date_before == null || date_before.compareTo(date) != 0) {
-					tvDate.setText(df_ymd.format(date));
-					tvDate.setVisibility(View.VISIBLE);
-				} else
-					tvDate.setVisibility(View.GONE);
-
-				/* content */
-				tvTitle.setText(cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_TITLE)));
-				tvVerse.setText(cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-				tvText.setText(cursor.getString(cursor
-						.getColumnIndex(TextDatabase.COLUMN_TEXT)));
-
-				/* author */
-				if (!cursor.isNull(cursor
-						.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-						&& !cursor
-								.getString(
-										cursor.getColumnIndex(TextDatabase.COLUMN_AUTHOR))
-								.equals("")) {
-					tvAuthor.setText(cursor.getString(cursor
-							.getColumnIndex(TextDatabase.COLUMN_AUTHOR)));
-					tvAuthor.setVisibility(View.VISIBLE);
-				} else
-					tvAuthor.setVisibility(View.GONE);
-
-				/* note */
-				if (date_after == null || date_after.compareTo(date) != 0) {
-					etNote.setText(db_note.getDateNote(date));
-					btSave.setTag(date);
-					btSave.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							try {
-								Date date = (Date) v.getTag();
-								String text = ((TextView) ((View) v.getParent())
-										.findViewById(R.id.noteText)).getText()
-										.toString();
-								db_note.setDateNote(date, text);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
-					((View) etNote.getParent()).setVisibility(View.VISIBLE);
-				} else
-					((View) etNote.getParent()).setVisibility(View.GONE);
-
-				/* text size */
-				int scale = getResources().getInteger(
-						R.integer.default_text_size);
-				try {
-					scale = Integer.valueOf(PreferenceManager
-							.getDefaultSharedPreferences(getBaseContext())
-							.getString(
-									"scale",
-									Integer.toString(getResources().getInteger(
-											R.integer.default_text_size))));
-				} catch (Exception e) {
-				}
-				tvDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-				tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-				tvVerse.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-				tvText.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-				tvAuthor.setTextSize(TypedValue.COMPLEX_UNIT_SP, scale);
-			}
-		});
+		list.setAdapter(new DaysAdapter(this, data));
 
 		/* add to flipper */
 		flipper.addView(container);
@@ -509,24 +376,23 @@ public class MainActivity extends Activity implements DateSelectListener,
 	@Override
 	public void onDateSelect(Date date) {
 		DialogFragment dialog;
-		for (String tag : new String[] { "calendar", "scriptures",
-				"dayscriptures", "notes" }) {
+		for (int id : new int[] { R.id.menuDayScriptures, R.id.menuCalendar,
+				R.id.menuScriptures, R.id.menuNotes, R.id.menuAbout }) {
 			dialog = (DialogFragment) getFragmentManager().findFragmentByTag(
-					tag);
+					getString(id));
 			if (dialog != null)
 				dialog.dismiss();
 		}
 		showDay(date);
 	}
 
-	/* show scripture */
+	/* scripture selected */
 	@Override
 	public void onScriptureSelect(String scripture) {
 		String url = PreferenceManager.getDefaultSharedPreferences(
 				getApplicationContext()).getString("scriptureUrl",
 				getString(R.string.scriptureUrlDefault))
 				+ scripture.replaceAll(" ", "");
-
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse(url));
 		startActivity(intent);
