@@ -2,7 +2,7 @@
 <resources>
 
     <!-- app -->
-    <string name="app_name">Lichtstrahlen Devel</string>
+    <string name="app_name">Lichtstrahlen 2015</string>
     <string name="scriptureUrlDefault">http://www.bibleserver.com/text/</string>
 
     <string-array name="scriptureEdition">
