@@ -44,8 +44,8 @@ public class Notification extends BroadcastReceiver {
 		notification.defaults = android.app.Notification.DEFAULT_SOUND
 				| android.app.Notification.DEFAULT_VIBRATE;
 		notification.flags = android.app.Notification.FLAG_AUTO_CANCEL;
-		notification.setLatestEventInfo(context, bundle.getString("title"),
-				bundle.getString("message"), receiver);
+		/*notification.setLatestEventInfo(context, bundle.getString("title"),
+				bundle.getString("message"), receiver);*/
 		((NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0,
 				notification);
