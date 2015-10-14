@@ -1,1 +1,2 @@
-include ':escoandlibrary'
+include ':escoandlibrary', ':lichtstrahlen'
+project(':lichtstrahlen').projectDir = new File('app')
