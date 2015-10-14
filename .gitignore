@@ -1,15 +1,47 @@
-/*~
-/bin
-/dev/*~
-/dev/*.csv
-/dev/*.docx
-/dev/*.jpg
-/dev/*.png
-/dev/*.psd
-/dev/*.xlsx
-/libs
-/res/drawable*/cover.jpg
-/res/drawable*/icon.png
-/res/drawable*/logo.png
-/res/raw*
-/gen
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+build/
+gen/
+/*/out/
+/*/*/build/
+/*/*/production/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath/
+.project/
+
+# Android Studio
+*~
+*.iml
+*.ipr
+*.iws
+*.swp
+.idea
+.gradle
+
+#NDK
+obj/
+
+escoandlibrary/
+app/src/main/res/drawable*/cover.jpg
+app/src/main/res/drawable*/icon.png
+app/src/main/res/drawable*/logo.png
