@@ -2,7 +2,7 @@
 <resources>
 
     <!-- app -->
-    <string name="app_name">mobile devotions 2013</string>
+    <string name="app_name">mobile devotions 2016</string>
     <string name="scriptureUrlDefault">http://www.bibleserver.com/text/</string>
 
     <string-array name="scriptureEdition">
@@ -75,7 +75,7 @@
     <string name="prefRemindDesc">Never forget to read mobile devotions</string>
 
     <!-- about -->
-    <string name="about" formatted="false"><![CDATA[<b>German original edition</b><br/><b>Title:</b> Lichtstrahlen 2013<br/><b>Publisher:</b> Deutscher Jugendverband „Entschieden für Christus“ (EC) e.V., <a href="http://www.ec-jugend.d/e">ec-jugend.de</a><br/><br/><b>English edition</b><br/><b>Publisher:</b> World’s Christian Endeavor Union, <a href="http://www.worldsceunion.org/">worldsceunion.org</a><br/><b>Translation:</b> Many thanks to Emily and Shawn Rudy, Andreas Rudolph, Annie Gomado, Helen Driediger-Nortje<br/><br/><b>Publishing company</b><br/><b>&copy; 2011 BORN-VERLAG Medien für Mitarbeiter, www.bornverlag.de</b><br/><br/>Programming: <a href="https://github.com/escoand/lichtstrahlen/wiki">Andreas Sch&ouml;nfelder</a><br/><br/>Copyrights<br/>Bibelleseplan, Monatsspr&uuml;che: &Ouml;kumenische Arbeitsgemeinschaft für Bibellesen, Berlin, <a href="http://www.oeab.de/">oeab.de</a><br/>Scripture taken from the HOLY BIBLE, NEW INTERNATIONAL VERSION. Copyright &copy; 1973, 1978, 1984 International Bible Society.<br/>Linking by courtesy to <a href="http://www.bibleserver.com/">bibleserver.com</a>]]></string>
+    <string name="about" formatted="false"><![CDATA[<b>German original edition</b><br/><b>Title:</b> Lichtstrahlen 2016<br/><b>Publisher:</b> Deutscher Jugendverband „Entschieden für Christus“ (EC) e.V., <a href="http://www.ec.de/">ec.de</a><br/><br/><b>English edition</b><br/><b>Publisher:</b> World’s Christian Endeavor Union, <a href="http://www.worldsceunion.org/">worldsceunion.org</a><br/><b>Translation:</b> Many thanks to Emily and Shawn Rudy, Andreas Rudolph, Annie Gomado, Helen Driediger-Nortje<br/><br/><b>Publishing company</b><br/><b>&copy; 2014 BORN-VERLAG Medien für Mitarbeiter, www.bornverlag.de</b><br/><br/>Programming: <a href="https://github.com/escoand/lichtstrahlen/wiki">Andreas Sch&ouml;nfelder</a><br/><br/>Copyrights<br/>Bibelleseplan, Monatsspr&uuml;che: &Ouml;kumenische Arbeitsgemeinschaft für Bibellesen, Berlin, <a href="http://www.oeab.de/">oeab.de</a><br/>Scripture taken from the HOLY BIBLE, NEW INTERNATIONAL VERSION. Copyright &copy; 1973, 1978, 1984 International Bible Society.<br/>Linking by courtesy to <a href="http://www.bibleserver.com/">bibleserver.com</a>]]></string>
 
     <!-- misc -->
     <string name="image">image</string>
