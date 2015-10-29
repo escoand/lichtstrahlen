@@ -10,26 +10,27 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
 import com.escoand.android.lichtstrahlen_2015.R;
 
 public class AboutDialog extends DialogFragment {
 
-	@SuppressLint("InflateParams")
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+    @SuppressLint("InflateParams")
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-		View view = inflater.inflate(R.layout.about, null);
+        View view = inflater.inflate(R.layout.about, null);
 
-		((TextView) view.findViewById(R.id.txtAbout)).setText(
-				Html.fromHtml(getString(R.string.about)),
-				TextView.BufferType.SPANNABLE);
-		((TextView) view.findViewById(R.id.txtAbout))
-				.setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) view.findViewById(R.id.txtAbout)).setText(
+                Html.fromHtml(getString(R.string.about)),
+                TextView.BufferType.SPANNABLE);
+        ((TextView) view.findViewById(R.id.txtAbout))
+                .setMovementMethod(LinkMovementMethod.getInstance());
 
-		dialog.setView(view);
+        dialog.setView(view);
 
-		return dialog.create();
-	}
+        return dialog.create();
+    }
 }

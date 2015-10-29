@@ -9,36 +9,36 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 
 public class DayScriptureDialog extends DialogFragment {
-	ScriptureSelectListener listener;
-	String[] items;
+    ScriptureSelectListener listener;
+    String[] items;
 
-	public DayScriptureDialog(String[] items) {
-		this.items = items;
-	}
+    public DayScriptureDialog(String[] items) {
+        this.items = items;
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		listener = (ScriptureSelectListener) activity;
-		super.onAttach(activity);
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        listener = (ScriptureSelectListener) activity;
+        super.onAttach(activity);
+    }
 
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
 
-		dialog.setCancelable(true)
+        dialog.setCancelable(true)
 
 		/* data for list */
-		.setItems(items,
+                .setItems(items,
 
 		/* listener */
-		new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				listener.onScriptureSelect(items[which]);
-			}
-		});
+                        new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                listener.onScriptureSelect(items[which]);
+                            }
+                        });
 
-		return dialog.create();
-	}
+        return dialog.create();
+    }
 }

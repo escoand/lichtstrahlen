@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- general settings -->
     <ListPreference
@@ -9,7 +9,7 @@
         android:title="@string/prefTranslation" />
 
     <!-- display settings -->
-    <PreferenceCategory android:title="@string/prefDisplay" >
+    <PreferenceCategory android:title="@string/prefDisplay">
         <ListPreference
             android:defaultValue="@integer/default_text_size"
             android:entries="@array/listScale"
@@ -26,7 +26,7 @@
     </PreferenceCategory>
 
     <!-- widget settings -->
-    <PreferenceCategory android:title="@string/prefWidget" >
+    <PreferenceCategory android:title="@string/prefWidget">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="widgetInverse"
@@ -35,7 +35,7 @@
     </PreferenceCategory>
 
     <!-- other settings -->
-    <PreferenceCategory android:title="@string/prefOther" >
+    <PreferenceCategory android:title="@string/prefOther">
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="splash"

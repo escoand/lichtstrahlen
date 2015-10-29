@@ -4,6 +4,6 @@
     android:layout_height="fill_parent"
     android:contentDescription="@android:string/untitled"
     android:scaleType="fitCenter"
-    android:src="@drawable/cover" >
+    android:src="@drawable/cover">
 
 </ImageView>

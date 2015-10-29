@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:baselineAligned="false"
     android:orientation="vertical"
-    android:padding="@dimen/listentry_margin" >
+    android:padding="@dimen/listentry_margin">
 
     <TextView
         android:id="@+id/listDate"

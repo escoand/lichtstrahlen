@@ -15,10 +15,6 @@
 
 package de.escoand.android.lichtstrahlen;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -27,70 +23,75 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
+
 import com.escoand.android.lichtstrahlen_2015.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Widget extends AppWidgetProvider {
 
-	@Override
-	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
-			int[] appWidgetIds) {
-		RemoteViews views = null;
-		TextDatabase db = new TextDatabase(context);
-		Cursor cursor = db.getDate(new Date());
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager,
+                         int[] appWidgetIds) {
+        RemoteViews views = null;
+        TextDatabase db = new TextDatabase(context);
+        Cursor cursor = db.getDate(new Date());
 
 		/* themes */
-		if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
-				"widgetInverse", true))
-			views = new RemoteViews(context.getPackageName(),
-					R.layout.widget_light);
-		else
-			views = new RemoteViews(context.getPackageName(),
-					R.layout.widget_dark);
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+                "widgetInverse", true))
+            views = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_light);
+        else
+            views = new RemoteViews(context.getPackageName(),
+                    R.layout.widget_dark);
 
 		/* content */
-		if (cursor != null && cursor.getCount() > 0) {
-			cursor.moveToLast();
-			views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_VERSE)));
-			views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
-					.getColumnIndex(TextDatabase.COLUMN_TITLE)));
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToLast();
+            views.setTextViewText(R.id.widgetVerse, cursor.getString(cursor
+                    .getColumnIndex(TextDatabase.COLUMN_VERSE)));
+            views.setTextViewText(R.id.widgetTitle, cursor.getString(cursor
+                    .getColumnIndex(TextDatabase.COLUMN_TITLE)));
 
 			/* close */
-			try {
-				cursor.close();
-				db.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+            try {
+                cursor.close();
+                db.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
 		/* no data */
-		else {
-			views.setTextViewText(R.id.widgetVerse,
-					context.getString(R.string.widgetNoData));
-			views.setTextViewText(R.id.widgetTitle,
-					context.getString(R.string.widgetNoData2));
-		}
+        else {
+            views.setTextViewText(R.id.widgetVerse,
+                    context.getString(R.string.widgetNoData));
+            views.setTextViewText(R.id.widgetTitle,
+                    context.getString(R.string.widgetNoData2));
+        }
 
 		/* date */
-		views.setTextViewText(R.id.widgetDay, new SimpleDateFormat("dd.",
-				Locale.getDefault()).format(new Date()));
-		views.setTextViewText(R.id.widgetMonth, new SimpleDateFormat("MMM",
-				Locale.getDefault()).format(new Date()));
+        views.setTextViewText(R.id.widgetDay, new SimpleDateFormat("dd.",
+                Locale.getDefault()).format(new Date()));
+        views.setTextViewText(R.id.widgetMonth, new SimpleDateFormat("MMM",
+                Locale.getDefault()).format(new Date()));
 
 		/* onclick listener */
-		Intent intent = new Intent(context, MainActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-				intent, 0);
-		views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                intent, 0);
+        views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
 		/* preference button */
-		intent = new Intent(context, Preferences.class);
-		pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-		views.setOnClickPendingIntent(R.id.widgetPreferences, pendingIntent);
+        intent = new Intent(context, Preferences.class);
+        pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.widgetPreferences, pendingIntent);
 
 		/* update */
-		appWidgetManager.updateAppWidget(appWidgetIds, views);
-		super.onUpdate(context, appWidgetManager, appWidgetIds);
-	}
+        appWidgetManager.updateAppWidget(appWidgetIds, views);
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
 }

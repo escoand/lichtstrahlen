@@ -7,7 +7,7 @@
     android:paddingBottom="@dimen/widget_padding_vertical"
     android:paddingLeft="@dimen/widget_padding_horizontal"
     android:paddingRight="@dimen/widget_padding_horizontal"
-    android:paddingTop="@dimen/widget_padding_vertical" >
+    android:paddingTop="@dimen/widget_padding_vertical">
 
     <TextView
         android:id="@+id/widgetDay"
