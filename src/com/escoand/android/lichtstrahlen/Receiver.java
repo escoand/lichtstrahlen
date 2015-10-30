@@ -25,7 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.escoand.android.lichtstrahlen_2014.R;
+import com.escoand.android.lichtstrahlen_2016.R;
 
 public class Receiver extends BroadcastReceiver {
 	@Override
