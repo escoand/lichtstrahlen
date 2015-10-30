@@ -21,7 +21,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 
 public class Notification extends BroadcastReceiver {
 	PendingIntent receiver = null;
@@ -38,7 +37,7 @@ public class Notification extends BroadcastReceiver {
 				PendingIntent.FLAG_UPDATE_CURRENT);
 
 		/* notification */
-		notification = new NotificationCompat.Builder(context).setSmallIcon(bundle.getInt("icon"))
+		notification = new android.app.Notification.Builder(context).setSmallIcon(bundle.getInt("icon"))
 				.setContentTitle(bundle.getString("title")).setContentText(bundle.getString("message"))
 				.setTicker(bundle.getString("ticker")).setAutoCancel(true).setContentIntent(receiver).build();
 		((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
