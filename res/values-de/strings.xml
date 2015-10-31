@@ -37,7 +37,7 @@
     <!-- main -->
     <string name="mainWeek">Wochenspruch:</string>
     <string name="mainMonth">Monatsspruch:</string>
-    <string name="mainNothing">Leider ist kein Text für dieses Datum oder diese Suche vorhanden.</string>
+    <string name="mainNothing">Leider ist kein Text\nfür dieses Datum oder\ndiese Suche vorhanden.</string>
 
     <!-- notes -->
     <string name="mainNote">Das merke ich mir</string>
