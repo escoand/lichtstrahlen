@@ -33,7 +33,7 @@ import com.escoand.android.lichtstrahlen_2016.R;
 @SuppressLint("SimpleDateFormat")
 public class TextDatabase extends AbstractDatabase {
 	public static final String DATABASE_NAME = "verses";
-	public static final int DATABASE_VERSION = 105;
+	public static final int DATABASE_VERSION = 1;
 
 	protected static final String COLUMN_DATE = "date";
 	protected static final String COLUMN_DATE_UNTIL = "date_until";
@@ -74,31 +74,31 @@ public class TextDatabase extends AbstractDatabase {
 				if (cols.length < 6)
 					continue;
 				values.clear();
-				values.put(COLUMN_ORDERID, Integer.parseInt(cols[0]));
+				values.put(COLUMN_ORDERID, (int) Float.parseFloat(cols[0]));
 				values.put(COLUMN_DATE, cols[1].trim());
 				values.put(COLUMN_AUTHOR, cols[2].trim());
-				values.put(COLUMN_VERSE, cols[3].trim());
-				values.put(COLUMN_TITLE, cols[4].trim());
-				values.put(COLUMN_TEXT, cols[5].trim());
+				values.put(COLUMN_VERSE, cols[4].trim());
+				values.put(COLUMN_TITLE, cols[5].trim());
+				values.put(COLUMN_TEXT, cols[6].trim());
 				db.insert(TABLE_NAME, null, values);
-				if (cols.length >= 8 && !cols[6].equals("")
+				if (cols.length >= 9 && !cols[7].equals("")
 						&& !cols[7].equals("")) {
 					values.remove(COLUMN_AUTHOR);
 					values.put(COLUMN_ORDERID, -1);
 					values.put(COLUMN_TITLE,
 							context.getString(R.string.mainWeek));
-					values.put(COLUMN_TEXT, cols[6].trim());
-					values.put(COLUMN_VERSE, cols[7].trim());
+					values.put(COLUMN_TEXT, cols[7].trim());
+					values.put(COLUMN_VERSE, cols[8].trim());
 					db.insert(TABLE_NAME, null, values);
 				}
-				if (cols.length >= 10 && !cols[8].equals("")
+				if (cols.length >= 11 && !cols[9].equals("")
 						&& !cols[9].equals("")) {
 					values.remove(COLUMN_AUTHOR);
 					values.put(COLUMN_ORDERID, -2);
 					values.put(COLUMN_TITLE,
 							context.getString(R.string.mainMonth));
-					values.put(COLUMN_TEXT, cols[8].trim());
-					values.put(COLUMN_VERSE, cols[9].trim());
+					values.put(COLUMN_TEXT, cols[9].trim());
+					values.put(COLUMN_VERSE, cols[10].trim());
 					db.insert(TABLE_NAME, null, values);
 				}
 			}
