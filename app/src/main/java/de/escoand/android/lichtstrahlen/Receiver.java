@@ -42,20 +42,17 @@ public class Receiver extends BroadcastReceiver {
 		/* set info */
         notification = new Intent(context, Notification.class);
         notification.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notification.putExtra("icon", R.drawable.icon);
-        notification.putExtra("info", context.getString(R.string.app_name)
-                + " - " + context.getString(R.string.msgRemind));
-        notification.putExtra("title", context.getString(R.string.app_name));
-        notification.putExtra("message", context.getString(R.string.msgRemind));
 
 		/* receiver */
         receiver = PendingIntent.getBroadcast(context, 0, notification,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
 		/* start notification */
-        if (prefs.getBoolean("remind", false)) {
-            int hour = prefs.getInt("remind_hour", 9);
-            int minute = prefs.getInt("remind_minute", 0);
+        if (prefs.getBoolean(Preferences.PREF_REMIND, false)) {
+            int hour = prefs.getInt(Preferences.PREF_REMIND_HOUR, 9);
+            int minute = prefs.getInt(Preferences.PREF_REMIND_MINUTE, 0);
+
+            System.err.println(hour + ":" + minute);
 
 			/* get date */
             Calendar cal = Calendar.getInstance();

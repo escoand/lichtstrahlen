@@ -16,6 +16,7 @@
 package de.escoand.android.lichtstrahlen;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.appwidget.AppWidgetManager;
@@ -36,8 +37,14 @@ import android.widget.TimePicker;
 import com.escoand.android.lichtstrahlen_2015.R;
 
 public class Preferences extends PreferenceActivity {
+    static final String PREF_REMIND = "remind";
+    static final String PREF_REMIND_HOUR = "remind_hour";
+    static final String PREF_REMIND_MINUTE = "remind_minute";
+
     private static final int DIALOG_REMIND_ID = 3;
+
     private static SharedPreferences prefs;
+
     OnPreferenceChangeListener changed = new OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -80,15 +87,16 @@ public class Preferences extends PreferenceActivity {
                 updateWidget);
 
 		/* reminder */
-        findPreference("remind").setOnPreferenceClickListener(
+        findPreference(PREF_REMIND).setOnPreferenceClickListener(
                 new OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        showDialog(DIALOG_REMIND_ID);
+                        DialogFragment newFragment = new TimeDialog();
+                        newFragment.show(getFragmentManager(), "timePicker");
                         return false;
                     }
                 });
-        findPreference("remind").setOnPreferenceChangeListener(
+        findPreference(PREF_REMIND).setOnPreferenceChangeListener(
                 new OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference,
@@ -96,70 +104,5 @@ public class Preferences extends PreferenceActivity {
                         return false;
                     }
                 });
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DIALOG_REMIND_ID:
-
-			/* get settings */
-                int hour = prefs.getInt("remind_hour", 9);
-                int minute = prefs.getInt("remind_minute", 0);
-
-			/* dialog */
-                TimePickerDialog dialog = new TimePickerDialog(this,
-                        new OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hour,
-                                                  int minute) {
-                                prefs.edit().putInt("remind_hour", hour)
-                                        .putInt("remind_minute", minute).commit();
-                                initReminder();
-                            }
-                        }, hour, minute, true);
-
-			/* ok button */
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE,
-                        getString(android.R.string.ok), new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                initReminder(true);
-                            }
-                        });
-
-			/* cancel button */
-                dialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-                        getString(android.R.string.cancel), new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                initReminder(false);
-                            }
-                        });
-
-			/* back key */
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        initReminder(false);
-                    }
-                });
-
-                return dialog;
-        }
-
-        return super.onCreateDialog(id);
-    }
-
-    private void initReminder(boolean state) {
-        prefs.edit().putBoolean("remind", state).commit();
-        ((CheckBoxPreference) findPreference("remind")).setChecked(state);
-        initReminder();
-    }
-
-    private void initReminder() {
-        Intent intent = new Intent(getBaseContext(), Receiver.class);
-        intent.setAction("de.escoand.android.lichtstrahlen.INIT_REMINDER");
-        getBaseContext().sendBroadcast(intent);
     }
 }
