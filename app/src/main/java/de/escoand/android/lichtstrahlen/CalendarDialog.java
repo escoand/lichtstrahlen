@@ -24,7 +24,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import com.escoand.android.lichtstrahlen_2015.R;
+import com.escoand.android.lichtstrahlen_2016.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

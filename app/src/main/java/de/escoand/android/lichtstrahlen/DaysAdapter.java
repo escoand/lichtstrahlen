@@ -27,7 +27,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.escoand.android.lichtstrahlen_2015.R;
+import com.escoand.android.lichtstrahlen_2016.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

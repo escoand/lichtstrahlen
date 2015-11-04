@@ -23,8 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.escoand.android.lichtstrahlen_2015.R;
-
 import java.util.Calendar;
 
 public class Receiver extends BroadcastReceiver {

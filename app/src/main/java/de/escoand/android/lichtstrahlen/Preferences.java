@@ -15,26 +15,19 @@
 
 package de.escoand.android.lichtstrahlen;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.widget.TimePicker;
 
-import com.escoand.android.lichtstrahlen_2015.R;
+import com.escoand.android.lichtstrahlen_2016.R;
 
 public class Preferences extends PreferenceActivity {
     static final String PREF_REMIND = "remind";

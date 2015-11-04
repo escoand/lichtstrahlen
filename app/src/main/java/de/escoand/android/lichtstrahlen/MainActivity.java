@@ -37,7 +37,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-import com.escoand.android.lichtstrahlen_2015.R;
+import com.escoand.android.lichtstrahlen_2016.R;
 
 import java.util.Date;
 
