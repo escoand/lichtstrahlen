@@ -3,15 +3,15 @@
 
     <!-- activity styles -->
     <style name="Theme" parent="@android:style/Theme.Holo">
-        <item name="ic_action_book">@drawable/ic_action_book_dark</item>
-        <item name="ic_action_search">@drawable/ic_action_search_dark</item>
-        <item name="ic_action_share">@drawable/ic_action_share_dark</item>
+        <item name="ic_book">@drawable/ic_local_library_dark</item>
+        <item name="ic_search">@drawable/ic_search_dark</item>
+        <item name="ic_share">@drawable/ic_share_dark</item>
     </style>
 
     <style name="Theme.Light" parent="@android:style/Theme.Holo.Light">
-        <item name="ic_action_book">@drawable/ic_action_book_light</item>
-        <item name="ic_action_search">@drawable/ic_action_search_light</item>
-        <item name="ic_action_share">@drawable/ic_action_share_light</item>
+        <item name="ic_book">@drawable/ic_local_library_light</item>
+        <item name="ic_search">@drawable/ic_search_light</item>
+        <item name="ic_share">@drawable/ic_share_light</item>
     </style>
 
     <!-- widget styles -->
