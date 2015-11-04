@@ -22,24 +22,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class Notification extends BroadcastReceiver {
-	PendingIntent receiver = null;
-	android.app.Notification notification = null;
-	Bundle bundle = null;
+import com.escoand.android.lichtstrahlen_2016.R;
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		bundle = intent.getExtras();
+public class Notification extends BroadcastReceiver {
+    PendingIntent receiver = null;
+    android.app.Notification notification = null;
+    Bundle bundle = null;
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        bundle = intent.getExtras();
 
 		/* receiver */
-		receiver = PendingIntent.getActivity(context, 0,
-				new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-				PendingIntent.FLAG_UPDATE_CURRENT);
+        receiver = PendingIntent.getActivity(context, 0,
+                new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-		/* notification */
-		notification = new android.app.Notification.Builder(context).setSmallIcon(bundle.getInt("icon"))
-				.setContentTitle(bundle.getString("title")).setContentText(bundle.getString("message"))
-				.setTicker(bundle.getString("ticker")).setAutoCancel(true).setContentIntent(receiver).build();
-		((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
-	}
+        /* notification */
+        notification = new android.app.Notification.Builder(context).setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(context.getString(R.string.app_name)).setContentText(context.getString(R.string.msgRemind))
+                .setTicker(context.getString(R.string.app_name) + " - " + context.getString(R.string.msgRemind)).setAutoCancel(true).setContentIntent(receiver).build();
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+    }
 }
