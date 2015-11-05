@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.escoand.android.lichtstrahlen"
     android:installLocation="auto"
-    android:versionCode="060091"
-    android:versionName="6.0.91 beta" >
+    android:versionCode="060100"
+    android:versionName="6.1.0-beta" >
 
     <uses-sdk
         android:minSdkVersion="14"
