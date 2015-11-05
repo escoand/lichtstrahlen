@@ -22,7 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 public class Notification extends BroadcastReceiver {
     PendingIntent receiver = null;

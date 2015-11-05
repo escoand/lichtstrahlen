@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 public class AboutDialog extends DialogFragment {
 

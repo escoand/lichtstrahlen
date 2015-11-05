@@ -21,7 +21,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

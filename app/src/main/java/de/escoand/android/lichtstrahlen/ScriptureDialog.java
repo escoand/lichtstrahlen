@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 import java.text.DateFormat;
 import java.text.ParseException;

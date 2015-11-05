@@ -27,7 +27,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 public class Preferences extends PreferenceActivity {
     static final String PREF_REMIND = "remind";

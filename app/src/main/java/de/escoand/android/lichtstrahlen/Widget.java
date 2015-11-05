@@ -24,7 +24,7 @@ import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
-import com.escoand.android.lichtstrahlen_2016.R;
+import com.escoand.android.lichtstrahlen.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

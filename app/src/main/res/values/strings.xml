@@ -2,7 +2,7 @@
 <resources>
 
     <!-- app -->
-    <string name="app_name">mobile devotions 2015</string>
+    <string name="app_name">mobile devotions devel</string>
     <string name="scriptureUrlDefault">http://www.bibleserver.com/text/</string>
 
     <string-array name="scriptureEdition">
@@ -92,8 +92,5 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
 
 </resources>
